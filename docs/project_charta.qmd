@@ -18,47 +18,47 @@ Publikationsort:
 •	Webbasierte Anwendung (responsive), ggf. Integration in Sportportale oder interne Analyseplattformen (Intranet)
 
 
-##Projektziele/Erfolgskriterien
+## Projektziele/Erfolgskriterien
 
-###Projektziele
+### Projektziele
 
 Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer separaten Liste historische Fussballdaten pro Land, Turnier und Kontinent mit verschiedenen Visualisierungen (Balkendiagramme, Liniendiagramme etc.) darstellt.
 
-###Qualitative Ziele
+### Qualitative Ziele
 
 •	Intuitive Bedienbarkeit für Nutzer mit unterschiedlicher Datenkompetenz
 •	Klare und verständliche Visualisierung komplexer Zusammenhänge
 •	Hohe visuelle Attraktivität und Interaktivität
 •	Unterstützung explorativer Datenanalyse
 
-###Quantitative Erfolgskennzahlen
+### Quantitative Erfolgskennzahlen
 
 •	≥ 80 % der Testnutzer können definierte Analyseaufgaben erfolgreich lösen
 •	≤ 5 Sekunden Ladezeit für Dashboard-Ansichten
 •	≥ 70 % Nutzerzufriedenheit (z. B. durch Umfragen)
 •	Mindestens 3 verschiedene Interaktionsmöglichkeiten (Filter, Drill-down, etc.)
 
-###Out of Scope
+### Out of Scope
 •	Echtzeitdaten (nur historische Daten)
 •	Vorhersagemodelle oder KI-basierte Prognosen
 •	Mobile App (Fokus auf Weblösung)
 •	Integration von nicht verifizierten Datenquellen
 
 
-##Stakeholder Analysis
+## Stakeholder Analysis
 
-###Primäre Stakeholder:
+### Primäre Stakeholder:
 
 •	Projektauftraggeber (z. B. Sportorganisation oder Medienunternehmen)
 •	Data Analysts / Data Scientists
 •	Fussball-Interessierte Nutzer (Fans, Journalisten)
 
-###Sekundäre Stakeholder:
+### Sekundäre Stakeholder:
 •	Entwicklerteam (Frontend/Backend)
 •	UX/UI Designer
 •	Datenlieferanten
 
-###Ziele & Beziehungen:
+### Ziele & Beziehungen:
 •	Auftraggeber: strategischer Nutzen, Reichweite
 •	Analysten: tiefergehende Analyse
 •	Nutzer: einfache Exploration
@@ -111,7 +111,7 @@ Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer
 
 ## Situation Assessment
 
-###Ressourcen:
+### Ressourcen:
 
 •	Daten: Historische Fussballdaten (FIFA, Turnierdatenbanken etc.)
 
@@ -127,7 +127,7 @@ Constraints:
 •	Performance bei grossen Datensätzen
 •	Responsives Design
 
-###Risiken:
+### Risiken:
 •	Inkonsistente Daten
 •	Komplexität der Interaktion
 •	Nutzerüberforderung
@@ -135,14 +135,14 @@ Constraints:
 
 ## Visualization Concept
 
-###Product Form
+### Product Form
 
 Ein interaktives Dashboard mit:
 •	Weltkarte als zentrale Navigationsinstanz
 •	Ergänzenden Diagrammen und Tabellen
 •	Explorativem Analyseansatz
 
-###Wert:
+### Wert:
 •	Kognitiv: Übersicht über globale Muster
 •	Kommunikativ: Klare Struktur für unterschiedliche Zielgruppen
 •	Erlebnis: Interaktive Exploration fördert Engagement
