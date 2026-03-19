@@ -5,6 +5,8 @@ Describe the context (domain/business area) and topic of the visualization proje
 ## Project Objectives and Success Criteria
 Describe the objectives **from the client/stakeholder perspective**. For example: "Enable users to understand the distribution of sales across different regions". Try to be as specific as possible, but restrict to the concrete needs formulated by the client/stakeholders. For example: if a dashboard is needed explicitly, then state it here, otherwise leave the form of the visualization product open.
 
+Test TEST tEST
+
 Formulate success criteria (from the client/stakeholder perspective): qualitative objectives and, wherever possible, corresponding quantitative metrics with target values to be achieved within the project. These objectives should directly address the pains and gains identified in the user analysis.
 
 It is also helpful to specify what is explicitly excluded from the project objectives (out of scope).
