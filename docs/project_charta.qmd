@@ -1,80 +1,167 @@
-# Project Charta test
+# Projektcharta
+
 ## Context and Scope
-Describe the context (domain/business area) and topic of the visualization project. Which topical aspects should be addressed? Which question(s) should the data visualization project answer? What are the expected benefits of the project? Where should the visualization product be published (e.g. website, app, intranet)?
 
-## Project Objectives and Success Criteria
-Interaktives Dashboard, welches auf einer Weltkarte und einer separaten Liste historische Fussballdaten pro Land/Tournament/Kontinent mit verschiedenen Visualisierungen darstellen kann (Balkendiagramme/Liniendiagramme etc.)
+Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Ziel ist die Entwicklung eines interaktiven Dashboards, das historische Fussballdaten auf globaler Ebene visualisiert. Dabei sollen Daten nach Ländern, Turnieren und Kontinenten aufbereitet und über eine Weltkarte sowie ergänzende Diagramme (z. B. Balken- und Liniendiagramme) explorierbar gemacht werden.
 
-Formulate success criteria (from the client/stakeholder perspective): qualitative objectives and, wherever possible, corresponding quantitative metrics with target values to be achieved within the project. These objectives should directly address the pains and gains identified in the user analysis.
+Zentrale Fragestellungen:
+•	Wie haben sich Fussballleistungen (z. B. Titel, Siege, Tore) über Zeit und Regionen entwickelt?
+•	Welche Länder und Kontinente dominieren bestimmte Turniere?
+•	Welche Trends lassen sich in der historischen Entwicklung erkennen?
 
-It is also helpful to specify what is explicitly excluded from the project objectives (out of scope).
+Erwartete Benefits:
+•	Schneller Überblick über komplexe historische Daten
+•	Unterstützung datenbasierter Analysen und Entscheidungen
+•	Attraktive und intuitive Darstellung für unterschiedliche Zielgruppen
 
-## Stakeholder Analysis
-List the people involved in and affected by the project. Describe their goals and relationships with each other. Visualisation in the form of a stakeholder map can provide a quick overview.
+Publikationsort:
+•	Webbasierte Anwendung (responsive), ggf. Integration in Sportportale oder interne Analyseplattformen (Intranet)
+
+
+##Projektziele/Erfolgskriterien
+
+###Projektziele
+
+Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer separaten Liste historische Fussballdaten pro Land, Turnier und Kontinent mit verschiedenen Visualisierungen (Balkendiagramme, Liniendiagramme etc.) darstellt.
+
+###Qualitative Ziele
+
+•	Intuitive Bedienbarkeit für Nutzer mit unterschiedlicher Datenkompetenz
+•	Klare und verständliche Visualisierung komplexer Zusammenhänge
+•	Hohe visuelle Attraktivität und Interaktivität
+•	Unterstützung explorativer Datenanalyse
+
+###Quantitative Erfolgskennzahlen
+
+•	≥ 80 % der Testnutzer können definierte Analyseaufgaben erfolgreich lösen
+•	≤ 5 Sekunden Ladezeit für Dashboard-Ansichten
+•	≥ 70 % Nutzerzufriedenheit (z. B. durch Umfragen)
+•	Mindestens 3 verschiedene Interaktionsmöglichkeiten (Filter, Drill-down, etc.)
+
+###Out of Scope
+•	Echtzeitdaten (nur historische Daten)
+•	Vorhersagemodelle oder KI-basierte Prognosen
+•	Mobile App (Fokus auf Weblösung)
+•	Integration von nicht verifizierten Datenquellen
+
+
+##Stakeholder Analysis
+
+###Primäre Stakeholder:
+
+•	Projektauftraggeber (z. B. Sportorganisation oder Medienunternehmen)
+•	Data Analysts / Data Scientists
+•	Fussball-Interessierte Nutzer (Fans, Journalisten)
+
+###Sekundäre Stakeholder:
+•	Entwicklerteam (Frontend/Backend)
+•	UX/UI Designer
+•	Datenlieferanten
+
+###Ziele & Beziehungen:
+•	Auftraggeber: strategischer Nutzen, Reichweite
+•	Analysten: tiefergehende Analyse
+•	Nutzer: einfache Exploration
+•	Entwickler & Designer: Umsetzung und Qualität
+
 
 ## User Analysis
-Analyse the target audience of the visualization product and create at least 2 personas with **relevant attributes** such as domain expertise, data literacy, technical environment (devices, screen sizes), frequency of use etc. Amend each persona with the dimensions of the customer profile side in the Value Proposition Canvas @Osterwalder2014:
 
-* **User tasks** (jobs): What tasks are users trying to accomplish? Consider functional jobs (e.g. analysing data, making decisions), social jobs (e.g. reporting to stakeholders, collaborating with colleagues) and emotional jobs (e.g. feeling confident in their decisions).
-* **Pains**: What obstacles, risks or undesired outcomes do users currently face? What makes their current approach frustrating or inefficient?
-* **Gains**: What outcomes and benefits do users expect or desire? What would exceed their expectations?
+### Persona 1: Sportjournalist
+•	Domain Expertise: Hoch
+•	Data Literacy: Mittel bis hoch
+•	Technik: Laptop/Desktop, grosse Bildschirme
+•	Nutzung: Regelmässig
+
+#### User Tasks:
+•	Daten analysieren und vergleichen
+•	Berichte erstellen
+•	Trends identifizieren
+
+#### Pains:
+•	Zeitaufwändige Datensuche
+•	Unübersichtliche Datenquellen
+•	Fehlende visuelle Unterstützung
+
+#### Gains:
+•	Schneller Zugriff auf strukturierte Daten
+•	Visuelle Storytelling-Elemente
+•	Exportierbare Insights
+
+### Persona 2: Fussballfan
+•	Domain Expertise: Mittel
+•	Data Literacy: Niedrig bis mittel
+•	Technik: Smartphone / Tablet / Laptop
+•	Nutzung: Gelegentlich
+
+#### User Tasks:
+•	Informationen entdecken
+•	Lieblingsmannschaften vergleichen
+•	Trends verstehen
+
+#### Pains:
+•	Komplexe Darstellungen
+•	Zu viele Daten ohne Kontext
+
+#### Gains:
+•	Intuitive Navigation
+•	Visuell ansprechende Darstellung
+•	Interaktive Exploration
 
 
 ## Situation Assessment
-Describe the available resources (data, personnel, material, software/tools, infrastructure, etc.) and time as well as restrictions and constraints. Possible risks that may arise during the project are also identified.
+
+###Ressourcen:
+
+•	Daten: Historische Fussballdaten (FIFA, Turnierdatenbanken etc.)
+
+•	Personal: Entwickler, Designer, Data Analyst
+
+•	Tools: JavaScript (z. B. D3.js), BI-Tools, Webframeworks
+
+•	Infrastruktur: Webserver, Cloudlösungen
+Zeit:
+•	Geschätzte Projektdauer: 3–6 Monate
+Constraints:
+•	Datenqualität und -verfügbarkeit
+•	Performance bei grossen Datensätzen
+•	Responsives Design
+
+###Risiken:
+•	Inkonsistente Daten
+•	Komplexität der Interaktion
+•	Nutzerüberforderung
 
 
 ## Visualization Concept
-Translate the project objectives into a concrete visualization concept. This corresponds to the value map side of the Value Proposition Canvas [@Osterwalder2014] – describe how the proposed visualization product addresses the users' tasks, relieves their pains and creates gains. Address the following aspects:
 
-* **Product form**: Composition of the visualization product – dashboard, data story, infographic, exploratory tool, etc.
-* **Visual encodings**: Types of charts and visualizations to be used – e.g. bar chart, line chart, scatter plot, map, etc.
-* **Interactivity**: Static vs. dynamic/interactive elements – filtering, drill-down, tooltips, linked views, etc.
-* **Narrative and annotation**: Text elements, storytelling structure, annotations and contextual information.
-* **Target medium and integration**: Embedding in the target environment – e.g. website, intranet, app, print, etc.
+###Product Form
 
-For each design decision, articulate the intended value along three dimensions:
+Ein interaktives Dashboard mit:
+•	Weltkarte als zentrale Navigationsinstanz
+•	Ergänzenden Diagrammen und Tabellen
+•	Explorativem Analyseansatz
 
-* **Cognitive and analytical value**: How does the design amplify the user's ability to detect patterns, identify outliers, understand distributions or discover relationships [@card1999; @vanwijk2005]?
-* **Communicative value**: How does the design support the communication of information to the target audience profile(s)? 
-* **Experiential and aesthetic value**: How do the visual and interactive qualities of the design foster engagement, trust and willingness to adopt the product in practice?
+###Wert:
+•	Kognitiv: Übersicht über globale Muster
+•	Kommunikativ: Klare Struktur für unterschiedliche Zielgruppen
+•	Erlebnis: Interaktive Exploration fördert Engagement
 
-Justify the concept by mapping it explicitly to the project objectives and the user needs identified in the user analysis.
+### Visual Encodings
+•	Weltkarte (Choropleth Map)
+•	Balkendiagramme (Vergleiche zwischen Ländern)
+•	Liniendiagramme (zeitliche Entwicklungen)
+•	Tabellen (Detailansichten)
 
+### Wert:
+•	Kognitiv: Muster und Trends leicht erkennbar
+•	Kommunikativ: Verständliche Darstellung auch für Laien
+•	Erlebnis: Visuelle Vielfalt steigert Interesse
+Interactivity
+•	Filter (Land, Turnier, Zeitraum)
+•	Drill-down (von Kontinent → Land → Turnier)
+•	Tooltips mit Detailinformationen
+•	Linked Views (Synchronisierung der Visualisierungen)
 
 ## Project Plan
-Divide the project into individual phases, describe them briefly and draw up a preliminary timetable, e.g. as a Gantt chart:
-
-```{mermaid}
-%%| label: fig-project-plan
-%%| fig-cap: Preliminary project plan in the form of a Gantt chart.
-gantt
-    title Project Plan
-    dateFormat YYYY-MM-DD
-    tickInterval 5day
-    section Project Understanding
-        Initiation workshop and context analysis     :a1, 2024-07-01, 1d
-        Stakeholder and user analysis     :a3, 2024-07-02, 5d
-        Situation assessment    :a4, 2024-07-06, 1d
-        Project objectives and visualization concept    :a5, 2024-07-07, 1d
-        Sign project charta: milestone, m1, 2024-07-08, 1d
-    
-    section Data Acquisition and Exploration
-        Acquire data :a6, 2024-07-08, 3d
-        Exploratory data analysis   :a7, 2024-07-09, 2d
-        Discuss data report: milestone, m2, 2024-07-11, 1d
-        
-    section Visual Encoding and Design
-        Overview charts   :a8, 2024-07-11, 3d
-        Maps :a9, 2024-07-11, 5d
-        Implement Dashboard prototype :a10, 2024-07-16, 5d
-        Complete visualization report :a10, 2024-07-21, 1d
-    section Evaluation
-        Prepare presentation :a10, 2024-07-22, 2d
-        Project presentation : milestone, m2, 2024-07-24, 4m
-```
-
-See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
-
-## Roles and Contact Details
-List the people involved in the development work here with their role titles, tasks and contact details.
+to do
