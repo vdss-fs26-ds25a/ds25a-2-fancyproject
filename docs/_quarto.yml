@@ -7,7 +7,7 @@ language:
   section-title-appendices: "Appendix"
 
 website:
-  title: "Sample Project"
+  title: "Football Dashboard"
   search: true
   sidebar:
     style: "floating"
