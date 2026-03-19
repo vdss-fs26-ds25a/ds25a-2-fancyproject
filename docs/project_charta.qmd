@@ -3,9 +3,7 @@
 Describe the context (domain/business area) and topic of the visualization project. Which topical aspects should be addressed? Which question(s) should the data visualization project answer? What are the expected benefits of the project? Where should the visualization product be published (e.g. website, app, intranet)?
 
 ## Project Objectives and Success Criteria
-Describe the objectives **from the client/stakeholder perspective**. For example: "Enable users to understand the distribution of sales across different regions". Try to be as specific as possible, but restrict to the concrete needs formulated by the client/stakeholders. For example: if a dashboard is needed explicitly, then state it here, otherwise leave the form of the visualization product open.
-
-Test TEST tEST
+Interaktives Dashboard, welches auf einer Weltkarte und einer separaten Liste historische Fussballdaten pro Land/Tournament/Kontinent mit verschiedenen Visualisierungen darstellen kann (Balkendiagramme/Liniendiagramme etc.)
 
 Formulate success criteria (from the client/stakeholder perspective): qualitative objectives and, wherever possible, corresponding quantitative metrics with target values to be achieved within the project. These objectives should directly address the pains and gains identified in the user analysis.
 
