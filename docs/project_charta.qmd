@@ -2,41 +2,39 @@
 
 ## Context and Scope
 
-Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Ziel ist die Entwicklung eines interaktiven Dashboards, das historische Fussballdaten auf globaler Ebene visualisiert. Dabei sollen Daten nach Ländern, Turnieren und Kontinenten aufbereitet und über eine Weltkarte sowie ergänzende Diagramme (z. B. Balken- und Liniendiagramme) explorierbar gemacht werden.
+Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Das Ziel ist die Erstellung eines interaktiven Dashboards, auf welchem die 15 interessantesten Rivalitäten abgebildet werden sollen, mitsamt zusätzlichen Statistiken wie Gewinn/Verlust und Goal-Verhältnisse. Das Dashboard dient hauptsächlich als Unterhaltungswerkzeug und soll im Rahmen eines Projektes mit dem Fifa-Museum in Zürich veröffentlicht werden und den Besuchern zur Verfügung gestellt werden.
 
 Zentrale Fragestellungen:
-•	Wie haben sich Fussballleistungen (z. B. Titel, Siege, Tore) über Zeit und Regionen entwickelt?
-•	Welche Länder und Kontinente dominieren bestimmte Turniere?
-•	Welche Trends lassen sich in der historischen Entwicklung erkennen?
+•	Was sind die statistischen Verhältnisse zwischen den Rivalen?
+•	Gibt es zwischen Kontinente und Regionen Unterschiede?
 
 Erwartete Benefits:
-•	Schneller Überblick über komplexe historische Daten
-•	Unterstützung datenbasierter Analysen und Entscheidungen
-•	Attraktive und intuitive Darstellung für unterschiedliche Zielgruppen
+•	Schneller Überblick über historische Daten der Rivalen
+•	Attraktive und unterhaltsame Darstellung für unterschiedliche Zielgruppen
 
 Publikationsort:
-•	Webbasierte Anwendung (responsive), ggf. Integration in Sportportale oder interne Analyseplattformen (Intranet)
-
+•	Das Dashboard wird als Vorzeigedashboard auf einem interaktivem Display im Fifa-Museum in Zürich eingerichtet und publiziert.
 
 ## Projektziele/Erfolgskriterien
-
 ### Projektziele
-
-Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer separaten Liste historische Fussballdaten pro Land, Turnier und Kontinent mit verschiedenen Visualisierungen (Balkendiagramme, Liniendiagramme etc.) darstellt.
-
-### Qualitative Ziele
-
-•	Intuitive Bedienbarkeit für Nutzer mit unterschiedlicher Datenkompetenz
-•	Klare und verständliche Visualisierung komplexer Zusammenhänge
-•	Hohe visuelle Attraktivität und Interaktivität
-•	Unterstützung explorativer Datenanalyse
-
-### Quantitative Erfolgskennzahlen
-
-•	≥ 80 % der Testnutzer können definierte Analyseaufgaben erfolgreich lösen
-•	≤ 5 Sekunden Ladezeit für Dashboard-Ansichten
-•	≥ 70 % Nutzerzufriedenheit (z. B. durch Umfragen)
-•	Mindestens 3 verschiedene Interaktionsmöglichkeiten (Filter, Drill-down, etc.)
+Datenanalyse und -aufbereitung: 
+•	Sammlung, Bereinigung und Strukturierung von relevanten Fussballdaten (z. B. Ergebnisse, Tore, Siege, Niederlagen) für die 15 wichtigsten Rivalitäten. 
+•	Identifikation der spannendsten Statistiken und Trends, die für die Visualisierung interessant sind. 
+Entwicklung eines interaktiven Dashboards: 
+•	Gestaltung und Implementierung eines nutzerfreundlichen, interaktiven Dashboards zur Darstellung der Rivalitäten. 
+•	Integration von Visualisierungselementen wie Diagrammen, Tabellen und interaktiven Filtern (z. B. nach Zeitraum, Liga oder Team). 
+Statistische Analyse und Berechnung relevanter Kennzahlen: 
+•	Berechnung von Gewinn-/Verlust-Verhältnissen, Torverhältnissen und weiteren interessanten Kennzahlen. 
+•	Bereitstellung der Daten in leicht verständlicher Form für den Endnutzer. 
+Unterhaltungs- und Bildungswert: 
+•	Sicherstellung, dass das Dashboard nicht nur informativ, sondern auch unterhaltsam ist, um Besucher des FIFA-Museums aktiv einzubinden. 
+•	Nutzung der Visualisierungen, um Geschichten rund um Fussballrivalitäten zu erzählen. 
+Integration und Veröffentlichung: 
+•	Implementierung des Dashboards im Rahmen der Ausstellung im FIFA-Museum Zürich.
+•	Bereitstellung einer stabilen, wartbaren Version für Besucherzugang. 
+Evaluation und Benutzerfeedback: 
+•	Durchführung von Tests mit potentiellen Nutzern, um Benutzerfreundlichkeit und Verständnis der Visualisierungen zu überprüfen. 
+•	Anpassung des Dashboards basierend auf Feedback vor der finalen Veröffentlichung.
 
 ### Out of Scope
 •	Echtzeitdaten (nur historische Daten)
@@ -44,14 +42,13 @@ Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer
 •	Mobile App (Fokus auf Weblösung)
 •	Integration von nicht verifizierten Datenquellen
 
-
 ## Stakeholder Analysis
 
 ### Primäre Stakeholder:
 
-•	Projektauftraggeber (z. B. Sportorganisation oder Medienunternehmen)
+•	Fifa-Museum in Zürich (Projektauftraggeber)
 •	Data Analysts / Data Scientists
-•	Fussball-Interessierte Nutzer (Fans, Journalisten)
+•	Fifa-Museum Besucher
 
 ### Sekundäre Stakeholder:
 •	Entwicklerteam (Frontend/Backend)
@@ -64,7 +61,6 @@ Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer
 •	Nutzer: einfache Exploration
 •	Entwickler & Designer: Umsetzung und Qualität
 
-
 ## User Analysis
 
 ### Persona 1: Sportjournalist
@@ -72,6 +68,7 @@ Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer
 •	Data Literacy: Mittel bis hoch
 •	Technik: Laptop/Desktop, grosse Bildschirme
 •	Nutzung: Regelmässig
+
 
 #### User Tasks:
 •	Daten analysieren und vergleichen
@@ -117,15 +114,17 @@ Entwicklung eines interaktiven Dashboards, welches auf einer Weltkarte und einer
 
 •	Personal: Entwickler, Designer, Data Analyst
 
-•	Tools: JavaScript (z. B. D3.js), BI-Tools, Webframeworks
+•	Tools: Quarto, Python, R
 
-•	Infrastruktur: Webserver, Cloudlösungen
+•	Infrastruktur: GitHub Webpages
+
 Zeit:
 •	Geschätzte Projektdauer: 3–6 Monate
 Constraints:
 •	Datenqualität und -verfügbarkeit
 •	Performance bei grossen Datensätzen
 •	Responsives Design
+
 
 ### Risiken:
 •	Inkonsistente Daten
@@ -148,10 +147,8 @@ Ein interaktives Dashboard mit:
 •	Erlebnis: Interaktive Exploration fördert Engagement
 
 ### Visual Encodings
-•	Weltkarte (Choropleth Map)
-•	Balkendiagramme (Vergleiche zwischen Ländern)
-•	Liniendiagramme (zeitliche Entwicklungen)
-•	Tabellen (Detailansichten)
+•	Weltkarte
+•	Daten zu den Rivalen in Form von Balkendiagrammen, Tabellen
 
 ### Wert:
 •	Kognitiv: Muster und Trends leicht erkennbar
@@ -165,3 +162,4 @@ Interactivity
 
 ## Project Plan
 to do
+
