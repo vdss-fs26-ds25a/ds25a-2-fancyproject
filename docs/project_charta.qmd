@@ -17,23 +17,35 @@ Publikationsort:
 
 ## Projektziele/Erfolgskriterien
 ### Projektziele
+
 Datenanalyse und -aufbereitung: 
-•	Sammlung, Bereinigung und Strukturierung von relevanten Fussballdaten (z. B. Ergebnisse, Tore, Siege, Niederlagen) für die 15 wichtigsten Rivalitäten. 
+•	Sammlung, Bereinigung und Strukturierung von relevanten Fussballdaten (z. B. Ergebnisse, Tore, Siege, Niederlagen) für die 15 wichtigsten Rivalitäten.
+
 •	Identifikation der spannendsten Statistiken und Trends, die für die Visualisierung interessant sind. 
+
 Entwicklung eines interaktiven Dashboards: 
 •	Gestaltung und Implementierung eines nutzerfreundlichen, interaktiven Dashboards zur Darstellung der Rivalitäten. 
+
 •	Integration von Visualisierungselementen wie Diagrammen, Tabellen und interaktiven Filtern (z. B. nach Zeitraum, Liga oder Team). 
+
 Statistische Analyse und Berechnung relevanter Kennzahlen: 
 •	Berechnung von Gewinn-/Verlust-Verhältnissen, Torverhältnissen und weiteren interessanten Kennzahlen. 
+
 •	Bereitstellung der Daten in leicht verständlicher Form für den Endnutzer. 
+
 Unterhaltungs- und Bildungswert: 
 •	Sicherstellung, dass das Dashboard nicht nur informativ, sondern auch unterhaltsam ist, um Besucher des FIFA-Museums aktiv einzubinden. 
+
 •	Nutzung der Visualisierungen, um Geschichten rund um Fussballrivalitäten zu erzählen. 
+
 Integration und Veröffentlichung: 
 •	Implementierung des Dashboards im Rahmen der Ausstellung im FIFA-Museum Zürich.
+
 •	Bereitstellung einer stabilen, wartbaren Version für Besucherzugang. 
+
 Evaluation und Benutzerfeedback: 
 •	Durchführung von Tests mit potentiellen Nutzern, um Benutzerfreundlichkeit und Verständnis der Visualisierungen zu überprüfen. 
+
 •	Anpassung des Dashboards basierend auf Feedback vor der finalen Veröffentlichung.
 
 ### Out of Scope
