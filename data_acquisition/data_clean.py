@@ -32,8 +32,6 @@ df_dict = {}
 # Loop through the list, read each CSV, and store it in the dictionary
 for file in csv_files:
     file_path = os.path.join(data_dir, file)
-    
-    # Extract the name without the '.csv' extension to use as the dictionary key
     df_name = file.replace(".csv", "")
     
     try:
@@ -42,4 +40,3 @@ for file in csv_files:
     except FileNotFoundError:
         print(FileNotFoundError)
 
-# Todo
