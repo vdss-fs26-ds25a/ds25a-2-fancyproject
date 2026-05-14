@@ -1,177 +1,205 @@
-# Projektcharta
+#Projektcharta
 
 ## Context and Scope
 
-Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Das Ziel ist die Erstellung eines interaktiven Dashboards, auf welchem die 15 interessantesten Rivalitäten abgebildet werden sollen, mitsamt zusätzlichen Statistiken wie Gewinn/Verlust und Goal-Verhältnisse. Das Dashboard dient hauptsächlich als Unterhaltungswerkzeug und soll im Rahmen eines Projektes mit dem Fifa-Museum in Zürich veröffentlicht werden und den Besuchern zur Verfügung gestellt werden.
+Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Das Ziel ist die Erstellung eines interaktiven Dashboards, das den **Verlauf der Marktwerte von Spitzenclubs im europäischen Fussball im Zeitraum 2010–2025** darstellt. Das Dashboard zeigt Trends, Vergleiche und Entwicklungen der wertvollsten Fussballvereine weltweit. Es dient als Analyse- und Unterhaltungswerkzeug und richtet sich an Fussballfans, Journalisten und Sportanalysten.
 
-Zentrale Fragestellungen:
-•	Was sind die statistischen Verhältnisse zwischen den Rivalen?
-•	Gibt es zwischen Kontinente und Regionen Unterschiede?
+**Zentrale Fragestellungen:**
 
-Erwartete Benefits:
-•	Schneller Überblick über historische Daten der Rivalen
-•	Attraktive und unterhaltsame Darstellung für unterschiedliche Zielgruppen
+- Wie haben sich die Marktwerte der Spitzenclubs zwischen 2010 und 2025 entwickelt?
+- Welche Clubs verzeichneten den grössten absoluten und relativen Anstieg?
+- Gibt es regionale oder ligaspezifische Unterschiede in der Marktwertentwicklung?
+- Welche externen Faktoren (z. B. Transferperioden, Titelgewinne, wirtschaftliche Ereignisse) korrelieren mit Marktwertveränderungen?
 
-Publikationsort:
-•	Das Dashboard wird als Vorzeigedashboard auf einem interaktivem Display im Fifa-Museum in Zürich eingerichtet und publiziert.
+**Erwartete Benefits:**
+
+- Schneller Überblick über historische Marktwertentwicklungen
+- Attraktive und interaktive Darstellung für unterschiedliche Zielgruppen
+- Fundierte Basis für Analysen und Vergleiche zwischen Clubs und Ligen
+
+**Publikationsort:**
+
+Das Dashboard wird als interaktive Webanwendung auf GitHub Pages veröffentlicht und kann optional in Ausstellungskontexte (z. B. FIFA-Museum Zürich) eingebettet werden.
 
 ## Projektziele/Erfolgskriterien
+
 ### Projektziele
 
-Datenanalyse und -aufbereitung: 
-•	Sammlung, Bereinigung und Strukturierung von relevanten Fussballdaten (z. B. Ergebnisse, Tore, Siege, Niederlagen) für die 15 wichtigsten Rivalitäten.
+**Datenanalyse und -aufbereitung:**
 
-•	Identifikation der spannendsten Statistiken und Trends, die für die Visualisierung interessant sind. 
+- Sammlung, Bereinigung und Strukturierung von historischen Marktwertdaten für die Top-50-Fussballvereine weltweit (2010–2025), basierend auf Quellen wie Transfermarkt.de, Forbes und UEFA.
+- Identifikation der relevantesten Kennzahlen: Gesamtmarktwert pro Verein, Veränderungsraten, Kaderwert-Zusammensetzung und Vergleiche zwischen Ligen.
 
-Entwicklung eines interaktiven Dashboards: 
-•	Gestaltung und Implementierung eines nutzerfreundlichen, interaktiven Dashboards zur Darstellung der Rivalitäten. 
+**Entwicklung eines interaktiven Dashboards:**
 
-•	Integration von Visualisierungselementen wie Diagrammen, Tabellen und interaktiven Filtern (z. B. nach Zeitraum, Liga oder Team). 
+- Gestaltung und Implementierung eines nutzerfreundlichen, interaktiven Dashboards zur Darstellung der Marktwertverläufe.
+- Integration von Visualisierungselementen wie Liniendiagrammen, Balkendiagrammen, Heatmaps und interaktiven Filtern (z. B. nach Liga, Land, Zeitraum, Club).
 
-Statistische Analyse und Berechnung relevanter Kennzahlen: 
-•	Berechnung von Gewinn-/Verlust-Verhältnissen, Torverhältnissen und weiteren interessanten Kennzahlen. 
+**Statistische Analyse und Berechnung relevanter Kennzahlen:**
 
-•	Bereitstellung der Daten in leicht verständlicher Form für den Endnutzer. 
+- Berechnung von Wachstumsraten, Rankings und Vergleichskennzahlen zwischen Clubs und Ligen.
+- Bereitstellung der Daten in leicht verständlicher Form für den Endnutzer.
 
-Unterhaltungs- und Bildungswert: 
-•	Sicherstellung, dass das Dashboard nicht nur informativ, sondern auch unterhaltsam ist, um Besucher des FIFA-Museums aktiv einzubinden. 
+**Unterhaltungs- und Bildungswert:**
 
-•	Nutzung der Visualisierungen, um Geschichten rund um Fussballrivalitäten zu erzählen. 
+- Sicherstellung, dass das Dashboard nicht nur informativ, sondern auch unterhaltsam ist und Nutzer aktiv einbindet.
+- Nutzung der Visualisierungen, um Geschichten rund um Marktwertentwicklungen zu erzählen (z. B. Aufstieg von RB Leipzig, Dominanz der Premier League).
 
-Integration und Veröffentlichung: 
-•	Implementierung des Dashboards im Rahmen der Ausstellung im FIFA-Museum Zürich.
+**Integration und Veröffentlichung:**
 
-•	Bereitstellung einer stabilen, wartbaren Version für Besucherzugang. 
+- Implementierung des Dashboards als Webanwendung auf GitHub Pages.
+- Bereitstellung einer stabilen, wartbaren Version für den öffentlichen Zugang.
 
-Evaluation und Benutzerfeedback: 
-•	Durchführung von Tests mit potentiellen Nutzern, um Benutzerfreundlichkeit und Verständnis der Visualisierungen zu überprüfen. 
+**Evaluation und Benutzerfeedback:**
 
-•	Anpassung des Dashboards basierend auf Feedback vor der finalen Veröffentlichung.
+- Durchführung von Tests mit potenziellen Nutzern, um Benutzerfreundlichkeit und Verständnis der Visualisierungen zu überprüfen.
+- Anpassung des Dashboards basierend auf Feedback vor der finalen Veröffentlichung.
 
 ### Out of Scope
-•	Echtzeitdaten (nur historische Daten)
-•	Vorhersagemodelle oder KI-basierte Prognosen
-•	Mobile App (Fokus auf Weblösung)
-•	Integration von nicht verifizierten Datenquellen
+
+- Echtzeitdaten (nur historische Daten 2010–2025)
+- Vorhersagemodelle oder KI-basierte Prognosen
+- Mobile App (Fokus auf Weblösung)
+- Integration von nicht verifizierten Datenquellen
+- Individuelle Spielermarktwerte (Fokus auf Vereinsebene)
 
 ## Stakeholder Analysis
 
-### Primäre Stakeholder:
+### Primäre Stakeholder
 
-•	Fifa-Museum in Zürich (Projektauftraggeber)
-•	Data Analysts / Data Scientists
-•	Fifa-Museum Besucher
+- Projektteam / Auftraggeber (Hochschule / Institution)
+- Data Analysts / Data Scientists
+- Endnutzer: Fussballfans, Journalisten, Sportanalysten
 
-### Sekundäre Stakeholder:
-•	Entwicklerteam (Frontend/Backend)
-•	UX/UI Designer
-•	Datenlieferanten
+### Sekundäre Stakeholder
 
-### Ziele & Beziehungen:
-•	Auftraggeber: strategischer Nutzen, Reichweite
-•	Analysten: tiefergehende Analyse
-•	Nutzer: einfache Exploration
-•	Entwickler & Designer: Umsetzung und Qualität
+- Entwicklerteam (Frontend/Backend)
+- UX/UI Designer
+- Datenlieferanten (Transfermarkt, Forbes, UEFA)
+
+### Ziele & Beziehungen
+
+- **Auftraggeber:** strategischer Nutzen, akademischer Mehrwert
+- **Analysten:** tiefergehende Datenexploration
+- **Nutzer:** einfache, intuitive Exploration der Marktwertdaten
+- **Entwickler & Designer:** technische Umsetzung und visuelle Qualität
 
 ## User Analysis
 
 ### Persona 1: Sportjournalist
-•	Domain Expertise: Hoch
-•	Data Literacy: Mittel bis hoch
-•	Technik: Laptop/Desktop, grosse Bildschirme
-•	Nutzung: Regelmässig
 
+| Merkmal | Ausprägung |
+|---|---|
+| Domain Expertise | Hoch |
+| Data Literacy | Mittel bis hoch |
+| Technik | Laptop/Desktop, grosse Bildschirme |
+| Nutzung | Regelmässig |
 
-#### User Tasks:
-•	Daten analysieren und vergleichen
-•	Berichte erstellen
-•	Trends identifizieren
+**User Tasks:**
 
-#### Pains:
-•	Zeitaufwändige Datensuche
-•	Unübersichtliche Datenquellen
-•	Fehlende visuelle Unterstützung
+- Marktwertentwicklungen analysieren und vergleichen
+- Artikel und Berichte mit Datenbasis erstellen
+- Trends und Ausreisser identifizieren
 
-#### Gains:
-•	Schneller Zugriff auf strukturierte Daten
-•	Visuelle Storytelling-Elemente
-•	Exportierbare Insights
+**Pains:**
+
+- Zeitaufwändige Suche nach strukturierten Marktwertdaten
+- Unübersichtliche oder inkonsistente Datenquellen
+- Fehlende visuelle Unterstützung für Storytelling
+
+**Gains:**
+
+- Schneller Zugriff auf strukturierte, vergleichbare Daten
+- Visuelle Storytelling-Elemente für Publikationen
+- Exportierbare Insights und Diagramme
 
 ### Persona 2: Fussballfan
-•	Domain Expertise: Mittel
-•	Data Literacy: Niedrig bis mittel
-•	Technik: Smartphone / Tablet / Laptop
-•	Nutzung: Gelegentlich
 
-#### User Tasks:
-•	Informationen entdecken
-•	Lieblingsmannschaften vergleichen
-•	Trends verstehen
+| Merkmal | Ausprägung |
+|---|---|
+| Domain Expertise | Mittel |
+| Data Literacy | Niedrig bis mittel |
+| Technik | Smartphone / Tablet / Laptop |
+| Nutzung | Gelegentlich |
 
-#### Pains:
-•	Komplexe Darstellungen
-•	Zu viele Daten ohne Kontext
+**User Tasks:**
 
-#### Gains:
-•	Intuitive Navigation
-•	Visuell ansprechende Darstellung
-•	Interaktive Exploration
+- Entwicklung des Lieblingsclubs entdecken und verfolgen
+- Clubs aus verschiedenen Ligen vergleichen
+- Trends und Meilensteine verstehen
 
+**Pains:**
+
+- Komplexe Darstellungen ohne Kontext
+- Zu viele Daten ohne klare Einordnung
+
+**Gains:**
+
+- Intuitive Navigation und verständliche Visualisierungen
+- Visuell ansprechende, interaktive Darstellung
+- Persönlicher Bezug durch Filterung nach Lieblingsclub
 
 ## Situation Assessment
 
-### Ressourcen:
+### Ressourcen
 
-•	Daten: Historische Fussballdaten (FIFA, Turnierdatenbanken etc.)
+| Kategorie | Details |
+|---|---|
+| Daten | Transfermarkt.de |
+| Personal | Entwickler, Designer, Data Analyst |
+| Tools | Quarto, Python, R (ggplot2, plotly, dplyr) |
+| Infrastruktur | GitHub Pages |
+| Projektdauer | 3–6 Monate |
 
-•	Personal: Entwickler, Designer, Data Analyst
+### Constraints
 
-•	Tools: Quarto, Python, R
+- Datenverfügbarkeit und -konsistenz über den gesamten Zeitraum 2010–2025
+- Unterschiedliche Bewertungsmethoden je nach Datenquelle
+- Performance bei grossen Datensätzen im Browser
+- Responsives Design für verschiedene Endgeräte
 
-•	Infrastruktur: GitHub Webpages
+### Risiken
 
-Zeit:
-•	Geschätzte Projektdauer: 3–6 Monate
-Constraints:
-•	Datenqualität und -verfügbarkeit
-•	Performance bei grossen Datensätzen
-•	Responsives Design
-
-
-### Risiken:
-•	Inkonsistente Daten
-•	Komplexität der Interaktion
-•	Nutzerüberforderung
-
+| Risiko | Beschreibung |
+|---|---|
+| Datenlücken | Inkonsistente oder lückenhafte Daten für einzelne Jahre oder Clubs |
+| Quellenkonflikte | Unterschiedliche Bewertungslogiken zwischen Datenquellen (z. B. Transfermarkt vs. Forbes) |
+| Interaktionskomplexität | Zu viele Optionen könnten einfache Nutzer überfordern |
+| Nutzerüberforderung | Zu viele Filter und Optionen ohne klare Priorisierung |
 
 ## Visualization Concept
 
 ### Product Form
 
 Ein interaktives Dashboard mit:
-•	Weltkarte als zentrale Navigationsinstanz
-•	Ergänzenden Diagrammen und Tabellen
-•	Explorativem Analyseansatz
 
-### Wert:
-•	Kognitiv: Übersicht über globale Muster
-•	Kommunikativ: Klare Struktur für unterschiedliche Zielgruppen
-•	Erlebnis: Interaktive Exploration fördert Engagement
+- Liniendiagrammen als zentrales Element zur Darstellung des Marktwert-Zeitverlaufs
+- Vergleichsansicht für mehrere Clubs gleichzeitig
+- Ergänzende Balkendiagramme und Tabellen
+- Explorativem Analyseansatz mit Drill-down-Möglichkeiten
+
+### Wert
+
+| Dimension | Beschreibung |
+|---|---|
+| Kognitiv | Übersicht über globale und ligaspezifische Muster der Marktwertentwicklung |
+| Kommunikativ | Klare Struktur für unterschiedliche Zielgruppen |
+| Erlebnis | Interaktive Exploration fördert Engagement und persönliche Entdeckung |
 
 ### Visual Encodings
-•	Weltkarte
-•	Daten zu den Rivalen in Form von Balkendiagrammen, Tabellen
 
-### Wert:
-•	Kognitiv: Muster und Trends leicht erkennbar
-•	Kommunikativ: Verständliche Darstellung auch für Laien
-•	Erlebnis: Visuelle Vielfalt steigert Interesse
-Interactivity
-•	Filter (Land, Turnier, Zeitraum)
-•	Drill-down (von Kontinent → Land → Turnier)
-•	Tooltips mit Detailinformationen
-•	Linked Views (Synchronisierung der Visualisierungen)
+- **Zeitreihenlinien:** Marktwert pro Club über Zeit
+- **Balkendiagramme:** Rankings und Vergleiche
+- **Tabellen:** detaillierte Kennzahlen
+
+### Interactivity
+
+- Filter (Liga, Land, Zeitraum, Club)
+- Drill-down (von Liga → Club → Saisondetails)
+- Tooltips mit Detailinformationen (Marktwert, Veränderung, Kontextinfo)
+- Linked Views (Synchronisierung der Visualisierungen beim Filtern)
+- Club-Vergleichsmodus (mehrere Vereine gleichzeitig selektieren)
 
 ## Project Plan
-to do
 
+Der detaillierte Projektplan ist in Bearbeitung und wird in einer späteren Version ergänzt.
