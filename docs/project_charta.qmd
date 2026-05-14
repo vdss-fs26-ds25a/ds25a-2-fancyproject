@@ -1,3 +1,5 @@
+#Projektcharta
+
 ## Context and Scope
 
 Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Das Ziel ist die Erstellung eines interaktiven Dashboards, das den **Verlauf der Marktwerte von Spitzenclubs im europäischen Fussball im Zeitraum 2010–2025** darstellt. Das Dashboard zeigt Trends, Vergleiche und Entwicklungen der wertvollsten Fussballvereine weltweit. Es dient als Analyse- und Unterhaltungswerkzeug und richtet sich an Fussballfans, Journalisten und Sportanalysten.
@@ -143,7 +145,7 @@ Das Dashboard wird als interaktive Webanwendung auf GitHub Pages veröffentlicht
 
 | Kategorie | Details |
 |---|---|
-| Daten | Transfermarkt.de, Forbes Football Valuations, UEFA Club Reports |
+| Daten | Transfermarkt.de |
 | Personal | Entwickler, Designer, Data Analyst |
 | Tools | Quarto, Python, R (ggplot2, plotly, dplyr) |
 | Infrastruktur | GitHub Pages |
@@ -173,7 +175,7 @@ Ein interaktives Dashboard mit:
 
 - Liniendiagrammen als zentrales Element zur Darstellung des Marktwert-Zeitverlaufs
 - Vergleichsansicht für mehrere Clubs gleichzeitig
-- Ergänzenden Balkendiagrammen, Tabellen und Heatmaps
+- Ergänzende Balkendiagramme und Tabellen
 - Explorativem Analyseansatz mit Drill-down-Möglichkeiten
 
 ### Wert
@@ -188,7 +190,6 @@ Ein interaktives Dashboard mit:
 
 - **Zeitreihenlinien:** Marktwert pro Club über Zeit
 - **Balkendiagramme:** Rankings und Vergleiche
-- **Heatmaps:** Veränderungsraten nach Liga/Jahr
 - **Tabellen:** detaillierte Kennzahlen
 
 ### Interactivity
