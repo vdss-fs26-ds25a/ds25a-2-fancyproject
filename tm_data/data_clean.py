@@ -5,7 +5,7 @@ import os
 # data visualization.
 
 START = 2010
-END = 2026
+END = 2025
 
 # Define subfolder with data in WD
 data_dir = "transfermarkt"
