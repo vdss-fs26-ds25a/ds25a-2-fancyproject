@@ -70,39 +70,50 @@ execute:
     });
   }
 
-  /* ---- deck: scroll-snap reveal + side dot navigation ---- */
+  /* ---- deck: delayed-snap + reveal + dot/keyboard navigation ---- */
+  if('scrollRestoration' in history){ try{ history.scrollRestoration='manual'; }catch(e){} }
+  try{ window.scrollTo(0,0); }catch(e){}
+
+  var root=document.documentElement, snapTimer=null;
+  function enableSnap(){ root.classList.add('snap-on'); }
+  function suspendSnap(ms){ root.classList.remove('snap-on'); clearTimeout(snapTimer); snapTimer=setTimeout(enableSnap, ms||900); }
+  function goTo(pg){ suspendSnap(900); pg.scrollIntoView({behavior:'smooth'}); }
+
   function initDeck(){
     if(document.querySelector('.deck-dots')) return;
     var pages=Array.prototype.slice.call(document.querySelectorAll('.page'));
     if(!pages.length) return;
     var nav=document.createElement('div'); nav.className='deck-dots';
     pages.forEach(function(pg,i){
-      var b=document.createElement('button'); b.setAttribute('aria-label','Seite '+(i+1));
-      b.addEventListener('click',function(){ pg.scrollIntoView({behavior:'smooth'}); });
+      var b=document.createElement('button'); b.type='button';
+      b.setAttribute('aria-label','Seite '+(i+1));
+      b.addEventListener('click',function(){ goTo(pg); });
       nav.appendChild(b);
     });
     document.body.appendChild(nav);
-    var dots=nav.children;
+    var dots=nav.children, current=0;
     var io=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if(e.isIntersecting && e.intersectionRatio>=0.5){
+        if(e.isIntersecting && e.intersectionRatio>=0.55){
           e.target.classList.add('in-view');
-          var idx=pages.indexOf(e.target);
-          for(var k=0;k<dots.length;k++){ dots[k].classList.toggle('active', k===idx); }
-          if(window.Plotly){
-            var plots=e.target.querySelectorAll('.js-plotly-plot');
-            for(var j=0;j<plots.length;j++){ try{ Plotly.Plots.resize(plots[j]); }catch(_){} }
-          }
+          current=pages.indexOf(e.target);
+          for(var k=0;k<dots.length;k++){ dots[k].classList.toggle('active', k===current); }
         }
       });
-    },{threshold:[0.5]});
+    },{threshold:[0.55]});
     pages.forEach(function(p){ io.observe(p); });
+    document.addEventListener('keydown', function(ev){
+      if(ev.key==='ArrowDown'||ev.key==='PageDown'){ if(current<pages.length-1){ ev.preventDefault(); goTo(pages[current+1]); } }
+      else if(ev.key==='ArrowUp'||ev.key==='PageUp'){ if(current>0){ ev.preventDefault(); goTo(pages[current-1]); } }
+    });
   }
 
   function boot(){ drawField(); placeSprites(); initDeck(); }
   document.addEventListener('DOMContentLoaded', boot);
-  [400,1000,2200,4500].forEach(function(t){ setTimeout(function(){ drawField(); placeSprites(); initDeck(); }, t); });
-  window.addEventListener('resize', function(){ drawField(); placeSprites(); });
+  window.addEventListener('load', function(){ boot(); setTimeout(enableSnap, 1600); });
+  setTimeout(boot, 600);
+  setTimeout(enableSnap, 3500);            /* fallback if 'load' is delayed */
+  window.addEventListener('resize', function(){ drawField(); placeSprites(); suspendSnap(700); });
 })();
 </script>
 ```

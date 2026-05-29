@@ -31,8 +31,11 @@
 html {
   font-size: 18px;
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;      /* page-by-page snapping */
+  overflow-anchor: none;              /* late-loading charts can't shove the viewport */
 }
+/* snapping is switched on by JS only AFTER charts settle, to avoid the
+   mandatory-snap-vs-reflow trap that pins the page to the bottom */
+html.snap-on { scroll-snap-type: y proximity; }
 body {
   font-family: var(--body);
   font-weight: 400;
@@ -273,7 +276,7 @@ strong { font-weight: 600; color: var(--w); }
    ============================================================ */
 /* tablet / phone width → single column spread, relaxed snap */
 @media (max-width: 900px) {
-  html { scroll-snap-type: y proximity; }
+  html.snap-on { scroll-snap-type: none; }
   .spread { grid-template-columns: 1fr; gap: 1.2rem; }
   .page { min-height: 100vh; padding: 7vh 6vw; }
   .col-chart { order: 2; }
@@ -289,7 +292,7 @@ strong { font-weight: 600; color: var(--w); }
 }
 /* very short → relax mandatory snap so nothing gets trapped */
 @media (max-height: 680px) {
-  html { scroll-snap-type: y proximity; }
+  html.snap-on { scroll-snap-type: none; }
   .page { min-height: 100vh; padding: 5vh 5vw; }
 }
 @media (max-width: 560px) {
