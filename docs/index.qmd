@@ -692,8 +692,8 @@ display(HTML(sec(
      'dominiert eine Farbe überwältigend.'),
     ch(fig),
     hl=('Die Premier League stellt <strong>654</strong> der 2006 wertvollsten Spieler Europas '
-        '(MV ≥ €5M) — mehr als La Liga (316), Serie A (381), Bundesliga (320) und '
-        'Ligue 1 (335) zusammen. Und ihr Median-Marktwert liegt mit '
+        '(MV ≥ €5M). Zum Vergleich: La Liga (316), Serie A (381), Bundesliga (320) und '
+        'Ligue 1 (335). Auch der Median-Marktwert liegt mit '
         '<strong>€17M</strong> weit über dem der Konkurrenz (€10M).'),
     hl_type='red',
     cap='Top 500 Spieler nach aktuellem/letztem Marktwert (Transfermarkt.de)'
