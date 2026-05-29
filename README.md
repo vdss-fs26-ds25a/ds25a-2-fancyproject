@@ -15,8 +15,8 @@ Das Dashboard bietet Einblicke in Marktwerttrends, Transferausgaben und Vergleic
 * **Visualisierung:** Die aufbereiteten Datensätze werden mit Python (`pandas`, `plotly`) innerhalb des Quarto-Frameworks zu interaktiven Visualisierungen verarbeitet.
 * **Deployment:** Das Dashboard wird via GitHub Actions auf GitHub Pages bereitgestellt.
 
-## Anerkennung
-Ein besonderer Dank gilt **[dcaribou](https://github.com/dcaribou)**. Die Modifikation und Integration seines Transfermarkt-Scrapers war die Grundlage für die Realisierung der Daten-Pipeline dieses Projekts.
+## Scraper
+Ein Dank gilt **[dcaribou](https://github.com/dcaribou)**. Die modifizierte Nutzung seines Transfermarkt-Scrapers war die Grundlage für die Datenakquise in diesem Projekt.
 
 ## Dashboard lokal erstellen:
 
@@ -24,20 +24,16 @@ Ein besonderer Dank gilt **[dcaribou](https://github.com/dcaribou)**. Die Modifi
 Stelle sicher, dass [uv](https://github.com/astral-sh/uv) auf deinem System installiert ist.
 
 ### Installation
-1. Repository klonen und in den Ordner 'docs' gehen.
-2. Abhängigkeiten installieren:
+1. Repository klonen und Ordner 'docs' öffnen
+2. Abhängigkeiten installieren und Render (Befehle in Terminal/Powershell ausführen):
    ```bash
    uv sync
    ```
+   ```bash
+   uv run quarto render
+   ```
 
-### Rendering
-Um das Dashboard lokal zu bauen und zu testen, führe den Render-Befehl im Ordner 'docs' aus:
-
-```bash
-uv run quarto render docs
-```
-
-Die generierte Webseite befindet sich anschließend im Verzeichnis `docs/build/`.
+Die Webpage  im .html-Format befindet sich danach im Ordner `docs/build/`.
 
 ## Lizenz
 Weitere Informationen finden sich in der `LICENSE`-Datei.
