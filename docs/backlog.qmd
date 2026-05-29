@@ -354,7 +354,7 @@ warnings.filterwarnings('ignore')
 
 # --- Daten laden ---
 records = []
-for f in glob.glob('*.jsonl'):
+for f in glob.glob('../data/*.jsonl'):
     with open(f) as fh:
         for line in fh:
             line = line.strip()

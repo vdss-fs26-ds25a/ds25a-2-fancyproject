@@ -133,3 +133,10 @@ dmypy.json
 
 /.quarto/
 **/*.quarto_ipynb
+
+# Quarto local build output
+docs/build/
+
+# R/Jupyter History
+.Rhistory
+docs/.Rhistory
