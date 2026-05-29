@@ -13,12 +13,9 @@ website:
     style: "floating"
     search: true
     contents:
-      - index.qmd
-      - project_charta.qmd
-      - data_report.qmd
-      - viz_design_report.qmd
-      - evaluation.qmd
-      - meeting_notes.qmd
+      - report.qmd
+      - backlog.qmd
+
 
 format:
   html:
@@ -29,7 +26,6 @@ format:
 
 number-sections: true
 
-bibliography: refs.bib
 csl: vancouver-brackets.csl
 
 jupyter: python3
