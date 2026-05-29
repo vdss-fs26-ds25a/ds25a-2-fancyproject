@@ -14,15 +14,12 @@ website:
     search: true
     contents:
       - report.qmd
-      - backlog.qmd
-
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
-      
 
 number-sections: true
 
