@@ -1,4 +1,4 @@
-#Projektcharta
+# Projektcharta
 
 ## Context and Scope
 
