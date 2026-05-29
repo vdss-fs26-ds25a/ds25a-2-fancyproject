@@ -2,170 +2,204 @@
 
 ## Context and Scope
 
-Das Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf Fussball. Das Ziel ist die Erstellung eines interaktiven Dashboards, das den **Verlauf der Marktwerte von Spitzenclubs im europäischen Fussball im Zeitraum 2010–2025** darstellt. Das Dashboard zeigt Trends, Vergleiche und Entwicklungen der wertvollsten Fussballvereine weltweit. Es dient als Analyse- und Unterhaltungswerkzeug und richtet sich an Fussballfans, Journalisten und Sportanalysten.
+Dieses Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf den europäischen Spitzenfussball. Ziel ist die Entwicklung eines interaktiven Dashboards zur Visualisierung und Analyse von Marktwerten, Transfersummen und weiteren Geldgeschäften im europäischen Fussball zwischen 2010 und 2025.
 
-**Zentrale Fragestellungen:**
+Das Dashboard bietet Einblicke in Marktwerttrends, Transferausgaben und finanzielle Entwicklungen innerhalb der Top-5-Ligen der UEFA (Premier League, La Liga, Bundesliga, Serie A und Ligue 1). Es dient als Analyse- und Explorationswerkzeug für Sportdaten-Interessierte, Fussballfans und Soccer-Analytics-Spezialisten.
 
-- Wie haben sich die Marktwerte der Spitzenclubs zwischen 2010 und 2025 entwickelt?
-- Welche Clubs verzeichneten den grössten absoluten und relativen Anstieg?
-- Gibt es regionale oder ligaspezifische Unterschiede in der Marktwertentwicklung?
-- Welche externen Faktoren (z. B. Transferperioden, Titelgewinne, wirtschaftliche Ereignisse) korrelieren mit Marktwertveränderungen?
+### Zentrale Fragestellungen
 
-**Erwartete Benefits:**
+* Wie haben sich Marktwerte und Transfersummen im europäischen Spitzenfussball zwischen 2010 und 2025 entwickelt?
+* Welche Clubs und Ligen investierten am meisten in Transfers?
+* Welche Zusammenhänge bestehen zwischen Transferausgaben und Marktwertentwicklungen?
+* Welche Ligen oder Vereine dominieren den europäischen Transfermarkt?
+* Welche Trends und wirtschaftlichen Entwicklungen lassen sich über den Zeitraum erkennen?
 
-- Schneller Überblick über historische Marktwertentwicklungen
-- Attraktive und interaktive Darstellung für unterschiedliche Zielgruppen
-- Fundierte Basis für Analysen und Vergleiche zwischen Clubs und Ligen
+### Erwartete Benefits
 
-**Publikationsort:**
+* Übersichtliche Darstellung komplexer Transfer- und Marktwertdaten
+* Interaktive Exploration von Trends und Entwicklungen
+* Vergleichsmöglichkeiten zwischen Clubs, Ligen und Zeiträumen
+* Unterstützung datenbasierter Analysen im Bereich Fussballökonomie
 
-Das Dashboard wird als interaktive Webanwendung auf GitHub Pages veröffentlicht und kann optional in Ausstellungskontexte (z. B. FIFA-Museum Zürich) eingebettet werden.
+### Publikationsort
 
-## Projektziele/Erfolgskriterien
+Das Dashboard wird als interaktive Webanwendung auf GitHub Pages veröffentlicht und automatisch über GitHub Actions deployed.
+
+---
+
+## Projektziele / Erfolgskriterien
 
 ### Projektziele
 
-**Datenanalyse und -aufbereitung:**
+#### Datenakquise und Datenaufbereitung
 
-- Sammlung, Bereinigung und Strukturierung von historischen Marktwertdaten für die Top-50-Fussballvereine weltweit (2010–2025), basierend auf Quellen wie Transfermarkt.de, Forbes und UEFA.
-- Identifikation der relevantesten Kennzahlen: Gesamtmarktwert pro Verein, Veränderungsraten, Kaderwert-Zusammensetzung und Vergleiche zwischen Ligen.
+* Entwicklung eines automatisierten Scrapers zur Extraktion historischer Marktwert- und Transferdaten von Transfermarkt.de
+* Bereinigung, Strukturierung und Speicherung der Daten für den Zeitraum 2010–2025
+* Erstellung eines konsistenten Datensatzes für Vereine und Ligen der UEFA Top-5-Ligen
 
-**Entwicklung eines interaktiven Dashboards:**
+#### Entwicklung interaktiver Visualisierungen
 
-- Gestaltung und Implementierung eines nutzerfreundlichen, interaktiven Dashboards zur Darstellung der Marktwertverläufe.
-- Integration von Visualisierungselementen wie Liniendiagrammen, Balkendiagrammen, Heatmaps und interaktiven Filtern (z. B. nach Liga, Land, Zeitraum, Club).
+* Implementierung eines interaktiven Dashboards mit Quarto
+* Erstellung von Visualisierungen mit Python, pandas und plotly
+* Integration von Diagrammen zur Analyse von:
 
-**Statistische Analyse und Berechnung relevanter Kennzahlen:**
+  * Marktwertentwicklungen
+  * Transferausgaben
+  * Transferbilanzen
+  * Liga- und Clubvergleichen
 
-- Berechnung von Wachstumsraten, Rankings und Vergleichskennzahlen zwischen Clubs und Ligen.
-- Bereitstellung der Daten in leicht verständlicher Form für den Endnutzer.
+#### Analyse wirtschaftlicher Entwicklungen
 
-**Unterhaltungs- und Bildungswert:**
+* Berechnung relevanter Kennzahlen wie:
 
-- Sicherstellung, dass das Dashboard nicht nur informativ, sondern auch unterhaltsam ist und Nutzer aktiv einbindet.
-- Nutzung der Visualisierungen, um Geschichten rund um Marktwertentwicklungen zu erzählen (z. B. Aufstieg von RB Leipzig, Dominanz der Premier League).
+  * Gesamtmarktwerte
+  * Transferausgaben pro Saison
+  * Nettotransfersalden
+  * Wachstumsraten
+* Untersuchung von Trends und Mustern im europäischen Transfermarkt
 
-**Integration und Veröffentlichung:**
+#### Benutzerfreundlichkeit und Interaktivität
 
-- Implementierung des Dashboards als Webanwendung auf GitHub Pages.
-- Bereitstellung einer stabilen, wartbaren Version für den öffentlichen Zugang.
+* Entwicklung intuitiver Filter- und Vergleichsfunktionen
+* Ermöglichung explorativer Analysen durch interaktive Diagramme und Drill-downs
+* Verständliche Darstellung komplexer Daten für unterschiedliche Zielgruppen
 
-**Evaluation und Benutzerfeedback:**
+#### Deployment und Wartbarkeit
 
-- Durchführung von Tests mit potenziellen Nutzern, um Benutzerfreundlichkeit und Verständnis der Visualisierungen zu überprüfen.
-- Anpassung des Dashboards basierend auf Feedback vor der finalen Veröffentlichung.
+* Automatisiertes Deployment über GitHub Actions
+* Veröffentlichung auf GitHub Pages
+* Wartbare und reproduzierbare Projektstruktur
+
+### Erfolgskriterien
+
+* Erfolgreiche automatische Datenakquise und Datenaufbereitung
+* Korrekte Darstellung historischer Marktwert- und Transferdaten
+* Interaktive und performante Visualisierungen
+* Verständliche und benutzerfreundliche Navigation
+* Erfolgreiche Veröffentlichung des Dashboards auf GitHub Pages
 
 ### Out of Scope
 
-- Echtzeitdaten (nur historische Daten 2010–2025)
-- Vorhersagemodelle oder KI-basierte Prognosen
-- Mobile App (Fokus auf Weblösung)
-- Integration von nicht verifizierten Datenquellen
-- Individuelle Spielermarktwerte (Fokus auf Vereinsebene)
+* Echtzeitdaten und Live-Transfers
+* Vorhersagemodelle oder KI-basierte Transferprognosen
+* Mobile App
+* Daten ausserhalb der UEFA Top-5-Ligen
+* Detaillierte individuelle Spieleranalysen
+
+---
 
 ## Stakeholder Analysis
 
 ### Primäre Stakeholder
 
-- Projektteam / Auftraggeber (Hochschule / Institution)
-- Data Analysts / Data Scientists
-- Endnutzer: Fussballfans, Journalisten, Sportanalysten
+* Projektteam / Hochschule
+* Sportdaten-Interessierte
+* Fussballfans
+* Soccer-Analytics-Spezialisten
 
 ### Sekundäre Stakeholder
 
-- Entwicklerteam (Frontend/Backend)
-- UX/UI Designer
-- Datenlieferanten (Transfermarkt, Forbes, UEFA)
+* Entwicklerteam
+* Datenlieferanten (Transfermarkt.de)
+* Open-Source-Community
 
 ### Ziele & Beziehungen
 
-- **Auftraggeber:** strategischer Nutzen, akademischer Mehrwert
-- **Analysten:** tiefergehende Datenexploration
-- **Nutzer:** einfache, intuitive Exploration der Marktwertdaten
-- **Entwickler & Designer:** technische Umsetzung und visuelle Qualität
+* **Projektteam:** erfolgreiche Umsetzung des Analyseprojekts
+* **Nutzer:** intuitive Exploration wirtschaftlicher Fussballdaten
+* **Entwickler:** stabile und wartbare technische Umsetzung
+* **Dateninteressierte:** fundierte Einblicke in Transfer- und Marktwertentwicklungen
+
+---
 
 ## User Analysis
 
-### Persona 1: Sportjournalist
+### Persona 1: Soccer-Analytics-Enthusiast
 
-| Merkmal | Ausprägung |
-|---|---|
-| Domain Expertise | Hoch |
-| Data Literacy | Mittel bis hoch |
-| Technik | Laptop/Desktop, grosse Bildschirme |
-| Nutzung | Regelmässig |
+| Merkmal          | Ausprägung     |
+| ---------------- | -------------- |
+| Domain Expertise | Hoch           |
+| Data Literacy    | Hoch           |
+| Technik          | Desktop/Laptop |
+| Nutzung          | Regelmässig    |
 
-**User Tasks:**
+#### User Tasks
 
-- Marktwertentwicklungen analysieren und vergleichen
-- Artikel und Berichte mit Datenbasis erstellen
-- Trends und Ausreisser identifizieren
+* Transferausgaben analysieren
+* Marktwertentwicklungen vergleichen
+* Trends zwischen Ligen identifizieren
 
-**Pains:**
+#### Pains
 
-- Zeitaufwändige Suche nach strukturierten Marktwertdaten
-- Unübersichtliche oder inkonsistente Datenquellen
-- Fehlende visuelle Unterstützung für Storytelling
+* Verstreute Datenquellen
+* Fehlende interaktive Vergleichsmöglichkeiten
+* Aufwendige Datenaufbereitung
 
-**Gains:**
+#### Gains
 
-- Schneller Zugriff auf strukturierte, vergleichbare Daten
-- Visuelle Storytelling-Elemente für Publikationen
-- Exportierbare Insights und Diagramme
+* Zentrale Plattform für Fussballfinanzdaten
+* Interaktive Analysen und Filter
+* Schneller Zugriff auf historische Entwicklungen
+
+---
 
 ### Persona 2: Fussballfan
 
-| Merkmal | Ausprägung |
-|---|---|
-| Domain Expertise | Mittel |
-| Data Literacy | Niedrig bis mittel |
-| Technik | Smartphone / Tablet / Laptop |
-| Nutzung | Gelegentlich |
+| Merkmal          | Ausprägung          |
+| ---------------- | ------------------- |
+| Domain Expertise | Mittel              |
+| Data Literacy    | Niedrig bis mittel  |
+| Technik          | Smartphone / Laptop |
+| Nutzung          | Gelegentlich        |
 
-**User Tasks:**
+#### User Tasks
 
-- Entwicklung des Lieblingsclubs entdecken und verfolgen
-- Clubs aus verschiedenen Ligen vergleichen
-- Trends und Meilensteine verstehen
+* Lieblingsclub analysieren
+* Transferaktivitäten vergleichen
+* Entwicklungen einzelner Ligen entdecken
 
-**Pains:**
+#### Pains
 
-- Komplexe Darstellungen ohne Kontext
-- Zu viele Daten ohne klare Einordnung
+* Komplexe Finanzdaten schwer verständlich
+* Fehlender Überblick über langfristige Entwicklungen
 
-**Gains:**
+#### Gains
 
-- Intuitive Navigation und verständliche Visualisierungen
-- Visuell ansprechende, interaktive Darstellung
-- Persönlicher Bezug durch Filterung nach Lieblingsclub
+* Einfache und visuell ansprechende Darstellung
+* Interaktive Exploration
+* Vergleichsmöglichkeiten zwischen Clubs und Ligen
+
+---
 
 ## Situation Assessment
 
 ### Ressourcen
 
-| Kategorie | Details |
-|---|---|
-| Daten | Transfermarkt.de |
-| Personal | Entwickler, Designer, Data Analyst |
-| Tools | Quarto, Python, R (ggplot2, plotly, dplyr) |
-| Infrastruktur | GitHub Pages |
-| Projektdauer | 3–6 Monate |
+| Kategorie     | Details                        |
+| ------------- | ------------------------------ |
+| Daten         | Transfermarkt.de               |
+| Technologien  | Python, pandas, plotly, Quarto |
+| Infrastruktur | GitHub Actions, GitHub Pages   |
+| Personal      | Entwickler, Data Analysts      |
+| Projektdauer  | 3–6 Monate                     |
 
 ### Constraints
 
-- Datenverfügbarkeit und -konsistenz über den gesamten Zeitraum 2010–2025
-- Unterschiedliche Bewertungsmethoden je nach Datenquelle
-- Performance bei grossen Datensätzen im Browser
-- Responsives Design für verschiedene Endgeräte
+* Datenqualität und Konsistenz historischer Transferdaten
+* Änderungen der Webseitenstruktur von Transfermarkt.de
+* Browser-Performance bei grossen Datensätzen
+* Begrenzte Datenverfügbarkeit einzelner Saisons
 
 ### Risiken
 
-| Risiko | Beschreibung |
-|---|---|
-| Datenlücken | Inkonsistente oder lückenhafte Daten für einzelne Jahre oder Clubs |
-| Quellenkonflikte | Unterschiedliche Bewertungslogiken zwischen Datenquellen (z. B. Transfermarkt vs. Forbes) |
-| Interaktionskomplexität | Zu viele Optionen könnten einfache Nutzer überfordern |
-| Nutzerüberforderung | Zu viele Filter und Optionen ohne klare Priorisierung |
+| Risiko              | Beschreibung                                                      |
+| ------------------- | ----------------------------------------------------------------- |
+| Scraper-Ausfälle    | Änderungen an Transfermarkt.de können den Scraper beeinträchtigen |
+| Datenlücken         | Fehlende oder inkonsistente historische Daten                     |
+| Performanceprobleme | Grosse Datensätze können Ladezeiten erhöhen                       |
+| Komplexität         | Zu viele Interaktionsmöglichkeiten könnten Nutzer überfordern     |
+
+---
 
 ## Visualization Concept
 
@@ -173,33 +207,63 @@ Das Dashboard wird als interaktive Webanwendung auf GitHub Pages veröffentlicht
 
 Ein interaktives Dashboard mit:
 
-- Liniendiagrammen als zentrales Element zur Darstellung des Marktwert-Zeitverlaufs
-- Vergleichsansicht für mehrere Clubs gleichzeitig
-- Ergänzende Balkendiagramme und Tabellen
-- Explorativem Analyseansatz mit Drill-down-Möglichkeiten
+* Zeitreihenanalysen von Marktwerten und Transfersummen
+* Vergleichsansichten zwischen Clubs und Ligen
+* Balkendiagrammen, Liniendiagrammen und Tabellen
+* Interaktiven Filtern und Drill-down-Funktionen
 
 ### Wert
 
-| Dimension | Beschreibung |
-|---|---|
-| Kognitiv | Übersicht über globale und ligaspezifische Muster der Marktwertentwicklung |
-| Kommunikativ | Klare Struktur für unterschiedliche Zielgruppen |
-| Erlebnis | Interaktive Exploration fördert Engagement und persönliche Entdeckung |
+| Dimension    | Beschreibung                                                  |
+| ------------ | ------------------------------------------------------------- |
+| Kognitiv     | Verständnis wirtschaftlicher Entwicklungen im Spitzenfussball |
+| Kommunikativ | Vergleichbare Darstellung komplexer Finanzdaten               |
+| Erlebnis     | Interaktive Exploration und Datenentdeckung                   |
 
 ### Visual Encodings
 
-- **Zeitreihenlinien:** Marktwert pro Club über Zeit
-- **Balkendiagramme:** Rankings und Vergleiche
-- **Tabellen:** detaillierte Kennzahlen
+* **Liniendiagramme:** Marktwert- und Transferentwicklung über Zeit
+* **Balkendiagramme:** Rankings und Liga-Vergleiche
+* **Tabellen:** Detaildaten und Kennzahlen
+* **Heatmaps:** Transferaktivität und Ausgabenmuster
 
 ### Interactivity
 
-- Filter (Liga, Land, Zeitraum, Club)
-- Drill-down (von Liga → Club → Saisondetails)
-- Tooltips mit Detailinformationen (Marktwert, Veränderung, Kontextinfo)
-- Linked Views (Synchronisierung der Visualisierungen beim Filtern)
-- Club-Vergleichsmodus (mehrere Vereine gleichzeitig selektieren)
+* Filter nach Liga, Club und Zeitraum
+* Drill-down von Liga → Club → Saison
+* Tooltips mit Zusatzinformationen
+* Vergleichsansichten mehrerer Clubs oder Ligen
+* Dynamische Aktualisierung der Visualisierungen
+
+---
+
+## Daten & Methodik
+
+### Datenakquise
+
+Die Marktwert- und Transferdaten werden mittels eines automatisierten Scrapers direkt von Transfermarkt.de extrahiert. Dabei werden historische Daten für den Zeitraum 2010–2025 gesammelt und strukturiert gespeichert.
+
+### Datenverarbeitung
+
+Die Daten werden mit Python und pandas bereinigt, transformiert und analysiert. Anschliessend werden die Datensätze für die Visualisierung vorbereitet.
+
+### Visualisierung
+
+Die Visualisierungen werden mit plotly innerhalb des Quarto-Frameworks umgesetzt. Dadurch entstehen interaktive Diagramme und Dashboards mit explorativen Funktionen.
+
+### Deployment
+
+Das Dashboard wird automatisiert mittels GitHub Actions auf GitHub Pages veröffentlicht.
+
+---
 
 ## Project Plan
 
-Der detaillierte Projektplan ist in Bearbeitung und wird in einer späteren Version ergänzt.
+Der detaillierte Projektplan wird in einer späteren Version ergänzt und umfasst:
+
+* Datenakquise und Scraper-Entwicklung
+* Datenbereinigung und Analyse
+* Entwicklung der Visualisierungen
+* Dashboard-Implementierung
+* Testing und Optimierung
+* Deployment und Dokumentation
