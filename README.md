@@ -1,7 +1,9 @@
 # VDSS Team 2: Marktwerte & Ligadaten von Transfermarkt.de
 # Das grosse Geld im Europäischen Fussball
 
-[![Dashboard](https://img.shields.io/badge/Status-Live_Dashboard-brightgreen?style=for-the-badge&logo=quarto)](https://vdss-fs26-ds25a.github.io/ds25a-2-fancyproject)
+[![Action](https://img.shields.io/badge/zum_Dashboard-blue?style=for-the-badge&logo=quarto)](https://vdss-fs26-ds25a.github.io/ds25a-2-fancyproject) [![Quarto](https://img.shields.io/badge/Quarto-000000?style=flat&logo=quarto&logoColor=white)](https://quarto.org)
+[![Jupyter](https://img.shields.io/badge/Jupyter-f37626?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org)
+[![uv](https://img.shields.io/badge/uv-deed00?style=flat&logo=uv&logoColor=black)](https://astral.sh/uv)
 
 ## Projektbeschreibung
 Dieses Projekt umfasst Visualisierungen und Analysen von Marktwerten, Transfersummen und weiteren Geldgeschäften im europäischen Spitzenfussball für den Zeitraum 2010–2025. 
