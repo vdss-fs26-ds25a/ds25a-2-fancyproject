@@ -1,0 +1,1160 @@
+---
+format:
+  html:
+    self-contained: true
+    toc: false
+    page-layout: full
+    theme: none
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sa: #4a8e32;          /* Rasenstreifen hell  */
+  --sb: #2d6b1e;          /* Rasenstreifen dunkel */
+  --w:  #ffffff;
+  --w88: rgba(255,255,255,0.88);
+  --w72: rgba(255,255,255,0.72);
+  --w50: rgba(255,255,255,0.50);
+  --w28: rgba(255,255,255,0.28);
+  --red:  #e05040;
+  --gold: #d4a830;
+  --fm:   rgba(255,255,255,0.52);  /* Feldmarkierungs-Farbe */
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+/* ── DER GESAMTE HINTERGRUND: scrollende Rasenstreifen ── */
+body {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  color: var(--w);
+  background: repeating-linear-gradient(
+    180deg,
+    var(--sa) 0px,   var(--sa) 80px,
+    var(--sb) 80px,  var(--sb) 160px
+  );
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Quarto wrapper: transparent lassen */
+#quarto-content,
+main.content,
+.page-layout-full .content {
+  padding: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* Quarto-Titelblock ausblenden */
+#title-block-header,
+.quarto-title-block,
+.quarto-title-meta { display: none !important; }
+
+h1, h2, h3, h4 {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  line-height: 1.18;
+  color: var(--w);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.50);
+}
+
+p { margin-bottom: 1.1rem; }
+
+code {
+  background: rgba(255,255,255,0.13);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+  font-size: 0.88em;
+}
+
+/* ============================================================
+   SPIELFELD-SVG – absolut, gesamte Dokumenthöhe, scrollend
+   Proportionen: 68 m × 105 m (Breite × Länge)
+   ============================================================ */
+body { position: relative; }
+
+#field-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Inhaltselemente explizit über das Feld-SVG */
+.hero, .section-wrap, .field-line, .page-footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 96vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 32px 100px;
+}
+
+.hero-content { max-width: 840px; }
+
+.hero-eyebrow {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--w50);
+  margin-bottom: 1.4rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 5.5vw, 4.4rem);
+  color: var(--w);
+  margin-bottom: 1rem;
+  font-style: italic;
+  text-shadow: 0 2px 28px rgba(0,0,0,0.60), 0 1px 0 rgba(0,0,0,0.25);
+  letter-spacing: -0.01em;
+}
+
+.hero-subtitle {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: clamp(0.95rem, 2vw, 1.18rem);
+  color: var(--w72);
+  max-width: 580px;
+  margin: 0 auto 2.8rem;
+  font-weight: 300;
+  line-height: 1.65;
+  text-shadow: 0 1px 14px rgba(0,0,0,0.45);
+}
+
+.kpi-row {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.kpi-card {
+  background: transparent;
+  border: 1px solid var(--w28);
+  border-radius: 3px;
+  padding: 1.3rem 1.8rem;
+  min-width: 150px;
+  text-align: center;
+}
+
+.kpi-card.accent { border-color: rgba(212,168,48,0.6); }
+
+.kpi-number {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 2.1rem;
+  font-weight: bold;
+  color: var(--w);
+  line-height: 1;
+  display: block;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.45);
+}
+
+.kpi-number.gold { color: var(--gold); }
+
+.kpi-label {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--w50);
+  margin-top: 0.45rem;
+  display: block;
+}
+
+.hero-lead {
+  font-size: 1.02rem;
+  color: var(--w72);
+  max-width: 660px;
+  margin: 0 auto;
+  padding-top: 0.6rem;
+  line-height: 1.8;
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-weight: 300;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.40);
+}
+
+/* ============================================================
+   SECTION SYSTEM — alle transparent
+   ============================================================ */
+.section-wrap {
+  width: 100%;
+  position: relative;
+  background: transparent;
+}
+
+
+.section {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 80px 44px;
+}
+
+.section-label {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--w50);
+  margin-bottom: 0.7rem;
+}
+
+.section h2 {
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  margin-bottom: 1.6rem;
+}
+
+.story-text {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 1.03rem;
+  line-height: 1.82;
+  color: var(--w88);
+  max-width: 700px;
+  margin-bottom: 1.4rem;
+  font-weight: 300;
+}
+
+/* Highlight-Box: kein Hintergrund, nur weisser Balken links */
+.highlight-box {
+  background: transparent;
+  border-left: 4px solid var(--w50);
+  padding: 1.1rem 1.5rem;
+  margin: 1.8rem 0;
+}
+
+.highlight-box.red  { border-left-color: var(--red);  }
+.highlight-box.gold { border-left-color: var(--gold); }
+
+.highlight-box p {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.92rem;
+  color: var(--w88);
+  margin: 0;
+  line-height: 1.65;
+}
+
+.highlight-box strong { color: var(--w); }
+
+.chart-wrap {
+  margin: 2.4rem 0 0.6rem;
+  background: rgba(0,0,0,0.32);
+  border-radius: 6px;
+  padding: 10px 10px 4px;
+}
+
+.chart-caption {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.78rem;
+  color: var(--w50);
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  margin: 2rem 0;
+}
+
+
+/* Methodik */
+.methodik-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2.4rem;
+}
+
+.methodik-item {
+  border-top: 2px solid var(--w28);
+  padding-top: 0.9rem;
+}
+
+.methodik-item h4 {
+  font-size: 0.88rem;
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--w);
+  text-shadow: none;
+}
+
+.methodik-item p {
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.83rem;
+  color: var(--w72);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Plotly */
+.cell-output-display { margin: 0; }
+.plotly { overflow: visible !important; }
+
+/* Footer */
+.page-footer {
+  background: transparent;
+  border-top: 1px solid var(--w28);
+  color: var(--w50);
+  text-align: center;
+  padding: 2.2rem;
+  font-family: 'Aptos Light', 'Aptos', 'Segoe UI Light', sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 720px) {
+  .two-col { grid-template-columns: 1fr; }
+  .section { padding: 52px 22px; }
+  .hero { padding: 60px 22px 80px; }
+  .kpi-card { min-width: 120px; padding: 1rem 1.2rem; }
+  .kpi-number { font-size: 1.7rem; }
+}
+</style>
+```
+
+```{python}
+#| include: false
+import json, glob, warnings
+import pandas as pd
+import numpy as np
+import plotly.graph_objects as go
+import plotly.express as px
+from plotly.subplots import make_subplots
+
+warnings.filterwarnings('ignore')
+
+# --- Daten laden ---
+records = []
+for f in glob.glob('*.jsonl'):
+    with open(f) as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                records.append(json.loads(line))
+
+df = pd.DataFrame(records)
+df['league'] = df['parent'].apply(
+    lambda x: x['href'].split('/wettbewerb/')[1] if 'wettbewerb' in x['href'] else 'UNK'
+)
+df['league_name'] = df['league'].map({
+    'GB1': 'Premier League',
+    'ES1': 'La Liga',
+    'L1':  'Bundesliga',
+    'IT1': 'Serie A',
+    'FR1': 'Ligue 1'
+})
+df['squad_size']   = pd.to_numeric(df['squad_size'], errors='coerce')
+df['average_age']  = pd.to_numeric(df['average_age'], errors='coerce')
+df['foreigners_number'] = pd.to_numeric(df['foreigners_number'], errors='coerce')
+
+# --- Farben ---
+LEAGUE_COLORS = {
+    'GB1': '#04f5ff',   # Premier League – Blau
+    'ES1': '#ffffff',   # La Liga – Weiss
+    'L1':  '#e90052',   # Bundesliga – Rot
+    'IT1': '#38003c',   # Serie A – Violett
+    'FR1': '#00ff85',   # Ligue 1 – Grün
+}
+LEAGUE_ORDER = ['GB1','L1','ES1','FR1','IT1']
+
+# --- Plotly Theme: weiss auf Rasengrün ---
+def theme(fig, height=420, show_legend=True):
+    fig.update_layout(
+        height=height,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(family='Aptos Light, Aptos, Segoe UI Light, sans-serif', size=11.5,
+                  color='rgba(255,255,255,0.88)'),
+        xaxis=dict(
+            showgrid=False,
+            linecolor='rgba(255,255,255,0.28)',
+            linewidth=1,
+            tickfont=dict(size=10.5, color='rgba(255,255,255,0.75)'),
+            title_font=dict(size=11, color='rgba(255,255,255,0.65)')
+        ),
+        yaxis=dict(
+            gridcolor='rgba(255,255,255,0.12)',
+            linecolor='rgba(0,0,0,0)',
+            tickfont=dict(size=10.5, color='rgba(255,255,255,0.75)'),
+            title_font=dict(size=11, color='rgba(255,255,255,0.65)')
+        ),
+        legend=dict(
+            bgcolor='rgba(0,0,0,0.30)',
+            bordercolor='rgba(255,255,255,0.18)',
+            borderwidth=1,
+            font=dict(size=10.5, color='rgba(255,255,255,0.88)'),
+            visible=show_legend
+        ),
+        margin=dict(l=60, r=24, t=28, b=48),
+        hovermode='x unified',
+        hoverlabel=dict(
+            bgcolor='rgba(0,0,0,0.75)',
+            bordercolor='rgba(255,255,255,0.2)',
+            font=dict(color='white', size=11)
+        )
+    )
+    return fig
+
+# --- Hero KPIs ---
+mv_2010 = df[df.season==2010]['total_market_value'].sum() / 1e9
+mv_2024 = df[df.season==2024]['total_market_value'].sum() / 1e9
+wachstum = int((mv_2024 - mv_2010) / mv_2010 * 100)
+total_transfers = df['transfer_spendings'].sum() / 1e9
+top_club = df.groupby('name')['transfer_spendings'].sum().idxmax()
+top_spend = df.groupby('name')['transfer_spendings'].sum().max() / 1e9
+```
+
+```{=html}
+<!--
+  Spielfeld-SVG: wird per JS auf die volle Dokumenthöhe skaliert.
+  Oben = Anfang des Feldes, Mitte = Mittellinie (zum Scrollen),
+  Unten = Ende des Feldes. Strafräume oben und unten proportional.
+-->
+<svg id="field-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+
+<script>
+(function () {
+  /* ── Spielfeld zeichnen ────────────────────────────────────── */
+  function drawField() {
+    var svg = document.getElementById('field-svg');
+    if (!svg) return;
+
+    var W = document.documentElement.clientWidth  || document.body.clientWidth;
+    var H = document.body.scrollHeight;
+    if (H < 200) return; // noch nicht bereit
+
+    svg.setAttribute('width',  W);
+    svg.setAttribute('height', H);
+    svg.style.height = H + 'px';
+
+    var pad = 32;           // Abstand Aussenrand → Seitenlinie
+
+    /* Spielfeld-Rechteck */
+    var fx = pad,  fy = pad;
+    var fw = W - 2 * pad;
+    var fh = H - 2 * pad;
+
+    /* Strafraum: 40.32 m breit (59.3 % der Feldbreite),
+                  Höhe = 4 Rasenstreifen = 4 × 80 px = 320 px fest  */
+    var paW = fw * 0.593;
+    var paH = 4 * 80;            // 320 px – unabhängig von Dokumenthöhe
+    var paX = fx + (fw - paW) / 2;
+
+    /* Fünfmeterraum: 18.32 m breit (45.4 % von paW), 5.5 m tief (33.3 % von paH) */
+    var gaW = paW * 0.454;
+    var gaH = paH * 0.333;
+    var gaX = fx + (fw - gaW) / 2;
+
+    /* Elfmeterpunkt: 11 m von Torlinie = 66.7 % von paH */
+    var spotDist = paH * 0.667;
+
+    /* Eckkreis-Radius: 1 m ≈ fw / 68 */
+    var cornerR = Math.max(16, Math.round(fw / 68));
+
+    /* Mittelkreis-Radius ≈ 9.15 m → 13.5 % der Feldbreite */
+    var cr = Math.round(fw * 0.135);
+    cr = Math.max(80, Math.min(cr, 240));
+
+    /* Mittellinien-Y */
+    var my = fy + fh / 2;
+    var mx = fx + fw / 2;
+
+    var col = 'rgba(255,255,255,0.52)';
+    var lw  = 3.5;   // Rahmen
+    var lw2 = 2.5;   // Innenlinien
+
+    svg.innerHTML =
+      /* Rahmen (Tor- + Seitenlinien) */
+      '<rect x="' + fx + '" y="' + fy + '" width="' + fw + '" height="' + fh + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw + '" stroke-linejoin="miter"/>' +
+
+      /* Strafraum oben */
+      '<rect x="' + paX + '" y="' + fy + '" width="' + paW + '" height="' + paH + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Fünfmeterraum oben */
+      '<rect x="' + gaX + '" y="' + fy + '" width="' + gaW + '" height="' + gaH + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Elfmeterpunkt oben */
+      '<circle cx="' + mx + '" cy="' + (fy + spotDist) + '" r="4" fill="' + col + '"/>' +
+
+      /* Strafraum unten */
+      '<rect x="' + paX + '" y="' + (fy + fh - paH) + '" width="' + paW + '" height="' + paH + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Fünfmeterraum unten */
+      '<rect x="' + gaX + '" y="' + (fy + fh - gaH) + '" width="' + gaW + '" height="' + gaH + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Elfmeterpunkt unten */
+      '<circle cx="' + mx + '" cy="' + (fy + fh - spotDist) + '" r="4" fill="' + col + '"/>' +
+
+      /* Mittellinie */
+      '<line x1="' + fx + '" y1="' + my + '" x2="' + (fx + fw) + '" y2="' + my + '"' +
+        ' stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Mittelkreis */
+      '<circle cx="' + mx + '" cy="' + my + '" r="' + cr + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Mittelpunkt */
+      '<circle cx="' + mx + '" cy="' + my + '" r="5" fill="' + col + '"/>' +
+
+      /* Eckkreise – Viertelkreise an allen vier Ecken
+         Zentrum jeweils am Eckpunkt selbst, Bogen zeigt ins Feld  */
+      /* Oben links:   M (fx+r,fy) → (fx,fy+r)  sweep=1 → Zentrum (fx,fy) */
+      '<path d="M ' + (fx + cornerR) + ' ' + fy + ' A ' + cornerR + ' ' + cornerR + ' 0 0 1 ' + fx + ' ' + (fy + cornerR) + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Oben rechts:  M (fx+fw-r,fy) → (fx+fw,fy+r)  sweep=0 → Zentrum (fx+fw,fy) */
+      '<path d="M ' + (fx + fw - cornerR) + ' ' + fy + ' A ' + cornerR + ' ' + cornerR + ' 0 0 0 ' + (fx + fw) + ' ' + (fy + cornerR) + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Unten links:  M (fx,fy+fh-r) → (fx+r,fy+fh)  sweep=1 → Zentrum (fx,fy+fh) */
+      '<path d="M ' + fx + ' ' + (fy + fh - cornerR) + ' A ' + cornerR + ' ' + cornerR + ' 0 0 1 ' + (fx + cornerR) + ' ' + (fy + fh) + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>' +
+
+      /* Unten rechts: M (fx+fw,fy+fh-r) → (fx+fw-r,fy+fh)  sweep=0 → Zentrum (fx+fw,fy+fh) */
+      '<path d="M ' + (fx + fw) + ' ' + (fy + fh - cornerR) + ' A ' + cornerR + ' ' + cornerR + ' 0 0 0 ' + (fx + fw - cornerR) + ' ' + (fy + fh) + '"' +
+        ' fill="none" stroke="' + col + '" stroke-width="' + lw2 + '"/>';
+  }
+
+  /* Mehrfach aufrufen – Plotly-Charts brauchen Zeit zum Rendern */
+  document.addEventListener('DOMContentLoaded', drawField);
+  [300, 900, 2000, 4500].forEach(function(t){ setTimeout(drawField, t); });
+  window.addEventListener('resize', drawField);
+})();
+</script>
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  HERO                                  ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{=html}
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Datenjournalismus · Europäischer Fussball · 2010 – 2024</div>
+    <h1>Das grosse Geld<br>im europäischen Fussball</h1>
+    <p class="hero-subtitle">
+      Fünf Ligen. Fünfzehn Spielzeiten. Eine wachsende Kluft zwischen jenen Clubs,
+      die den Markt gestalten – und allen anderen.
+    </p>
+```
+
+```{python}
+from IPython.display import HTML, display
+display(HTML(f'''
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <span class="kpi-number">€ {mv_2024:.0f} Mrd.</span>
+        <span class="kpi-label">Gesamtmarktwert 2024</span>
+      </div>
+      <div class="kpi-card accent">
+        <span class="kpi-number gold">+{wachstum} %</span>
+        <span class="kpi-label">Wachstum seit 2010</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-number">€ {total_transfers:.0f} Mrd.</span>
+        <span class="kpi-label">Transferausgaben 2010–2024</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-number">Chelsea FC</span>
+        <span class="kpi-label">Grösster Transferausgeber</span>
+      </div>
+    </div>
+
+    <p class="hero-lead">
+      Seit 2010 hat sich der Gesamtmarktwert der fünf grossen europäischen Ligen
+      von rund € {mv_2010:.0f} Mrd. auf € {mv_2024:.0f} Mrd. mehr als verdoppelt.
+      Gleichzeitig flossen über € {total_transfers:.0f} Mrd. in Transfers –
+      ein System, das wächst, aber dessen Früchte ungleich verteilt bleiben.
+    </p>
+'''))
+```
+
+```{=html}
+  </div><!-- .hero-content -->
+</section>
+
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  LIGA-STRIP                            ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{python}
+import os, base64
+from IPython.display import HTML, display
+
+# Logos aus lokalem Ordner laden – PNG oder SVG, egal welche Grösse.
+# Quarto setzt das CWD auf den Ordner der .qmd-Datei, daher reicht 'logos/'.
+_DIR = 'logos'
+_FILES = {
+    'GB1': ['pl.svg',         'pl.png'],
+    'ES1': ['laliga.svg',     'laliga.png'],
+    'L1':  ['bundesliga.svg', 'bundesliga.png'],
+    'IT1': ['seriea.svg',     'seriea.png'],
+    'FR1': ['ligue1.svg',     'ligue1.png'],
+}
+
+def _load(key):
+    for fname in _FILES.get(key, []):
+        path = os.path.join(_DIR, fname)
+        # Datei muss existieren UND nicht leer sein
+        if os.path.exists(path) and os.path.getsize(path) > 0:
+            ext  = fname.rsplit('.', 1)[-1].lower()
+            mime = 'image/svg+xml' if ext == 'svg' else 'image/png'
+            with open(path, 'rb') as f:
+                return f'data:{mime};base64,' + base64.b64encode(f.read()).decode()
+    return None
+
+_INFO = [
+    ('GB1', 'Premier League', 'England',     '#04f5ff', '#08090a'),  # blau
+    ('L1',  'Bundesliga',     'Deutschland',  '#e90052', '#ffffff'),  # rot
+    ('ES1', 'La Liga',        'Spanien',      '#ffffff', '#08090a'),  # weiss
+    ('FR1', 'Ligue 1',        'Frankreich',   '#00ff85', '#08090a'),  # grün
+    ('IT1', 'Serie A',        'Italien',      '#38003c', '#ffffff'),  # violett
+]
+
+cols = []
+for key, name, country, bg, fg in _INFO:
+    src = _load(key)
+    img_tag = (
+        f'<img src="{src}" alt="{name}" style="max-width:140px;max-height:90px;'
+        f'object-fit:contain;display:block;">'
+        if src else ''
+    )
+    cols.append(f'''
+<div style="flex:1;background:{bg};display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:3.2rem 1.2rem 2.8rem;gap:1.1rem;
+  border-right:1px solid rgba(0,0,0,0.10);">
+  {img_tag}
+  <div style="text-align:center;">
+    <div style="font-family:\'Aptos Light\',\'Aptos\',\'Segoe UI Light\',sans-serif;
+      font-size:0.70rem;font-weight:700;letter-spacing:0.18em;
+      text-transform:uppercase;color:{fg};">{name}</div>
+    <div style="font-family:\'Aptos Light\',\'Aptos\',\'Segoe UI Light\',sans-serif;
+      font-size:0.60rem;letter-spacing:0.12em;text-transform:uppercase;
+      color:{fg};opacity:0.55;margin-top:0.25rem;">{country}</div>
+  </div>
+</div>''')
+
+# margin: 0 52px → etwas Abstand zur weissen Seitenlinie (pad=32px)
+display(HTML(
+    '<div style="position:relative;z-index:2;display:flex;'
+    'margin:0 52px;box-shadow:0 4px 24px rgba(0,0,0,0.32);">'
+    + ''.join(cols) +
+    '</div>'
+))
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SECTION 1: TRANSFERMARKT              ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{=html}
+<div class="section-wrap bg-light">
+  <div class="section">
+    <div class="section-label">Abschnitt 1</div>
+    <h2>Der Transfermarkt:<br>Wachstum ohne Pause</h2>
+    <p class="story-text">
+      Kein Sommer ohne Rekord. Die Transferausgaben der fünf grossen Ligen –
+      Premier League, La Liga, Bundesliga, Serie A und Ligue 1 – haben sich
+      zwischen 2010 und 2019 fast vervierfacht. Nur die Corona-Pause 2020/21
+      unterbrach den Aufwärtstrend kurz. Seit 2022 fliesst das Geld wieder
+      so stark wie nie zuvor.
+    </p>
+    <p class="story-text">
+      Die Premier League dominiert die Ausgaben in jedem einzelnen Jahr.
+      Ihr finanzieller Vorsprung gegenüber den kontinentalen Konkurrenten
+      ist seit der TV-Geldexplosion Mitte der 2010er-Jahre strukturell verankert.
+    </p>
+    <div class="highlight-box">
+      <p><strong>2024:</strong> Die fünf Topligen gaben zusammen rund <strong>€ 6,6 Mrd.</strong>
+      für Transfers aus. Mehr als in jedem Jahr vor 2017.</p>
+    </div>
+    <div class="chart-wrap">
+```
+
+```{python}
+# Chart 1: Transferausgaben nach Liga und Saison
+by_league_season = (
+    df.groupby(['season','league','league_name'])['transfer_spendings']
+    .sum().reset_index()
+)
+by_league_season['spend_m'] = by_league_season['transfer_spendings'] / 1e6
+
+fig1 = go.Figure()
+for lg in LEAGUE_ORDER:
+    d = by_league_season[by_league_season.league == lg]
+    name = d['league_name'].iloc[0] if len(d) > 0 else lg
+    fig1.add_trace(go.Scatter(
+        x=d['season'], y=d['spend_m'],
+        name=name,
+        mode='lines+markers',
+        line=dict(color=LEAGUE_COLORS[lg], width=2.5),
+        marker=dict(size=5.5, color=LEAGUE_COLORS[lg]),
+        hovertemplate=f'<b>{name}</b><br>%{{x}}: € %{{y:.0f}} Mio.<extra></extra>'
+    ))
+
+theme(fig1, height=400)
+fig1.update_layout(
+    yaxis_title='Transferausgaben (Mio. €)',
+    xaxis=dict(tickmode='linear', dtick=2, showgrid=False,
+               linecolor='rgba(255,255,255,0.28)', linewidth=1)
+)
+fig1.show()
+```
+
+```{=html}
+    </div>
+    <p class="chart-caption">Transferausgaben pro Saison und Liga, in Mio. €. Quelle: Transfermarkt.</p>
+
+    <p class="story-text" style="margin-top:2.4rem;">
+      Auf Clubebene ist die Konzentration noch deutlicher. Weniger als zwanzig
+      Clubs verantworten den Löwenanteil aller Ausgaben. Chelsea FC führt die
+      Gesamtbilanz seit 2010 an – mit über € 3&nbsp;Mrd. Transferausgaben
+      in 15 Jahren.
+    </p>
+    <div class="chart-wrap">
+```
+
+```{python}
+# Chart 2: Top 12 Clubs nach Gesamtausgaben
+top12 = (
+    df.groupby(['name','league'])['transfer_spendings']
+    .sum().reset_index()
+    .sort_values('transfer_spendings', ascending=True)
+    .tail(12)
+)
+top12['spend_b'] = top12['transfer_spendings'] / 1e9
+top12['color'] = top12['league'].map(LEAGUE_COLORS)
+
+fig2 = go.Figure(go.Bar(
+    y=top12['name'],
+    x=top12['spend_b'],
+    orientation='h',
+    marker_color=top12['color'].tolist(),
+    marker_line_width=0,
+    hovertemplate='<b>%{y}</b><br>€ %{x:.2f} Mrd.<extra></extra>',
+    text=top12['spend_b'].apply(lambda x: f'€ {x:.1f} Mrd.'),
+    textposition='outside',
+    textfont=dict(size=10, color='rgba(255,255,255,0.85)')
+))
+
+theme(fig2, height=420, show_legend=False)
+fig2.update_layout(
+    xaxis_title='Transferausgaben gesamt 2010–2024 (Mrd. €)',
+    xaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.10)',
+               linecolor='rgba(0,0,0,0)'),
+    yaxis=dict(tickfont=dict(size=10.5)),
+    margin=dict(l=170, r=80, t=20, b=48)
+)
+fig2.show()
+```
+
+```{=html}
+    </div>
+    <p class="chart-caption">Kumulierte Transferausgaben 2010–2024. Farbe zeigt die Liga.</p>
+  </div><!-- .section -->
+</div><!-- .section-wrap -->
+
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SECTION 2: KAPITALKONZENTRATION       ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{=html}
+<div class="section-wrap bg-grass">
+  <div class="section">
+    <div class="section-label">Abschnitt 2</div>
+    <h2>Kapital konzentriert sich –<br>Jahr für Jahr</h2>
+    <p class="story-text">
+      Nicht nur die absolute Summe wächst. Der Anteil, den die wenigen reichsten
+      Clubs am gesamten Marktwert halten, nimmt ebenfalls zu. In jeder Liga
+      dominieren drei bis fünf Clubs rund die Hälfte des gesamten Ligawertes.
+      Der Rest kämpft um die Reste.
+    </p>
+    <p class="story-text">
+      Besonders ausgeprägt ist diese Konzentration in der Premier League und
+      der Ligue 1, wo Paris Saint-Germain allein zeitweise über 30 % des
+      gesamten Ligamarktwertes auf sich vereint.
+    </p>
+    <div class="chart-wrap">
+```
+
+```{python}
+# Chart 3: Anteil Top-5 Clubs am Ligagesamtwert pro Saison
+def top5_share(group):
+    total = group['total_market_value'].sum()
+    top5  = group.nlargest(5, 'total_market_value')['total_market_value'].sum()
+    return top5 / total * 100 if total > 0 else np.nan
+
+conc = (
+    df.groupby(['season','league','league_name'])
+    .apply(top5_share, include_groups=False)
+    .reset_index(name='top5_share')
+)
+
+fig3 = go.Figure()
+for lg in LEAGUE_ORDER:
+    d = conc[conc.league == lg]
+    name = d['league_name'].iloc[0] if len(d) > 0 else lg
+    fig3.add_trace(go.Scatter(
+        x=d['season'], y=d['top5_share'],
+        name=name,
+        mode='lines+markers',
+        line=dict(color=LEAGUE_COLORS[lg], width=2.5),
+        marker=dict(size=5),
+        hovertemplate=f'<b>{name}</b><br>%{{x}}: %{{y:.1f}} %<extra></extra>'
+    ))
+
+fig3.add_hline(y=50, line_dash='dot',
+               line_color='rgba(255,255,255,0.35)', line_width=1.2,
+               annotation_text='50 %-Schwelle', annotation_font_size=10,
+               annotation_font_color='rgba(255,255,255,0.65)')
+
+theme(fig3, height=400)
+fig3.update_layout(
+    yaxis_title='Anteil Top-5 Clubs am Ligamarktwert (%)',
+    xaxis=dict(tickmode='linear', dtick=2, showgrid=False,
+               linecolor='rgba(255,255,255,0.28)', linewidth=1),
+    yaxis=dict(range=[25, 85], ticksuffix=' %')
+)
+fig3.show()
+```
+
+```{=html}
+    </div>
+    <p class="chart-caption">Prozentualer Anteil der fünf wertvollsten Clubs am Gesamtmarktwert ihrer Liga, pro Saison.</p>
+
+    <div class="highlight-box red" style="margin-top:2rem;">
+      <p><strong>Strukturelle Ungleichheit:</strong> In der Ligue 1 hielten die Top-5 Clubs
+      in einzelnen Saisons über <strong>70 %</strong> des gesamten Ligamarktwertes –
+      massgeblich getrieben durch PSGs Investitionen nach der Übernahme 2011.</p>
+    </div>
+
+    <p class="story-text" style="margin-top:2rem;">
+      Im folgenden Streudiagramm ist die Spannung zwischen Marktwert und
+      Netto-Transferbilanz sichtbar: Clubs mit hohem Marktwert kaufen sich
+      diesen Status aktiv. Ihre negative Nettobilanz (mehr ausgegeben als
+      eingenommen) ist das Spiegelbild ihrer Machtposition.
+    </p>
+    <div class="chart-wrap">
+```
+
+```{python}
+# Chart 4: Scatter Marktwert vs Netto-Transferbilanz (2022–2024 Mittel)
+recent = df[df.season >= 2022].copy()
+avg_recent = (
+    recent.groupby(['name','league','league_name'])
+    .agg(
+        avg_mv=('total_market_value','mean'),
+        avg_net=('net_transfer_record','mean')
+    ).reset_index()
+)
+avg_recent['avg_mv_m']  = avg_recent['avg_mv'] / 1e6
+avg_recent['avg_net_m'] = avg_recent['avg_net'] / 1e6
+avg_recent['color'] = avg_recent['league'].map(LEAGUE_COLORS)
+
+# Nur Clubs mit MV > 100M für Lesbarkeit
+plot_df = avg_recent[avg_recent['avg_mv_m'] > 100].copy()
+
+fig4 = go.Figure()
+for lg in LEAGUE_ORDER:
+    d = plot_df[plot_df.league == lg]
+    ln = d['league_name'].iloc[0] if len(d) > 0 else lg
+    fig4.add_trace(go.Scatter(
+        x=d['avg_mv_m'], y=d['avg_net_m'],
+        mode='markers',
+        name=ln,
+        marker=dict(
+            color=LEAGUE_COLORS[lg],
+            size=8,
+            opacity=0.78,
+            line=dict(width=0.5, color='rgba(255,255,255,0.5)')
+        ),
+        text=d['name'],
+        hovertemplate='<b>%{text}</b><br>Marktwert Ø: € %{x:.0f} Mio.<br>Nettobilanz Ø: € %{y:.0f} Mio.<extra></extra>'
+    ))
+
+fig4.add_hline(y=0, line_color='rgba(255,255,255,0.30)', line_width=1.2, line_dash='solid')
+fig4.add_annotation(x=plot_df['avg_mv_m'].max()*0.95, y=10,
+    text='Nettoeinnahmen', showarrow=False,
+    font=dict(size=9, color='rgba(255,255,255,0.55)'), xanchor='right')
+fig4.add_annotation(x=plot_df['avg_mv_m'].max()*0.95, y=-10,
+    text='Nettoausgaben', showarrow=False,
+    font=dict(size=9, color='rgba(255,255,255,0.55)'), xanchor='right')
+
+theme(fig4, height=420)
+fig4.update_layout(
+    xaxis_title='Durchschnittlicher Marktwert 2022–2024 (Mio. €)',
+    yaxis_title='Durchschnittliche Nettotransfer-bilanz (Mio. €)',
+    xaxis=dict(showgrid=False, linecolor='rgba(255,255,255,0.28)')
+)
+fig4.show()
+```
+
+```{=html}
+    </div>
+    <p class="chart-caption">Jeder Punkt = ein Club. Durchschnitt der Saisons 2022–2024.
+    Unterhalb der Nulllinie: Nettokäufer. Clubs mit Marktwert &lt; € 100 Mio. ausgeblendet.</p>
+  </div>
+</div>
+
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SECTION 3: UEFA 70%-REGEL             ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{=html}
+<div class="section-wrap bg-dark">
+  <div class="section">
+    <div class="section-label">Abschnitt 3</div>
+    <h2 style="color:#fff;">Die UEFA Squad Cost Rule:<br>70 % als Grenzwert</h2>
+    <p class="story-text">
+      Seit der Saison 2025/26 dürfen Clubs in europäischen Wettbewerben
+      maximal 70 % ihrer Einnahmen für Spielergehälter und Transferkosten
+      ausgeben. Die Regel zielt auf finanzielle Nachhaltigkeit – und trifft
+      vor allem Clubs, die jahrelang auf Pump gewachsen sind.
+    </p>
+    <p class="story-text">
+      Ohne vollständige Umsatz- und Lohndaten lässt sich die 70-%-Schwelle
+      nicht exakt berechnen. Als Näherung dient das Verhältnis von
+      Transferausgaben zum Gesamtmarktwert des Kaders: ein struktureller
+      Indikator dafür, wie aggressiv Clubs in Spielerkapital investieren.
+    </p>
+    <div class="highlight-box white">
+      <p><strong>Methodischer Hinweis:</strong> Die folgende Kennzahl
+      <em>Transferausgaben / Kadermarktwert</em> ist kein direktes Abbild
+      der UEFA-Regel, aber ein valider Proxy für Investitionsintensität.
+      Clubs über 40 % gelten als strukturell auffällig.</p>
+    </div>
+    <div class="chart-wrap">
+```
+
+```{python}
+# Chart 5: Investitionsintensität (Transfer spend / MV) – Top Clubs, Mittel 2019–2024
+invest = df[df.season >= 2019].copy()
+invest['intensity'] = invest['transfer_spendings'] / invest['total_market_value'] * 100
+
+top_intense = (
+    invest.groupby(['name','league'])['intensity']
+    .mean().reset_index()
+    .sort_values('intensity', ascending=True)
+    .tail(16)
+)
+top_intense['color'] = top_intense['league'].map(LEAGUE_COLORS)
+top_intense['text_color'] = '#fff'
+
+fig5 = go.Figure(go.Bar(
+    y=top_intense['name'],
+    x=top_intense['intensity'],
+    orientation='h',
+    marker_color=top_intense['color'].tolist(),
+    marker_line_width=0,
+    hovertemplate='<b>%{y}</b><br>Investitionsintensität: %{x:.1f} %<extra></extra>',
+    text=top_intense['intensity'].apply(lambda v: f'{v:.1f} %'),
+    textposition='outside',
+    textfont=dict(size=10, color='rgba(255,255,255,0.8)')
+))
+
+# 40%-Referenzlinie
+fig5.add_vline(x=40, line_dash='dot',
+               line_color='rgba(184,50,40,0.7)', line_width=1.5,
+               annotation_text='40 %', annotation_font_size=10,
+               annotation_font_color='rgba(184,50,40,0.9)',
+               annotation_position='top')
+
+theme(fig5, height=460, show_legend=False)
+fig5.update_layout(
+    xaxis=dict(
+        title='Ø Transferausgaben / Kadermarktwert (%)',
+        showgrid=True, gridcolor='rgba(255,255,255,0.10)',
+        ticksuffix=' %'
+    ),
+    margin=dict(l=180, r=70, t=20, b=48)
+)
+fig5.show()
+```
+
+```{=html}
+    </div>
+    <p class="chart-caption" style="color:rgba(255,255,255,0.38);">Durchschnittliche Investitionsintensität 2019–2024: Transferausgaben relativ zum Kadermarktwert.
+    Clubs rechts der 40 %-Linie investieren strukturell sehr aggressiv.</p>
+
+    <div class="highlight-box red" style="margin-top:2rem;">
+      <p><strong>Regulatorischer Druck:</strong> Clubs mit dauerhaft hoher Investitionsintensität
+      stehen unter der UEFA Squad Cost Rule vor einem Anpassungszwang – entweder durch
+      höhere Einnahmen oder durch Reduktion der Transferausgaben.
+      Beides ist politisch heikel.</p>
+    </div>
+  </div>
+</div>
+
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SECTION 4: EIGENTÜMERSTRUKTUREN       ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{=html}
+<div class="section-wrap bg-grass">
+  <div class="section">
+    <div class="section-label">Abschnitt 4</div>
+    <h2>Eigentümerstrukturen:<br>Wer besitzt den Fussball?</h2>
+    <p class="story-text">
+      Hinter den Transfermilliarden stehen Eigentümer mit unterschiedlichen
+      Motiven: staatlich finanzierte Investoren aus dem Nahen Osten,
+      amerikanische Finanzinvestoren, traditionelle europäische Familienclans
+      und börsennotierte Unternehmen.
+    </p>
+    <p class="story-text">
+      Die Übernahme des FC Chelsea durch Roman Abramowitsch 2003, jene von
+      Manchester City durch die Abu Dhabi United Group 2008 und PSG durch
+      Qatar Sports Investments 2011 markieren Wendepunkte: Fussball wurde
+      zur Assetklasse. Die Transferkurven der Abschnitte zuvor spiegeln diese
+      Eigentümerwechsel direkt wider.
+    </p>
+    <div class="highlight-box gold">
+      <p><strong>Daten-Erweiterung:</strong> Eine systematische Analyse der
+      Eigentümertypen – Staatsfonds, Private Equity, Familieneigentum –
+      ist mit zusätzlichen Ownership-Daten möglich. Diese Dimension
+      lässt sich nahtlos in dieses Dashboard integrieren.
+      Die Datenbasis (Club-Saison-Panel) ist bereits strukturiert dafür.</p>
+    </div>
+    <div class="chart-wrap">
+```
+
+```{python}
+# Proxy: Transferausgaben über Zeit für die 5 grössten Einzelinvestoren
+big5 = ['Chelsea FC','Manchester City','Paris Saint-Germain','Juventus FC','FC Barcelona']
+df_big5 = df[df['name'].isin(big5)].copy()
+df_big5['spend_m'] = df_big5['transfer_spendings'] / 1e6
+
+fig6 = go.Figure()
+club_colors = {
+    'Chelsea FC':           '#034694',
+    'Manchester City':      '#6caddf',
+    'Paris Saint-Germain':  '#004170',
+    'Juventus FC':          '#1a1a1a',
+    'FC Barcelona':         '#a50044',
+}
+for club in big5:
+    d = df_big5[df_big5['name'] == club].sort_values('season')
+    fig6.add_trace(go.Bar(
+        x=d['season'], y=d['spend_m'],
+        name=club,
+        marker_color=club_colors[club],
+        marker_line_width=0,
+        hovertemplate=f'<b>{club}</b><br>%{{x}}: € %{{y:.0f}} Mio.<extra></extra>'
+    ))
+
+theme(fig6, height=380)
+fig6.update_layout(
+    barmode='group',
+    yaxis_title='Transferausgaben (Mio. €)',
+    xaxis=dict(tickmode='linear', dtick=2, showgrid=False,
+               linecolor='rgba(255,255,255,0.28)', linewidth=1),
+    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0)
+)
+fig6.show()
+```
+
+```{=html}
+    </div>
+    <p class="chart-caption">Jährliche Transferausgaben der fünf Clubs mit den höchsten Gesamtausgaben 2010–2024.</p>
+  </div>
+</div>
+
+```
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SECTION 5: METHODIK                   ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+
+```{=html}
+<div class="section-wrap bg-light">
+  <div class="section">
+    <div class="section-label">Methodik</div>
+    <h2>Daten, Quellen,<br>Einschränkungen</h2>
+    <p class="story-text">
+      Alle Zahlen basieren auf Club-Saison-Daten von Transfermarkt.de,
+      erfasst für die fünf grossen europäischen Ligen über die Saisons
+      2010 bis 2024. Das Panel umfasst 1466 Club-Saison-Beobachtungen.
+    </p>
+
+    <div class="methodik-grid">
+      <div class="methodik-item">
+        <h4>Ligazuordnung</h4>
+        <p>Die Liga wird aus dem <code>parent.href</code>-Feld extrahiert
+        (Kürzel: GB1, ES1, L1, IT1, FR1).</p>
+      </div>
+      <div class="methodik-item">
+        <h4>Marktwerte</h4>
+        <p>Kadermarktwerte in Euro, wie von Transfermarkt zum jeweiligen
+        Saisonstart geschätzt. Inflationsbereinigung wurde nicht vorgenommen.</p>
+      </div>
+      <div class="methodik-item">
+        <h4>Transferdaten</h4>
+        <p><code>transfer_spendings</code> und <code>transfer_income</code>
+        decken alle offiziell gemeldeten Transfers pro Saison ab.</p>
+      </div>
+      <div class="methodik-item">
+        <h4>UEFA-Approximation</h4>
+        <p>Mangels Lohn- und Umsatzdaten wird
+        <em>Transferausgaben / Kadermarktwert</em> als Proxy
+        für Investitionsintensität verwendet.</p>
+      </div>
+      <div class="methodik-item">
+        <h4>Ligaposition</h4>
+        <p>Die Variable <code>league_position</code> ist in diesem Datensatz
+        nicht befüllt. Sportliche Erfolgsmetriken erfordern eine separate Quelle.</p>
+      </div>
+      <div class="methodik-item">
+        <h4>Fehlende Werte</h4>
+        <p>Numerische Fehlerwerte werden per <code>pd.to_numeric(errors='coerce')</code>
+        behandelt und aus Aggregationen ausgeschlossen.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">
+  Daten: Transfermarkt.de · Visualisierung: Quarto + Plotly · FS26 Vis &amp; DS Storytelling
+</div>
+```

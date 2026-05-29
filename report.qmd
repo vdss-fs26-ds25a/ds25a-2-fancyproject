@@ -1,0 +1,1001 @@
+---
+format:
+  html:
+    self-contained: true
+    toc: false
+    page-layout: full
+    theme: none
+    include-in-header: _plotly_inject.html
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --sa:  #4a8e32;
+  --sb:  #2d6b1e;
+  --w:   #ffffff;
+  --w88: rgba(255,255,255,0.88);
+  --w72: rgba(255,255,255,0.72);
+  --w50: rgba(255,255,255,0.50);
+  --w28: rgba(255,255,255,0.28);
+  --red:  #e05040;
+  --gold: #d4a830;
+}
+html { font-size: 18px; scroll-behavior: smooth; }
+body {
+  font-family: 'Aptos','Segoe UI','Helvetica Neue',sans-serif;
+  font-weight: 400; color: var(--w);
+  background: repeating-linear-gradient(180deg,var(--sa) 0px,var(--sa) 80px,var(--sb) 80px,var(--sb) 160px);
+  line-height: 1.7; -webkit-font-smoothing: antialiased;
+}
+#quarto-content, main.content, .page-layout-full .content {
+  padding: 0 !important; max-width: 100% !important; margin: 0 !important; background: transparent !important;
+}
+#title-block-header, .quarto-title-block, .quarto-title-meta { display: none !important; }
+h1,h2,h3,h4 {
+  font-family: 'Aptos','Segoe UI','Helvetica Neue',sans-serif;
+  font-weight: 500; line-height: 1.18; color: var(--w);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.50);
+}
+p { margin-bottom: 1.1rem; }
+
+/* ── League logos ── */
+.league-logos { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin: 2.4rem 0 1rem; }
+.league-badge {
+  width: 88px; height: 88px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; padding: 12px;
+  flex-shrink: 0;
+}
+.league-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* ── Field SVG ── */
+body { position: relative; }
+#field-svg { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; z-index: 1; }
+.hero, .section-wrap, .field-line, .page-footer { position: relative; z-index: 2; }
+
+/* ── Hero ── */
+.hero {
+  position: relative; min-height: 96vh; background: transparent;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center; padding: 80px 32px 100px;
+}
+.hero-content { max-width: 840px; }
+.hero-eyebrow {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--w50); margin-bottom: 1.4rem;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5.5vw, 4.4rem); font-style: italic;
+  text-shadow: 0 2px 28px rgba(0,0,0,0.60); letter-spacing: -0.01em; margin-bottom: 1rem;
+}
+.hero-subtitle {
+  font-size: clamp(0.95rem, 2vw, 1.18rem); color: var(--w72);
+  max-width: 580px; margin: 0 auto 2.8rem; line-height: 1.65;
+}
+.kpi-row { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+.kpi-card {
+  background: transparent; border: 1px solid var(--w28);
+  border-radius: 3px; padding: 1.3rem 1.8rem; min-width: 150px; text-align: center;
+}
+.kpi-card.accent { border-color: rgba(212,168,48,0.6); }
+.kpi-number {
+  font-size: 2.1rem; font-weight: bold; color: var(--w);
+  line-height: 1; display: block; text-shadow: 0 2px 16px rgba(0,0,0,0.45);
+}
+.kpi-number.gold { color: var(--gold); }
+.kpi-label {
+  font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--w50); margin-top: 0.45rem; display: block;
+}
+
+/* ── Section System ── */
+.section-wrap { width: 100%; position: relative; background: transparent; }
+.section { max-width: 980px; margin: 0 auto; padding: 80px 44px; }
+.section-label {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--w50); margin-bottom: 0.7rem;
+}
+.section h2 { font-size: clamp(1.7rem, 3vw, 2.6rem); margin-bottom: 1.6rem; }
+.story-text {
+  font-size: 1.08rem; line-height: 1.82; color: var(--w88);
+  max-width: 700px; margin-bottom: 1.4rem; font-weight: 400;
+}
+.highlight-box {
+  background: transparent; border-left: 4px solid var(--w50);
+  padding: 1.1rem 1.5rem; margin: 1.8rem 0;
+}
+.highlight-box.red  { border-left-color: var(--red);  }
+.highlight-box.gold { border-left-color: var(--gold); }
+.highlight-box p { font-size: 0.92rem; color: var(--w88); margin: 0; line-height: 1.65; }
+.highlight-box strong { color: var(--w); }
+.chart-wrap {
+  margin: 2.4rem 0 0.6rem; background: rgba(0,0,0,0.32);
+  border-radius: 6px; padding: 10px 10px 4px;
+}
+.chart-caption { font-size: 0.78rem; color: var(--w50); margin-top: 0.4rem; font-style: italic; }
+
+/* ── Section Bridge ── */
+.section-bridge {
+  text-align: center; font-style: italic; color: var(--w50);
+  font-size: 1.02rem; padding: 2.2rem 3rem; max-width: 600px;
+  margin: 0 auto; position: relative;
+}
+.section-bridge::before, .section-bridge::after {
+  content: ''; position: absolute; top: 50%; width: 22%; height: 1px;
+  background: rgba(255,255,255,0.16);
+}
+.section-bridge::before { left: 0; }
+.section-bridge::after  { right: 0; }
+
+/* ── Plotly / cell output ── */
+.cell-output-display { margin: 0 !important; }
+.js-plotly-plot .plotly { border-radius: 4px; }
+
+/* ── Footer ── */
+.page-footer {
+  background: transparent; border-top: 1px solid var(--w28); color: var(--w50);
+  text-align: center; padding: 2.2rem; font-size: 0.76rem; letter-spacing: 0.06em;
+}
+
+@media (max-width: 720px) {
+  .section { padding: 52px 22px; }
+  .hero { padding: 60px 22px 80px; }
+  .kpi-card { min-width: 120px; padding: 1rem 1.2rem; }
+  .kpi-number { font-size: 1.7rem; }
+}
+</style>
+```
+
+```{=html}
+<svg id="field-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+<script>
+(function(){
+  function drawField(){
+    var svg=document.getElementById('field-svg');
+    if(!svg) return;
+    var W=document.documentElement.clientWidth||document.body.clientWidth;
+    var H=document.body.scrollHeight;
+    if(H<200) return;
+    svg.setAttribute('width',W); svg.setAttribute('height',H); svg.style.height=H+'px';
+    var pad=32, fx=pad, fy=pad, fw=W-2*pad, fh=H-2*pad;
+    var paW=fw*0.593, paH=4*80, paX=fx+(fw-paW)/2;
+    var gaW=paW*0.454, gaH=paH*0.333, gaX=fx+(fw-gaW)/2;
+    var spotDist=paH*0.667, cornerR=Math.max(16,Math.round(fw/68));
+    var cr=Math.round(fw*0.135); cr=Math.max(80,Math.min(cr,240));
+    var my=fy+fh/2, mx=fx+fw/2;
+    var col='rgba(255,255,255,0.52)', lw=3.5, lw2=2.5;
+    svg.innerHTML=
+      '<rect x="'+fx+'" y="'+fy+'" width="'+fw+'" height="'+fh+'" fill="none" stroke="'+col+'" stroke-width="'+lw+'" stroke-linejoin="miter"/>'+
+      '<rect x="'+paX+'" y="'+fy+'" width="'+paW+'" height="'+paH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<rect x="'+gaX+'" y="'+fy+'" width="'+gaW+'" height="'+gaH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<circle cx="'+mx+'" cy="'+(fy+spotDist)+'" r="4" fill="'+col+'"/>'+
+      '<rect x="'+paX+'" y="'+(fy+fh-paH)+'" width="'+paW+'" height="'+paH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<rect x="'+gaX+'" y="'+(fy+fh-gaH)+'" width="'+gaW+'" height="'+gaH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<circle cx="'+mx+'" cy="'+(fy+fh-spotDist)+'" r="4" fill="'+col+'"/>'+
+      '<line x1="'+fx+'" y1="'+my+'" x2="'+(fx+fw)+'" y2="'+my+'" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<circle cx="'+mx+'" cy="'+my+'" r="'+cr+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<circle cx="'+mx+'" cy="'+my+'" r="5" fill="'+col+'"/>'+
+      '<path d="M '+(fx+cornerR)+' '+fy+' A '+cornerR+' '+cornerR+' 0 0 1 '+fx+' '+(fy+cornerR)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<path d="M '+(fx+fw-cornerR)+' '+fy+' A '+cornerR+' '+cornerR+' 0 0 0 '+(fx+fw)+' '+(fy+cornerR)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<path d="M '+fx+' '+(fy+fh-cornerR)+' A '+cornerR+' '+cornerR+' 0 0 1 '+(fx+cornerR)+' '+(fy+fh)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
+      '<path d="M '+(fx+fw)+' '+(fy+fh-cornerR)+' A '+cornerR+' '+cornerR+' 0 0 0 '+(fx+fw-cornerR)+' '+(fy+fh)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'">';
+  }
+  document.addEventListener('DOMContentLoaded',drawField);
+  [300,900,2200,5000].forEach(function(t){setTimeout(drawField,t);});
+  window.addEventListener('resize',drawField);
+})();
+</script>
+
+<div id="sprite-layer"
+     style="position:absolute;top:0;left:0;width:100%;overflow:hidden;
+            pointer-events:none;z-index:1;"></div>
+<script>
+(function(){
+  var PL = [
+    [0.035, 0.040,  50,  -5],[0.075, 0.120,  44,   8],[0.040, 0.220,  52, -10],
+    [0.080, 0.340,  46,   4],[0.035, 0.460,  50,  -7],[0.070, 0.580,  48,  13],
+    [0.040, 0.700,  52,  -4],[0.075, 0.840,  46,   9],[0.200, 0.070,  46,   6],
+    [0.250, 0.270,  50,  -8],[0.180, 0.490,  48,  11],[0.230, 0.720,  46,  -6],
+    [0.440, 0.150,  48,  -9],[0.520, 0.380,  50,   7],[0.480, 0.620,  46, -11],
+    [0.510, 0.870,  48,   5],[0.760, 0.100,  46,  -5],[0.800, 0.330,  50,   9],
+    [0.770, 0.560,  48,  -7],[0.810, 0.790,  46,  12],[0.935, 0.060,  50,   6],
+    [0.920, 0.240,  48,  -9],[0.940, 0.450,  52,   4],[0.915, 0.680,  46, -12]
+  ];
+  function placeSprites(){
+    var layer=document.getElementById('sprite-layer');
+    if(!layer||!window.SPRITES||!SPRITES.length) return;
+    var W=document.documentElement.clientWidth||document.body.clientWidth;
+    var H=document.body.scrollHeight;
+    if(H<400) return;
+    layer.style.height=H+'px'; layer.innerHTML='';
+    PL.forEach(function(p,i){
+      var src=SPRITES[i%SPRITES.length]; if(!src) return;
+      var sz=p[2], img=document.createElement('img');
+      img.src=src; img.setAttribute('aria-hidden','true');
+      img.style.cssText='position:absolute;left:'+Math.round(p[0]*W-sz/2)+'px;top:'+
+        Math.round(p[1]*H-sz/2)+'px;width:'+sz+'px;height:auto;opacity:0.90;'+
+        'transform:rotate('+p[3]+'deg);image-rendering:pixelated;image-rendering:crisp-edges;';
+      layer.appendChild(img);
+    });
+  }
+  document.addEventListener('DOMContentLoaded',placeSprites);
+  [600,1500,3000,6000].forEach(function(t){setTimeout(placeSprites,t);});
+  window.addEventListener('resize',placeSprites);
+})();
+</script>
+```
+
+```{python}
+#| label: setup
+import json, warnings, base64 as _b64, io as _io, os as _os
+import pandas as pd, numpy as np
+import plotly, plotly.graph_objects as go
+from collections import deque as _deque
+from PIL import Image as _PILImage
+from IPython.display import HTML, display
+warnings.filterwarnings('ignore')
+
+# Write plotly.min.js inline into _plotly_inject.html so Quarto includes it in <head>.
+# include-in-header is processed by Pandoc BEFORE --embed-resources, so the JS
+# lands inline in the final self-contained HTML — bypassing the file:// CORS block.
+_pjs_path = _os.path.join(_os.path.dirname(plotly.__file__), 'package_data', 'plotly.min.js')
+with open(_pjs_path, 'r', encoding='utf-8') as _pf:
+    _pjs = _pf.read()
+with open('_plotly_inject.html', 'w', encoding='utf-8') as _hf:
+    _hf.write(f'<script type="text/javascript">\n{_pjs}\n</script>\n')
+
+TOP5    = ['GB1','ES1','L1','IT1','FR1']
+LNAMES  = {'GB1':'Premier League','ES1':'La Liga','L1':'Bundesliga','IT1':'Serie A','FR1':'Ligue 1'}
+LCOLORS = {'GB1':'#04f5ff','ES1':'#ffffff','L1':'#e90052','IT1':'#38003c','FR1':'#00ff85'}
+
+# ── Load JSONL (club-level per season) ─────────────────────
+rows = []
+for _lg in TOP5:
+    with open(f'data/{_lg}_long.jsonl') as _f:
+        for _line in _f:
+            _d = json.loads(_line)
+            _d['competition_id'] = _lg
+            rows.append(_d)
+df = pd.DataFrame(rows)
+df['season'] = df['season'].astype(int)
+df = df[df['season'].between(2010, 2024)]
+
+# ── Load CSV data ──────────────────────────────────────────
+clubs = pd.read_csv('data/transfermarkt/clubs.csv')[['club_id','domestic_competition_id']]
+tr_raw = pd.read_csv('data/transfermarkt/transfers.csv')
+pv_raw = pd.read_csv('data/transfermarkt/player_valuations.csv')
+players = pd.read_csv('data/transfermarkt/players.csv')[['player_id','name','sub_position']]
+games = pd.read_csv('data/transfermarkt/games.csv')
+
+# ── Helpers ────────────────────────────────────────────────
+def parse_season(s):
+    try: return 2000 + int(str(s)[:2])
+    except: return None
+
+def hex_to_rgba(h, a=0.35):
+    h = h.lstrip('#')
+    r,g,b = int(h[0:2],16), int(h[2:4],16), int(h[4:6],16)
+    return f'rgba({r},{g},{b},{a})'
+
+def themed(fig, height=460):
+    fig.update_layout(
+        height=height,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0.22)',
+        font=dict(color='rgba(255,255,255,0.82)',
+                  family='Aptos Light,Helvetica Neue,sans-serif', size=12),
+        legend=dict(bgcolor='rgba(0,0,0,0)', borderwidth=0,
+                    font=dict(color='rgba(255,255,255,0.75)', size=11)),
+        hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
+                        bordercolor='rgba(255,255,255,0.18)',
+                        font=dict(color='#fff', size=12)),
+        margin=dict(l=60, r=20, t=36, b=50)
+    )
+    fig.update_xaxes(
+        gridcolor='rgba(255,255,255,0.07)',
+        linecolor='rgba(255,255,255,0.25)',
+        tickfont=dict(color='rgba(255,255,255,0.68)'),
+        title_font=dict(color='rgba(255,255,255,0.52)', size=11)
+    )
+    fig.update_yaxes(
+        gridcolor='rgba(255,255,255,0.07)',
+        linecolor='rgba(255,255,255,0)',
+        tickfont=dict(color='rgba(255,255,255,0.68)'),
+        title_font=dict(color='rgba(255,255,255,0.52)', size=11)
+    )
+    return fig
+
+def ch(fig):
+    return fig.to_html(
+        full_html=False, include_plotlyjs=False,
+        config={'responsive': True, 'displayModeBar': False}
+    )
+
+def sec(label, h2, story, chart_str, hl='', hl_type='gold', cap='', bridge=''):
+    hl_s  = f'<div class="highlight-box {hl_type}"><p>{hl}</p></div>' if hl else ''
+    cap_s = f'<div class="chart-caption">{cap}</div>' if cap else ''
+    br_s  = f'<div class="section-bridge">{bridge}</div>' if bridge else ''
+    return (f'<div class="section-wrap"><div class="section">'
+            f'<h2>{h2}</h2>'
+            f'<p class="section-label">{label}</p>'
+            f'<p class="story-text">{story}</p>'
+            f'<div class="chart-wrap">{chart_str}</div>{cap_s}{hl_s}'
+            f'</div></div>{br_s}')
+
+# ══════════════════════════════════════════════════════════
+# DATA: Section 1 — Die Schere
+# ══════════════════════════════════════════════════════════
+mv_df = df.groupby(['competition_id','season'])['total_market_value'].sum().reset_index()
+mv_pivot = mv_df.pivot(index='season', columns='competition_id', values='total_market_value').fillna(0) / 1e9
+
+ratio_s = pd.DataFrame({
+    'season': mv_pivot.index,
+    'ratio': (mv_pivot['GB1'] / mv_pivot[['ES1','L1','IT1','FR1']].mean(axis=1)).values
+})
+
+# ══════════════════════════════════════════════════════════
+# DATA: Section 2 — Transfer-Dominanz
+# ══════════════════════════════════════════════════════════
+tr = tr_raw.copy()
+tr['yr'] = tr['transfer_season'].apply(parse_season)
+tr = tr.dropna(subset=['yr']); tr['yr'] = tr['yr'].astype(int)
+tr = tr.merge(clubs.rename(columns={'club_id':'from_club_id','domestic_competition_id':'from_league'}),
+              on='from_club_id', how='left')
+tr = tr.merge(clubs.rename(columns={'club_id':'to_club_id','domestic_competition_id':'to_league'}),
+              on='to_club_id', how='left')
+
+tr5 = tr[tr['from_league'].isin(TOP5) & tr['to_league'].isin(TOP5) &
+         (tr['transfer_fee'] > 0) & (tr['from_league'] != tr['to_league']) &
+         tr['yr'].between(2012, 2024)].copy()
+
+sankey_flows = tr5.groupby(['from_league','to_league'])['transfer_fee'].sum().reset_index()
+sankey_flows['fee_m'] = (sankey_flows['transfer_fee'] / 1e6).round(1)
+
+# Net balance per league per season (from jsonl: all transfers)
+net_df = df.groupby(['competition_id','season'])['net_transfer_record'].sum().reset_index()
+net_df['net_m'] = (net_df['net_transfer_record'] / 1e6).round(1)
+
+# ══════════════════════════════════════════════════════════
+# DATA: Section 3 — Spielerwert-Konzentration
+# ══════════════════════════════════════════════════════════
+pv = pv_raw.copy()
+pv['date'] = pd.to_datetime(pv['date'], errors='coerce')
+pv5 = pv[pv['player_club_domestic_competition_id'].isin(TOP5)]
+latest_pv = pv5.sort_values('date').groupby('player_id').last().reset_index()
+latest_pv = latest_pv[latest_pv['market_value_in_eur'] >= 5e6].merge(
+    players, on='player_id', how='left'
+)
+top500 = latest_pv.nlargest(500, 'market_value_in_eur').copy()
+top500['mv_m'] = top500['market_value_in_eur'] / 1e6
+np.random.seed(42)
+top500['jitter'] = np.random.uniform(-0.38, 0.38, len(top500))
+top500['lg_idx'] = top500['player_club_domestic_competition_id'].map(
+    {lg: i for i, lg in enumerate(TOP5)}
+)
+top500['y_pos'] = top500['lg_idx'] + top500['jitter']
+
+# Treemap: latest season club MVs
+tm_df = df[df['season'] == 2024].copy()
+# branchvalues='remainder': parent values are ADDED to children, so set parents=0.
+# Leaf clubs carry all the area → no rounding mismatch possible.
+tm_labels  = ['Gesamt']
+tm_parents = ['']
+tm_values  = [0]          # root contributes no extra area
+tm_colors  = ['rgba(0,0,0,0)']
+tm_text    = ['']
+for _lg in TOP5:
+    _d = tm_df[tm_df['competition_id'] == _lg].nlargest(12, 'total_market_value')
+    _total = int(_d['total_market_value'].sum() / 1e6)
+    tm_labels.append(LNAMES[_lg]); tm_parents.append('Gesamt')
+    tm_values.append(0)             # league contributes no extra area
+    tm_colors.append(LCOLORS[_lg])
+    tm_text.append(f'€{_total/1000:.1f}B')
+    for _, _r in _d.iterrows():
+        _mv = int(_r['total_market_value'] / 1e6)
+        tm_labels.append(_r['name']); tm_parents.append(LNAMES[_lg])
+        tm_values.append(_mv)
+        tm_colors.append(hex_to_rgba(LCOLORS[_lg], 0.72))
+        tm_text.append(f'€{_mv}M')
+
+# ══════════════════════════════════════════════════════════
+# DATA: Section 4 — Wettbewerb
+# ══════════════════════════════════════════════════════════
+g5 = games[games['competition_id'].isin(TOP5) & games['season'].between(2012, 2024)].copy()
+g5['home_pts'] = np.where(g5['home_club_goals'] > g5['away_club_goals'], 3,
+                 np.where(g5['home_club_goals'] == g5['away_club_goals'], 1, 0))
+g5['away_pts'] = np.where(g5['away_club_goals'] > g5['home_club_goals'], 3,
+                 np.where(g5['home_club_goals'] == g5['away_club_goals'], 1, 0))
+
+home_r = g5[['competition_id','season','home_club_id','home_club_name','home_pts']].rename(
+    columns={'home_club_id':'club_id','home_club_name':'club_name','home_pts':'pts'})
+away_r = g5[['competition_id','season','away_club_id','away_club_name','away_pts']].rename(
+    columns={'away_club_id':'club_id','away_club_name':'club_name','away_pts':'pts'})
+all_pts = pd.concat([home_r, away_r])
+standings = all_pts.groupby(['competition_id','season','club_id','club_name'])['pts'].sum().reset_index()
+standings['rank'] = standings.groupby(['competition_id','season'])['pts'].rank(
+    ascending=False, method='min').astype(int)
+
+# Join with club MV from jsonl
+df_mv = df[['club_id','season','total_market_value','competition_id']].copy()
+scatter_df = standings.merge(df_mv, on=['club_id','season','competition_id'], how='inner')
+scatter_df = scatter_df[scatter_df['total_market_value'] > 0].copy()
+scatter_df['mv_m'] = scatter_df['total_market_value'] / 1e6
+
+# MV rank within each league-season (1 = richest)
+scatter_df['mv_rank'] = scatter_df.groupby(['competition_id','season'])['mv_m'].rank(
+    ascending=False, method='first').astype(int)
+scatter_df['n_clubs'] = scatter_df.groupby(['competition_id','season'])['club_id'].transform('count')
+
+def _mv_grp(r, n):
+    p = r / n
+    if p <= 0.25:  return '① Top-25%'
+    elif p <= 0.60: return '② Mittelfeld'
+    else:           return '③ Unteres Drittel'
+
+scatter_df['mv_grp'] = scatter_df.apply(lambda x: _mv_grp(x['mv_rank'], x['n_clubs']), axis=1)
+_grp_order = ['① Top-25%', '② Mittelfeld', '③ Unteres Drittel']
+grp_avg = (scatter_df
+    .groupby(['competition_id','mv_grp'])['rank']
+    .mean().reset_index()
+    .rename(columns={'rank':'avg_rank'}))
+
+# Top-4 share of total MV per league-season (replaces Gini)
+def _top4_share(g):
+    tot = g['total_market_value'].sum()
+    return g.nlargest(4,'total_market_value')['total_market_value'].sum() / tot * 100 if tot else np.nan
+
+top4_df = df.groupby(['competition_id','season']).apply(_top4_share).reset_index()
+top4_df.columns = ['competition_id','season','top4_pct']
+
+# ══════════════════════════════════════════════════════════
+# DATA: Section 5 — Brain Drain / PL Tax
+# ══════════════════════════════════════════════════════════
+tr_pl = tr[(tr['to_league'] == 'GB1') &
+           (tr['transfer_fee'] > 1e6) &
+           (tr['market_value_in_eur'] > 1e6) &
+           tr['from_league'].isin(TOP5)].copy()
+tr_pl['fee_m']     = tr_pl['transfer_fee'] / 1e6
+tr_pl['mv_m']      = tr_pl['market_value_in_eur'] / 1e6
+tr_pl['premium']   = ((tr_pl['fee_m'] / tr_pl['mv_m']) - 1) * 100
+tr_pl = tr_pl[tr_pl['mv_m'] >= 5].copy()
+
+# ══════════════════════════════════════════════════════════
+# KPIs for hero
+# ══════════════════════════════════════════════════════════
+_pl_2024  = mv_pivot.loc[2024, 'GB1']
+_es_2024  = mv_pivot.loc[2024, 'ES1']
+_ratio_24 = ratio_s[ratio_s['season']==2024]['ratio'].values[0]
+_net_pl_total = tr5[tr5['to_league']=='GB1']['transfer_fee'].sum() - \
+                tr5[tr5['from_league']=='GB1']['transfer_fee'].sum()
+_pl_tax_med = tr_pl['premium'].median()
+
+# ── Load SVG logos as base64 data URIs ────────────────────
+import os as _os, base64 as _b64_logo
+_LOGO_FILES = {'GB1':'pl','ES1':'laliga','L1':'bundesliga','IT1':'seriea','FR1':'ligue1'}
+_LOGOS = {}
+for _lg, _fn in _LOGO_FILES.items():
+    try:
+        with open(f'logos/{_fn}.svg','rb') as _lf:
+            _b = _b64_logo.b64encode(_lf.read()).decode()
+        _LOGOS[_lg] = f'data:image/svg+xml;base64,{_b}'
+    except:
+        _LOGOS[_lg] = ''
+
+# ── Sprite background removal ─────────────────────────────
+def _remove_bg(path, tol=22):
+    img = _PILImage.open(path).convert('RGBA')
+    arr = np.array(img, dtype=np.int32)
+    bg  = arr[0, 0, :3]
+    h, w = arr.shape[:2]
+    alpha   = arr[:, :, 3].copy()
+    visited = np.zeros((h, w), dtype=bool)
+    q = _deque()
+    for r, c in [(0,0),(0,w-1),(h-1,0),(h-1,w-1)]:
+        if not visited[r,c]: q.append((r,c)); visited[r,c] = True
+    while q:
+        r, c = q.popleft()
+        if np.abs(arr[r,c,:3] - bg).max() <= tol:
+            alpha[r,c] = 0
+            for nr, nc in [(r-1,c),(r+1,c),(r,c-1),(r,c+1)]:
+                if 0<=nr<h and 0<=nc<w and not visited[nr,nc]:
+                    visited[nr,nc] = True; q.append((nr,nc))
+    arr[:,:,3] = alpha
+    buf = _io.BytesIO()
+    _PILImage.fromarray(arr.astype(np.uint8)).save(buf, 'PNG')
+    return 'data:image/png;base64,' + _b64.b64encode(buf.getvalue()).decode()
+
+_sprite_b64 = []
+for _i in range(1, 16):
+    try:    _sprite_b64.append(_remove_bg(f'assets/sprite_{_i:02d}.png'))
+    except: _sprite_b64.append('')
+
+_sprites_js = 'var SPRITES=[' + ','.join(f'"{s}"' for s in _sprite_b64) + '];'
+display(HTML(f'<script>{_sprites_js}</script>'))
+
+```
+
+```{python}
+#| label: hero
+_logo_strip = ''.join([
+    f'<div class="league-badge" style="background:{LCOLORS[lg]}">'
+    f'<img src="{_LOGOS[lg]}" alt="{LNAMES[lg]}">'
+    f'</div>'
+    for lg in TOP5 if _LOGOS.get(lg)
+])
+
+display(HTML(f'''
+<div class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Top-5-Ligen Europa · Marktwert · Transfer · 2010–2024</p>
+    <h1>Eine Liga.<br>Ein anderes Spiel.</h1>
+    <div class="league-logos">{_logo_strip}</div>
+    <p class="hero-subtitle">
+      Die Premier League ist die reichste Fussball-Liga der Welt — aber wie gross ist der Abstand
+      wirklich? 15 Saisons, 5 Ligen, Milliarden von Euro. Das Ungleichgewicht ist grösser
+      als die meisten ahnen.
+    </p>
+    <div class="kpi-row">
+      <div class="kpi-card accent">
+        <span class="kpi-number gold">€{_pl_2024:.1f}B</span>
+        <span class="kpi-label">Premier League Gesamtmarktwert 2024</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-number">{_ratio_24:.1f}×</span>
+        <span class="kpi-label">PL vs. Ø andere Top-4-Ligen (2024)</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-number">€{_net_pl_total/1e9:.1f}B</span>
+        <span class="kpi-label">PL Netto-Kaufsumme inter-liga (2012–2024)</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-number">+{_pl_tax_med:.0f}%</span>
+        <span class="kpi-label">Median-Aufschlag bei PL-Transfers (PL Tax)</span>
+      </div>
+    </div>
+  </div>
+</div>
+'''))
+```
+
+```{python}
+#| label: s1a-mv-time
+# ── Chart 1A: Grouped bar — total MV per league per season ─
+fig = go.Figure()
+for lg in TOP5:
+    _d = mv_df[mv_df['competition_id']==lg].sort_values('season')
+    fig.add_trace(go.Bar(
+        name=LNAMES[lg],
+        x=_d['season'],
+        y=(_d['total_market_value']/1e9).round(2),
+        marker_color=LCOLORS[lg],
+        marker_line_width=0,
+        hovertemplate='<b>%{x}</b>: €%{y:.2f}B<extra>' + LNAMES[lg] + '</extra>'
+    ))
+fig.update_layout(
+    barmode='group',
+    xaxis_title='Saison',
+    yaxis_title='Gesamtmarktwert (Mrd. €)',
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
+)
+themed(fig, height=460)
+# Annotation: 2016 TV-Deal
+fig.add_vline(x=2015.5, line_dash='dot', line_color='rgba(212,168,48,0.5)', line_width=1.5)
+fig.add_annotation(x=2016, y=0.97, yref='paper', text='TV-Deal 2016',
+    showarrow=False, font=dict(color='rgba(212,168,48,0.85)', size=10),
+    xanchor='left')
+
+display(HTML(sec(
+    'Akt I · Die Schere',
+    'Premier League: doppelt so wertvoll wie jede andere Liga.',
+    ('Der Gesamtmarktwert aller Klubs pro Saison — in den fünf grössten europäischen Ligen. '
+     'Bis 2015 lagen die Ligen näher beieinander. Mit dem neuen TV-Vertrag der Premier League 2016 '
+     'öffnete sich die Schere schlagartig. Heute ist die PL mehr als doppelt so wertvoll wie jede '
+     'andere Liga einzeln betrachtet.'),
+    ch(fig),
+    hl=('Der TV-Vertrag 2016 brachte der Premier League rund <strong>£5,1 Milliarden</strong> '
+        'über drei Saisons — mehr als jede andere Liga an TV-Geldern in ihrer Geschichte erhalten hatte. '
+        'Das Geld verwandelte sich direkt in Marktwert.'),
+    hl_type='gold',
+    cap='Quelle: Transfermarkt.de · Gesamtmarktwert aller Erstliga-Klubs je Saison (Saisonbeginn)'
+)))
+```
+
+```{python}
+#| label: s1b-ratio
+# ── Chart 1B: Line — PL / avg others ratio ─────────────────
+fig = go.Figure()
+fig.add_trace(go.Scatter(
+    x=ratio_s['season'], y=ratio_s['ratio'],
+    name='PL / Ø (ES1, L1, IT1, FR1)',
+    mode='lines+markers',
+    line=dict(color=LCOLORS['GB1'], width=2.5),
+    marker=dict(size=6, color=LCOLORS['GB1']),
+    fill='tozeroy',
+    fillcolor=hex_to_rgba(LCOLORS['GB1'], 0.12),
+    hovertemplate='<b>%{x}</b>: %{y:.2f}×<extra></extra>'
+))
+fig.add_hline(y=1.0, line_dash='dot', line_color='rgba(255,255,255,0.25)',
+              annotation_text='Gleichstand', annotation_position='right',
+              annotation_font_color='rgba(255,255,255,0.45)', annotation_font_size=10)
+fig.add_vline(x=2016, line_dash='dash', line_color='rgba(212,168,48,0.55)', line_width=1.5)
+fig.add_annotation(x=2016.2, y=0.97, yref='paper', text='TV-Deal 2016',
+    showarrow=False, font=dict(color='rgba(212,168,48,0.85)', size=10), xanchor='left')
+fig.update_layout(
+    xaxis_title='Saison',
+    yaxis_title='Faktor (PL ÷ Ø andere 4 Ligen)',
+    showlegend=False
+)
+themed(fig, height=340)
+
+display(HTML(sec(
+    'Akt I · Fortsetzung',
+    'Vor 2016: 1.3×. Heute: 2.4×.',
+    ('Wie viel grösser ist die Premier League im Vergleich zum Durchschnitt der anderen vier '
+     'Top-Ligen? Diese eine Linie erzählt die Geschichte komprimiert. Zwischen 2010 und 2015 '
+     'lag der Faktor relativ stabil bei 1.2–1.4. Dann: Kipp-Punkt.'),
+    ch(fig),
+    bridge='Wohin fliesst das Geld? Direkt in den Transfermarkt.'
+)))
+```
+
+```{python}
+#| label: s2a-sankey
+# ── Chart 2A: Sankey — inter-liga transfer flows ───────────
+_node_idx = {lg: i for i, lg in enumerate(TOP5)}
+_link_colors = [hex_to_rgba(LCOLORS[r['from_league']], 0.4)
+                for _, r in sankey_flows.iterrows()]
+
+# For bright colors (#04f5ff, #00ff85, #fff), use dark text; for dark use white
+_node_font_colors = {'GB1':'#000000','ES1':'#000000','L1':'#ffffff','IT1':'#ffffff','FR1':'#000000'}
+
+fig = go.Figure(go.Sankey(
+    arrangement='snap',
+    node=dict(
+        pad=18, thickness=22,
+        line=dict(color='rgba(255,255,255,0.25)', width=0.8),
+        label=[LNAMES[lg] for lg in TOP5],
+        color=[LCOLORS[lg] for lg in TOP5],
+        hovertemplate='%{label}<extra></extra>'
+    ),
+    link=dict(
+        source=[_node_idx[r['from_league']] for _, r in sankey_flows.iterrows()],
+        target=[_node_idx[r['to_league']]   for _, r in sankey_flows.iterrows()],
+        value =[r['fee_m']                  for _, r in sankey_flows.iterrows()],
+        color =_link_colors,
+        label =[f"{LNAMES[r['from_league']]} → {LNAMES[r['to_league']]}: €{r['fee_m']:.0f}M"
+                for _, r in sankey_flows.iterrows()],
+        hovertemplate='%{label}<extra></extra>'
+    )
+))
+fig.update_layout(
+    height=440,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    font=dict(color='rgba(255,255,255,0.82)',
+              family='Aptos Light,Helvetica Neue,sans-serif', size=12),
+    margin=dict(l=20, r=20, t=36, b=20),
+    hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
+                    bordercolor='rgba(255,255,255,0.18)',
+                    font=dict(color='#fff', size=12))
+)
+
+display(HTML(sec(
+    'Akt II · Transfer-Dominanz',
+    'Das Geld fliesst in eine Richtung.',
+    ('Jede Verbindung zeigt: Wie viel Geld floss bei Transfers zwischen zwei Ligen? '
+     'Die Breite der Pfeile entspricht der summierten Transfersumme 2012–2024. '
+     'Das Bild ist eindeutig: Die Premier League zieht massiv Talent an — '
+     'aus allen anderen vier Top-Ligen gleichzeitig.'),
+    ch(fig),
+    hl=('Die vier grössten Geldflüsse in die PL: aus Ligue 1 <strong>€2.4B</strong>, '
+        'aus der Bundesliga <strong>€2.3B</strong>, aus La Liga <strong>€2.1B</strong>, '
+        'aus der Serie A <strong>€1.9B</strong>. '
+        'Summe: <strong>€8.7 Milliarden</strong> netto Abfluss aus den Konkurrenzligen.'),
+    hl_type='red',
+    cap='Nur Transfers zwischen verschiedenen Top-5-Ligen · mit bekannter Ablösesumme · 2012–2024'
+)))
+```
+
+```{python}
+#| label: s2b-net-balance
+# ── Chart 2B: Net transfer balance per league per season ───
+fig = go.Figure()
+for lg in TOP5:
+    _d = net_df[net_df['competition_id']==lg].sort_values('season')
+    fig.add_trace(go.Bar(
+        name=LNAMES[lg],
+        x=_d['season'],
+        y=_d['net_m'],
+        marker_color=LCOLORS[lg],
+        marker_line_width=0,
+        hovertemplate='<b>%{x}</b>: €%{y:+.0f}M<extra>' + LNAMES[lg] + '</extra>'
+    ))
+fig.update_layout(
+    barmode='relative',
+    xaxis_title='Saison',
+    yaxis_title='Netto-Transferbilanz (Mio. €)',
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0),
+    yaxis=dict(zeroline=True, zerolinecolor='rgba(255,255,255,0.35)', zerolinewidth=1.5)
+)
+themed(fig, height=430)
+
+display(HTML(sec(
+    'Akt II · Fortsetzung',
+    'PL-Klubs geben netto am meisten aus — jede Saison.',
+    ('Die Netto-Transferbilanz zeigt: Wer kauft mehr als er verkauft? '
+     'Negative Werte bedeuten Nettokäufer (mehr ausgegeben als eingenommen). '
+     'Die Premier League-Klubs dominieren als Nettokäufer — besonders seit 2016. '
+     'Andere Ligen profitieren als Nettoverkäufer.'),
+    ch(fig),
+    hl=('Ligue 1 und Bundesliga sind systematische <strong>Nettoverkäufer</strong> — sie züchten Talent '
+        'und verkaufen es an die PL. Die Serie A ist seit dem Rückzug von Investoren ebenfalls '
+        'unter Druck. Nur La Liga hält sich zeitweise durch Barça/Real-Verkäufe im Gleichgewicht.'),
+    bridge='Wer sind diese Spieler — und wo sind die teuersten Talente jetzt?'
+)))
+```
+
+```{python}
+#| label: s3a-beeswarm
+# ── Chart 3A: Strip plot — top 500 players by MV ──────────
+fig = go.Figure()
+for lg in TOP5:
+    _d = top500[top500['player_club_domestic_competition_id']==lg]
+    fig.add_trace(go.Scatter(
+        x=_d['mv_m'],
+        y=_d['y_pos'],
+        mode='markers',
+        name=LNAMES[lg],
+        marker=dict(
+            color=LCOLORS[lg], size=7, opacity=0.72,
+            line=dict(color='rgba(0,0,0,0.3)', width=0.6)
+        ),
+        text=_d['name'].fillna(''),
+        customdata=np.column_stack([
+            _d['sub_position'].fillna(''),
+            _d['mv_m'].round(0)
+        ]),
+        hovertemplate=(
+            '<b>%{text}</b><br>'
+            'Position: %{customdata[0]}<br>'
+            'Marktwert: €%{customdata[1]:.0f}M<extra>' + LNAMES[lg] + '</extra>'
+        )
+    ))
+fig.update_layout(
+    xaxis_title='Marktwert (Mio. €)',
+    yaxis=dict(
+        tickmode='array',
+        tickvals=list(range(len(TOP5))),
+        ticktext=[LNAMES[lg] for lg in TOP5],
+        tickfont=dict(color='rgba(255,255,255,0.75)', size=11.5),
+        showgrid=False, zeroline=False
+    ),
+    showlegend=False
+)
+themed(fig, height=400)
+
+display(HTML(sec(
+    'Akt III · Spielerwert-Konzentration',
+    'Die teuersten 500 Spieler Europas — und wo sie spielen.',
+    ('Jeder Punkt ist ein Spieler: sein aktueller Marktwert auf der X-Achse, '
+     'seine Liga auf der Y-Achse. Die Punkte sind leicht gestreut um die Ligalinie. '
+     'Das Muster ist sofort sichtbar: Im oberen Wertebereich — ab €40M — '
+     'dominiert eine Farbe überwältigend.'),
+    ch(fig),
+    hl=('Die Premier League stellt <strong>654</strong> der 2006 wertvollsten Spieler Europas '
+        '(MV ≥ €5M) — mehr als La Liga (316), Serie A (381), Bundesliga (320) und '
+        'Ligue 1 (335) zusammen. Und ihr Median-Marktwert liegt mit '
+        '<strong>€17M</strong> weit über dem der Konkurrenz (€10M).'),
+    hl_type='red',
+    cap='Top 500 Spieler nach aktuellem/letztem Marktwert (Transfermarkt.de)'
+)))
+```
+
+```{python}
+#| label: s3b-treemap
+# ── Chart 3B: Treemap — liga → club (2024) ─────────────────
+fig = go.Figure(go.Treemap(
+    labels=tm_labels,
+    parents=tm_parents,
+    values=tm_values,
+    text=tm_text,
+    textinfo='label+text',
+    marker=dict(
+        colors=tm_colors,
+        line=dict(width=1.5, color='rgba(0,0,0,0.5)')
+    ),
+    hovertemplate='<b>%{label}</b><br>€%{value}M<extra></extra>',
+    root_color='rgba(0,0,0,0)',
+    branchvalues='remainder'
+))
+fig.update_layout(
+    height=500,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    font=dict(color='rgba(255,255,255,0.88)',
+              family='Aptos Light,Helvetica Neue,sans-serif', size=12),
+    margin=dict(l=10, r=10, t=36, b=10),
+    hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
+                    bordercolor='rgba(255,255,255,0.18)',
+                    font=dict(color='#fff', size=12))
+)
+
+display(HTML(sec(
+    'Akt III · Fortsetzung',
+    'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
+    ('Die Fläche jedes Feldes entspricht dem Gesamtmarktwert der Klubs — '
+     'aufgeteilt nach Liga und innerhalb der Ligen nach den Top-12-Klubs (Saison 2024). '
+     'Klicke auf eine Liga, um die Klubs zu sehen. '
+     'Die Dominanz der Premier League ist räumlich unmittelbar erfahrbar.'),
+    ch(fig),
+    bridge='Hat dieses Geld auch sportliche Auswirkungen — kauft Geld Tabellenplätze?'
+)))
+```
+
+```{python}
+#| label: s4a-mv-group
+# ── Chart 4A: Slope — avg final position by MV quartile group ─
+# Shows how predictive squad wealth is across leagues.
+fig = go.Figure()
+for lg in TOP5:
+    _d = grp_avg[grp_avg['competition_id']==lg].copy()
+    _d['mv_grp'] = pd.Categorical(_d['mv_grp'], categories=_grp_order, ordered=True)
+    _d = _d.sort_values('mv_grp')
+    _lw = 2.8 if lg == 'GB1' else 1.8
+    fig.add_trace(go.Scatter(
+        x=_d['mv_grp'],
+        y=_d['avg_rank'],
+        mode='lines+markers',
+        name=LNAMES[lg],
+        line=dict(color=LCOLORS[lg], width=_lw),
+        marker=dict(size=9 if lg=='GB1' else 7,
+                    color=LCOLORS[lg],
+                    line=dict(color='rgba(0,0,0,0.4)', width=1)),
+        hovertemplate='%{x}: Ø Platz %{y:.1f}<extra>' + LNAMES[lg] + '</extra>'
+    ))
+fig.update_layout(
+    xaxis=dict(title='Kaderwert-Gruppe (nach prozentualem Rang)',
+               tickfont=dict(size=11)),
+    yaxis=dict(title='Ø Abschlusstabellenplatz', autorange='reversed',
+               tickvals=list(range(1, 20, 2))),
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
+)
+themed(fig, height=420)
+
+display(HTML(sec(
+    'Akt IV · Kauft Geld Tabellenplätze?',
+    'Wer viel zahlt, landet oben — aber die PL bestraft Armut am härtesten.',
+    ('Drei Gruppen: die reichsten 25% der Klubs einer Liga, das Mittelfeld, das untere Drittel. '
+     'Auf der Y-Achse steht ihr durchschnittlicher Abschlusstabellenplatz (2012–2024). '
+     'Je steiler die Linie, desto stärker sagt Geld den Erfolg vorher.'),
+    ch(fig),
+    hl=('In der <strong>Bundesliga</strong> ist die Linie flacher als erwartet — Bayern verzerrt das Bild. '
+        'In der <strong>Premier League</strong> ist der Abstieg von Kaderwert-Gruppe 1 zu Gruppe 3 '
+        'besonders steil: Klubs ohne grosses Budget landen strukturell im hinteren Tabellendrittel.'),
+    cap='Durchschnittswerte 2012–2024 · Kaderwert-Gruppe = proportionaler Rang innerhalb der Liga'
+)))
+```
+
+```{python}
+#| label: s4b-top4share
+# ── Chart 4B: Top-4 share of total MV per league per season ─
+fig = go.Figure()
+for lg in TOP5:
+    _d = top4_df[top4_df['competition_id']==lg].sort_values('season')
+    _lw = 2.8 if lg == 'GB1' else 1.8
+    _op = 1.0 if lg == 'GB1' else 0.75
+    fig.add_trace(go.Scatter(
+        x=_d['season'], y=_d['top4_pct'].round(1),
+        mode='lines+markers',
+        name=LNAMES[lg],
+        line=dict(color=LCOLORS[lg], width=_lw),
+        marker=dict(size=5 if lg == 'GB1' else 4, opacity=_op),
+        opacity=_op,
+        hovertemplate='<b>%{x}</b>: %{y:.1f}% bei Top-4<extra>' + LNAMES[lg] + '</extra>'
+    ))
+fig.update_layout(
+    xaxis_title='Saison',
+    yaxis=dict(title='Anteil Top-4 am Ligakaderwert (%)',
+               ticksuffix='%'),
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
+)
+themed(fig, height=390)
+
+display(HTML(sec(
+    'Akt IV · Fortsetzung',
+    'Reich unter Reichen: 4 Klubs kontrollieren über die Hälfte des PL-Wertes.',
+    ('Wie viel Prozent des gesamten Kaderwerts einer Liga entfällt auf die vier reichsten Klubs? '
+     'Ein hoher Wert bedeutet: Wenige Klubs haben fast alles, der Rest kämpft um Reste. '
+     'Die Premier League — trotz höchstem Gesamt-Reichtum — ist auch intern am stärksten '
+     'gespalten. Die Schere öffnet sich seit 2016 auch innerhalb der Liga.'),
+    ch(fig),
+    hl=('Selbst innerhalb der reichsten Liga der Welt gibt es eine Zweiklassengesellschaft. '
+        'Manchester City, Arsenal, Liverpool — und dann der Rest. '
+        '<strong>Geld schafft Ungleichheit auf zwei Ebenen:</strong> zwischen den Ligen und '
+        'innerhalb der Premier League selbst.'),
+    bridge='Woher kommt dieses Talent überhaupt — und zahlt die PL zu viel?'
+)))
+```
+
+```{python}
+#| label: s5a-pl-tax
+# ── Chart 5A: Scatter — PL tax (fee vs market value) ──────
+_max_val = max(tr_pl['mv_m'].max(), tr_pl['fee_m'].max())
+_diag_x  = [0, _max_val]
+
+fig = go.Figure()
+# Diagonal: fee == market value
+fig.add_trace(go.Scatter(
+    x=_diag_x, y=_diag_x,
+    mode='lines', name='Fee = Marktwert',
+    line=dict(color='rgba(255,255,255,0.28)', width=1.5, dash='dot'),
+    hoverinfo='skip'
+))
+# Points per source league
+for lg in ['ES1','L1','IT1','FR1']:
+    _d = tr_pl[tr_pl['from_league']==lg]
+    fig.add_trace(go.Scatter(
+        x=_d['mv_m'], y=_d['fee_m'],
+        mode='markers', name=f'von {LNAMES[lg]}',
+        marker=dict(
+            color=LCOLORS[lg], size=7, opacity=0.65,
+            line=dict(color='rgba(0,0,0,0.3)', width=0.5)
+        ),
+        text=_d['player_name'],
+        customdata=np.column_stack([_d['transfer_season'], _d['premium'].round(0)]),
+        hovertemplate=(
+            '<b>%{text}</b> (%{customdata[0]})<br>'
+            'Marktwert: €%{x:.1f}M<br>'
+            'Ablöse: €%{y:.1f}M<br>'
+            'Aufschlag: +%{customdata[1]:.0f}%<extra>' + LNAMES[lg] + '</extra>'
+        )
+    ))
+fig.update_layout(
+    xaxis=dict(title='Marktwert zum Zeitpunkt des Transfers (Mio. €)', range=[0, _max_val * 1.05]),
+    yaxis=dict(title='Tatsächliche Ablösesumme (Mio. €)', range=[0, _max_val * 1.05]),
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
+)
+themed(fig, height=490)
+# Annotation
+fig.add_annotation(
+    x=_max_val * 0.55, y=_max_val * 0.62,
+    text='Über der Linie = PL zahlt Aufschlag',
+    showarrow=False,
+    font=dict(color='rgba(212,168,48,0.7)', size=10),
+    bgcolor='rgba(0,0,0,0)'
+)
+
+display(HTML(sec(
+    'Akt V · Brain Drain & PL Tax',
+    'Die Premier League zahlt systematisch über Marktwert.',
+    ('Bei jedem Punkt ist der X-Wert der offizielle Marktwert des Spielers zum Zeitpunkt '
+     'des Transfers — und der Y-Wert die tatsächlich bezahlte Ablöse. '
+     'Punkte über der diagonalen Linie: Die PL zahlte mehr als der Spieler "wert" war. '
+     'Das ist die sogenannte <em>PL Tax</em>.'),
+    ch(fig),
+    hl=('Der Median-Aufschlag liegt bei <strong>+27%</strong> über dem offiziellen Marktwert — '
+        'das heisst, PL-Klubs zahlen im Schnitt ein Viertel mehr als der Transfermarkt-Wert. '
+        'Bei Transfers über €50M steigt dieser Aufschlag oft auf 50–100%. '
+        '<strong>Die PL Tax ist real. Und sie treibt die Preise global.</strong>'),
+    hl_type='red',
+    cap='Transfers TO Premier League · Ablöse > €1M · Marktwert > €5M · 2012–2024'
+)))
+```
+
+```{=html}
+<div class="page-footer">
+  <p style="font-size:1.3rem;font-style:italic;color:rgba(255,255,255,0.82);
+            margin-bottom:1rem;max-width:720px;margin-left:auto;margin-right:auto;">
+    Die Premier League spielt nicht in einer anderen Liga.<br>
+    Sie spielt in einer anderen Realität.
+  </p>
+  Datenquelle: Transfermarkt.de &nbsp;·&nbsp;
+  Top-5-Ligen Europa &nbsp;·&nbsp;
+  Saisons 2010–2024 &nbsp;·&nbsp;
+  Plotly 2.35
+</div>
+```
