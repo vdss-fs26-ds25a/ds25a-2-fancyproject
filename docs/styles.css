@@ -1,1 +1,299 @@
-/* css styles */
+/* ============================================================
+   Football Dashboard — design system
+   All visual/layout logic lives here. index.qmd holds data +
+   structure only. Loaded via `css: styles.css` in the page YAML.
+   ============================================================ */
+
+/* ── Fonts: sports-gazette feel (ESPN / L'Équipe / Marca) ───
+   Oswald  = condensed athletic display (headlines, labels, KPIs)
+   Barlow  = clean sporty body face (paragraphs, captions)
+   NOTE: served from Google Fonts. For a fully offline / embedded
+   build, swap these for locally bundled @font-face woff2 files. */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sa:  #4a8e32;            /* mow stripe A */
+  --sb:  #3c7726;            /* mow stripe B */
+  --ink: 6,22,6;             /* dark panel base (rgb triplet) */
+  --w:   #ffffff;
+  --w88: rgba(255,255,255,0.88);
+  --w72: rgba(255,255,255,0.72);
+  --w50: rgba(255,255,255,0.50);
+  --w28: rgba(255,255,255,0.28);
+  --red:  #e05040;
+  --gold: #d4a830;
+  --disp: 'Oswald','Arial Narrow',sans-serif;
+  --body: 'Barlow','Segoe UI','Helvetica Neue',sans-serif;
+}
+
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;      /* page-by-page snapping */
+}
+body {
+  font-family: var(--body);
+  font-weight: 400;
+  color: var(--w);
+  background: transparent;            /* pitch is drawn by fixed layers below */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Quarto chrome reset — full-bleed, no sidebar/title block */
+#quarto-content, main.content, .page-layout-full .content {
+  padding: 0 !important; max-width: 100% !important; margin: 0 !important;
+  background: transparent !important;
+}
+#title-block-header, .quarto-title-block, .quarto-title-meta,
+#quarto-sidebar, .quarto-sidebar, nav.sidebar, #quarto-margin-sidebar,
+.quarto-secondary-nav, #quarto-header { display: none !important; }
+.cell, .cell-output, .cell-output-display { margin: 0 !important; }
+
+/* ── Fixed pitch background (stays put; pages slide over it) ── */
+#pitch {
+  position: fixed; inset: 0; z-index: -3; pointer-events: none;
+  background-color: var(--sa);
+  background-image: repeating-linear-gradient(
+      90deg, var(--sa) 0, var(--sa) 7.69%,
+      var(--sb) 7.69%, var(--sb) 15.38%);
+}
+#field-svg {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  z-index: -2; pointer-events: none;
+}
+#sprite-layer {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+}
+/* darkening overlay → the "background change" that lifts text legibility */
+#pitch-overlay {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 40%, rgba(var(--ink),0.20), rgba(var(--ink),0.62) 95%),
+    linear-gradient(180deg, rgba(var(--ink),0.58) 0%, rgba(var(--ink),0.40) 45%, rgba(var(--ink),0.66) 100%);
+}
+
+/* ── Headings / display type ── */
+h1, h2, h3, h4 {
+  font-family: var(--disp);
+  font-weight: 600; line-height: 1.06;
+  text-transform: uppercase; letter-spacing: 0.005em;
+  color: var(--w); text-shadow: 0 2px 22px rgba(0,0,0,0.55);
+}
+p { margin-bottom: 1rem; }
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--w); }
+
+/* ============================================================
+   PAGE DECK — one full-viewport page per story/plot
+   ============================================================ */
+.page {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex; align-items: center; justify-content: center;
+  padding: 5vh 5vw; position: relative;
+}
+.page-inner { width: 100%; max-width: 1180px; }
+
+/* two-column gazette spread: narrative | chart */
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.12fr);
+  gap: clamp(1.6rem, 3.5vw, 3.6rem);
+  align-items: center;
+}
+.col-text {
+  background: rgba(var(--ink),0.56);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 14px;
+  padding: clamp(1.4rem, 2.6vw, 2.4rem);
+  backdrop-filter: blur(4px);
+}
+.col-chart {
+  background: rgba(var(--ink),0.50);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 12px 12px 6px;
+  backdrop-filter: blur(4px);
+}
+
+.section-label {
+  font-family: var(--disp); font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.6rem;
+}
+.page h2 { font-size: clamp(1.5rem, 3.1vw, 2.7rem); margin-bottom: 1.1rem; }
+.story-text {
+  font-family: var(--body); font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  line-height: 1.6; color: var(--w88); margin-bottom: 1.1rem;
+}
+.highlight-box {
+  background: rgba(0,0,0,0.22); border-left: 4px solid var(--w50);
+  padding: 0.9rem 1.2rem; margin: 1.2rem 0 0; border-radius: 0 6px 6px 0;
+}
+.highlight-box.red  { border-left-color: var(--red);  }
+.highlight-box.gold { border-left-color: var(--gold); }
+.highlight-box p { font-size: 0.9rem; color: var(--w88); margin: 0; line-height: 1.55; }
+.chart-caption { font-family: var(--body); font-size: 0.74rem; color: var(--w50); margin-top: 0.45rem; font-style: italic; padding: 0 6px; }
+.bridge-line {
+  font-family: var(--body); font-style: italic; color: var(--w72);
+  font-size: 0.95rem; margin-top: 1.2rem; padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+/* ── Plotly cell output ── */
+.cell-output-display { margin: 0 !important; }
+.js-plotly-plot .plotly { border-radius: 6px; }
+
+/* ============================================================
+   HERO PAGE (intro + 6 tiles)
+   ============================================================ */
+.page-hero .page-inner { max-width: 880px; text-align: center; }
+.hero-content {
+  background: rgba(var(--ink),0.50);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  padding: clamp(1.3rem, 2.4vh, 2rem) clamp(1.4rem, 4vw, 2.4rem);
+  backdrop-filter: blur(4px);
+}
+.hero-eyebrow {
+  font-family: var(--disp); font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--w72); margin-bottom: 0.7rem;
+}
+.hero-content h1 {
+  font-size: clamp(1.9rem, 4.6vw, 3.5rem);
+  text-shadow: 0 2px 30px rgba(0,0,0,0.65);
+  letter-spacing: 0.01em; margin-bottom: 0.6rem;
+}
+.hero-subtitle {
+  font-family: var(--body); font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  color: var(--w72); max-width: 560px; margin: 0 auto 1.2rem; line-height: 1.5;
+}
+
+/* league logos — uniform light tiles (no clashing brand colors) */
+.league-logos { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0; }
+.league-badge {
+  width: 56px; height: 56px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center; padding: 9px;
+  flex-shrink: 0; background: rgba(255,255,255,0.94);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.league-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* KPI tiles — equal-sized square grid (4 stats + 2 placeholders) */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem; max-width: 540px; margin: 1.2rem auto 0;
+}
+.kpi-card {
+  background: rgba(var(--ink),0.62);
+  border: 1px solid var(--w28); border-radius: 10px;
+  padding: 0.7rem; text-align: center; aspect-ratio: 1 / 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.4rem; backdrop-filter: blur(2px);
+}
+.kpi-card.accent { border-color: rgba(212,168,48,0.6); }
+.kpi-card.placeholder { border-style: dashed; }
+.kpi-number {
+  font-family: var(--disp); font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700; color: var(--w); line-height: 1;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.55);
+}
+.kpi-number.gold { color: var(--gold); }
+.kpi-number.muted { color: var(--w50); }
+.kpi-label {
+  font-family: var(--disp); font-size: 0.6rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--w72); line-height: 1.35;
+}
+
+/* scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%);
+  font-family: var(--disp); font-size: 0.66rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--w50);
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+}
+.scroll-hint span { font-size: 1.1rem; animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+/* ── End page ── */
+.page-end .page-inner { max-width: 760px; text-align: center; }
+.end-card {
+  background: rgba(var(--ink),0.55); border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 16px; padding: clamp(2rem,4vw,3rem); backdrop-filter: blur(4px);
+}
+.end-card .kicker {
+  font-family: var(--disp); text-transform: uppercase; font-style: normal;
+  font-size: clamp(1.3rem, 3vw, 2rem); color: var(--w); line-height: 1.2;
+  margin-bottom: 1.2rem; letter-spacing: 0.01em;
+}
+.end-meta { font-family: var(--body); color: var(--w50); font-size: 0.78rem; letter-spacing: 0.05em; }
+
+/* ============================================================
+   PAGE NAV DOTS (right side)
+   ============================================================ */
+.deck-dots {
+  position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+  z-index: 50; display: flex; flex-direction: column; gap: 11px;
+}
+.deck-dots button {
+  width: 10px; height: 10px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.55); background: transparent;
+  transition: background .25s, transform .25s, border-color .25s;
+}
+.deck-dots button:hover { border-color: #fff; }
+.deck-dots button.active { background: var(--gold); border-color: var(--gold); transform: scale(1.25); }
+
+/* ============================================================
+   ENTRANCE ANIMATION (revealed when a page snaps into view)
+   ============================================================ */
+.col-text, .col-chart, .hero-content, .end-card {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.page.in-view .hero-content,
+.page.in-view .end-card { opacity: 1; transform: none; }
+.page.in-view .col-text  { opacity: 1; transform: none; transition-delay: .05s; }
+.page.in-view .col-chart { opacity: 1; transform: none; transition-delay: .16s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .col-text, .col-chart, .hero-content, .end-card { opacity: 1 !important; transform: none !important; transition: none; }
+  .scroll-hint span { animation: none; }
+}
+
+/* ============================================================
+   RESPONSIVE — stack to one column, relax snapping on small/short
+   ============================================================ */
+/* tablet / phone width → single column spread, relaxed snap */
+@media (max-width: 900px) {
+  html { scroll-snap-type: y proximity; }
+  .spread { grid-template-columns: 1fr; gap: 1.2rem; }
+  .page { min-height: 100vh; padding: 7vh 6vw; }
+  .col-chart { order: 2; }
+  .deck-dots { display: none; }
+}
+/* short viewports (common laptops ~768–800) → compact hero so 6 tiles fit */
+@media (max-height: 820px) {
+  .page-hero .kpi-card { aspect-ratio: auto; min-height: 64px; }
+  .kpi-row { gap: 0.6rem; margin-top: 1rem; }
+  .hero-content { padding-top: 1rem; padding-bottom: 1rem; }
+  .hero-content h1 { font-size: clamp(1.7rem, 4vw, 3rem); margin-bottom: 0.5rem; }
+  .league-logos { margin: 0.8rem 0; }
+}
+/* very short → relax mandatory snap so nothing gets trapped */
+@media (max-height: 680px) {
+  html { scroll-snap-type: y proximity; }
+  .page { min-height: 100vh; padding: 5vh 5vw; }
+}
+@media (max-width: 560px) {
+  html { font-size: 16px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); max-width: 360px; }
+  .league-badge { width: 54px; height: 54px; }
+}

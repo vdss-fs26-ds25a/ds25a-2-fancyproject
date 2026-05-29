@@ -5,6 +5,7 @@ format:
     toc: false
     page-layout: full
     theme: none
+    css: styles.css
     include-in-header: _plotly_inject.html
 execute:
   echo: false
@@ -13,219 +14,95 @@ execute:
 ---
 
 ```{=html}
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --sa:  #4a8e32;
-  --sb:  #2d6b1e;
-  --w:   #ffffff;
-  --w88: rgba(255,255,255,0.88);
-  --w72: rgba(255,255,255,0.72);
-  --w50: rgba(255,255,255,0.50);
-  --w28: rgba(255,255,255,0.28);
-  --red:  #e05040;
-  --gold: #d4a830;
-}
-html { font-size: 18px; scroll-behavior: smooth; }
-body {
-  font-family: 'Aptos','Segoe UI','Helvetica Neue',sans-serif;
-  font-weight: 400; color: var(--w);
-  background: repeating-linear-gradient(180deg,var(--sa) 0px,var(--sa) 80px,var(--sb) 80px,var(--sb) 160px);
-  line-height: 1.7; -webkit-font-smoothing: antialiased;
-}
-#quarto-content, main.content, .page-layout-full .content {
-  padding: 0 !important; max-width: 100% !important; margin: 0 !important; background: transparent !important;
-}
-#title-block-header, .quarto-title-block, .quarto-title-meta { display: none !important; }
-h1,h2,h3,h4 {
-  font-family: 'Aptos','Segoe UI','Helvetica Neue',sans-serif;
-  font-weight: 500; line-height: 1.18; color: var(--w);
-  text-shadow: 0 2px 20px rgba(0,0,0,0.50);
-}
-p { margin-bottom: 1.1rem; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 
-/* ── League logos ── */
-.league-logos { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin: 2.4rem 0 1rem; }
-.league-badge {
-  width: 88px; height: 88px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; padding: 12px;
-  flex-shrink: 0;
-}
-.league-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
-
-/* ── Field SVG ── */
-body { position: relative; }
-#field-svg { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; z-index: 1; }
-.hero, .section-wrap, .field-line, .page-footer { position: relative; z-index: 2; }
-
-/* ── Hero ── */
-.hero {
-  position: relative; min-height: 96vh; background: transparent;
-  display: flex; flex-direction: column; justify-content: center;
-  align-items: center; text-align: center; padding: 80px 32px 100px;
-}
-.hero-content { max-width: 840px; }
-.hero-eyebrow {
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--w50); margin-bottom: 1.4rem;
-}
-.hero h1 {
-  font-size: clamp(2.2rem, 5.5vw, 4.4rem); font-style: italic;
-  text-shadow: 0 2px 28px rgba(0,0,0,0.60); letter-spacing: -0.01em; margin-bottom: 1rem;
-}
-.hero-subtitle {
-  font-size: clamp(0.95rem, 2vw, 1.18rem); color: var(--w72);
-  max-width: 580px; margin: 0 auto 2.8rem; line-height: 1.65;
-}
-.kpi-row { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
-.kpi-card {
-  background: transparent; border: 1px solid var(--w28);
-  border-radius: 3px; padding: 1.3rem 1.8rem; min-width: 150px; text-align: center;
-}
-.kpi-card.accent { border-color: rgba(212,168,48,0.6); }
-.kpi-number {
-  font-size: 2.1rem; font-weight: bold; color: var(--w);
-  line-height: 1; display: block; text-shadow: 0 2px 16px rgba(0,0,0,0.45);
-}
-.kpi-number.gold { color: var(--gold); }
-.kpi-label {
-  font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase;
-  color: var(--w50); margin-top: 0.45rem; display: block;
-}
-
-/* ── Section System ── */
-.section-wrap { width: 100%; position: relative; background: transparent; }
-.section { max-width: 980px; margin: 0 auto; padding: 80px 44px; }
-.section-label {
-  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--w50); margin-bottom: 0.7rem;
-}
-.section h2 { font-size: clamp(1.7rem, 3vw, 2.6rem); margin-bottom: 1.6rem; }
-.story-text {
-  font-size: 1.08rem; line-height: 1.82; color: var(--w88);
-  max-width: 700px; margin-bottom: 1.4rem; font-weight: 400;
-}
-.highlight-box {
-  background: transparent; border-left: 4px solid var(--w50);
-  padding: 1.1rem 1.5rem; margin: 1.8rem 0;
-}
-.highlight-box.red  { border-left-color: var(--red);  }
-.highlight-box.gold { border-left-color: var(--gold); }
-.highlight-box p { font-size: 0.92rem; color: var(--w88); margin: 0; line-height: 1.65; }
-.highlight-box strong { color: var(--w); }
-.chart-wrap {
-  margin: 2.4rem 0 0.6rem; background: rgba(0,0,0,0.32);
-  border-radius: 6px; padding: 10px 10px 4px;
-}
-.chart-caption { font-size: 0.78rem; color: var(--w50); margin-top: 0.4rem; font-style: italic; }
-
-/* ── Section Bridge ── */
-.section-bridge {
-  text-align: center; font-style: italic; color: var(--w50);
-  font-size: 1.02rem; padding: 2.2rem 3rem; max-width: 600px;
-  margin: 0 auto; position: relative;
-}
-.section-bridge::before, .section-bridge::after {
-  content: ''; position: absolute; top: 50%; width: 22%; height: 1px;
-  background: rgba(255,255,255,0.16);
-}
-.section-bridge::before { left: 0; }
-.section-bridge::after  { right: 0; }
-
-/* ── Plotly / cell output ── */
-.cell-output-display { margin: 0 !important; }
-.js-plotly-plot .plotly { border-radius: 4px; }
-
-/* ── Footer ── */
-.page-footer {
-  background: transparent; border-top: 1px solid var(--w28); color: var(--w50);
-  text-align: center; padding: 2.2rem; font-size: 0.76rem; letter-spacing: 0.06em;
-}
-
-@media (max-width: 720px) {
-  .section { padding: 52px 22px; }
-  .hero { padding: 60px 22px 80px; }
-  .kpi-card { min-width: 120px; padding: 1rem 1.2rem; }
-  .kpi-number { font-size: 1.7rem; }
-}
-</style>
-```
-
-```{=html}
+<div id="pitch" aria-hidden="true"></div>
 <svg id="field-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
-<script>
-(function(){
-  function drawField(){
-    var svg=document.getElementById('field-svg');
-    if(!svg) return;
-    var W=document.documentElement.clientWidth||document.body.clientWidth;
-    var H=document.body.scrollHeight;
-    if(H<200) return;
-    svg.setAttribute('width',W); svg.setAttribute('height',H); svg.style.height=H+'px';
-    var pad=32, fx=pad, fy=pad, fw=W-2*pad, fh=H-2*pad;
-    var paW=fw*0.593, paH=4*80, paX=fx+(fw-paW)/2;
-    var gaW=paW*0.454, gaH=paH*0.333, gaX=fx+(fw-gaW)/2;
-    var spotDist=paH*0.667, cornerR=Math.max(16,Math.round(fw/68));
-    var cr=Math.round(fw*0.135); cr=Math.max(80,Math.min(cr,240));
-    var my=fy+fh/2, mx=fx+fw/2;
-    var col='rgba(255,255,255,0.52)', lw=3.5, lw2=2.5;
-    svg.innerHTML=
-      '<rect x="'+fx+'" y="'+fy+'" width="'+fw+'" height="'+fh+'" fill="none" stroke="'+col+'" stroke-width="'+lw+'" stroke-linejoin="miter"/>'+
-      '<rect x="'+paX+'" y="'+fy+'" width="'+paW+'" height="'+paH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<rect x="'+gaX+'" y="'+fy+'" width="'+gaW+'" height="'+gaH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<circle cx="'+mx+'" cy="'+(fy+spotDist)+'" r="4" fill="'+col+'"/>'+
-      '<rect x="'+paX+'" y="'+(fy+fh-paH)+'" width="'+paW+'" height="'+paH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<rect x="'+gaX+'" y="'+(fy+fh-gaH)+'" width="'+gaW+'" height="'+gaH+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<circle cx="'+mx+'" cy="'+(fy+fh-spotDist)+'" r="4" fill="'+col+'"/>'+
-      '<line x1="'+fx+'" y1="'+my+'" x2="'+(fx+fw)+'" y2="'+my+'" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<circle cx="'+mx+'" cy="'+my+'" r="'+cr+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<circle cx="'+mx+'" cy="'+my+'" r="5" fill="'+col+'"/>'+
-      '<path d="M '+(fx+cornerR)+' '+fy+' A '+cornerR+' '+cornerR+' 0 0 1 '+fx+' '+(fy+cornerR)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<path d="M '+(fx+fw-cornerR)+' '+fy+' A '+cornerR+' '+cornerR+' 0 0 0 '+(fx+fw)+' '+(fy+cornerR)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<path d="M '+fx+' '+(fy+fh-cornerR)+' A '+cornerR+' '+cornerR+' 0 0 1 '+(fx+cornerR)+' '+(fy+fh)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'"/>'+
-      '<path d="M '+(fx+fw)+' '+(fy+fh-cornerR)+' A '+cornerR+' '+cornerR+' 0 0 0 '+(fx+fw-cornerR)+' '+(fy+fh)+'" fill="none" stroke="'+col+'" stroke-width="'+lw2+'">';
-  }
-  document.addEventListener('DOMContentLoaded',drawField);
-  [300,900,2200,5000].forEach(function(t){setTimeout(drawField,t);});
-  window.addEventListener('resize',drawField);
-})();
-</script>
+<div id="sprite-layer" aria-hidden="true"></div>
+<div id="pitch-overlay" aria-hidden="true"></div>
 
-<div id="sprite-layer"
-     style="position:absolute;top:0;left:0;width:100%;overflow:hidden;
-            pointer-events:none;z-index:1;"></div>
 <script>
 (function(){
-  var PL = [
-    [0.035, 0.040,  50,  -5],[0.075, 0.120,  44,   8],[0.040, 0.220,  52, -10],
-    [0.080, 0.340,  46,   4],[0.035, 0.460,  50,  -7],[0.070, 0.580,  48,  13],
-    [0.040, 0.700,  52,  -4],[0.075, 0.840,  46,   9],[0.200, 0.070,  46,   6],
-    [0.250, 0.270,  50,  -8],[0.180, 0.490,  48,  11],[0.230, 0.720,  46,  -6],
-    [0.440, 0.150,  48,  -9],[0.520, 0.380,  50,   7],[0.480, 0.620,  46, -11],
-    [0.510, 0.870,  48,   5],[0.760, 0.100,  46,  -5],[0.800, 0.330,  50,   9],
-    [0.770, 0.560,  48,  -7],[0.810, 0.790,  46,  12],[0.935, 0.060,  50,   6],
-    [0.920, 0.240,  48,  -9],[0.940, 0.450,  52,   4],[0.915, 0.680,  46, -12]
-  ];
+  /* ---- fixed, viewport-sized horizontal pitch (matches the PDF) ---- */
+  function rect(x,y,w,h,lw){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="'+lw+'"/>';}
+  function circ(cx,cy,r){return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>';}
+  function dot(cx,cy,r){return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="rgba(255,255,255,0.42)"/>';}
+  function arc(d){return '<path d="'+d+'" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>';}
+  function drawField(){
+    var svg=document.getElementById('field-svg'); if(!svg) return;
+    var W=window.innerWidth, H=window.innerHeight; if(H<200) return;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.setAttribute('width',W); svg.setAttribute('height',H);
+    var pad=Math.round(Math.min(W,H)*0.05);
+    var fx=pad, fy=pad, fw=W-2*pad, fh=H-2*pad, mx=fx+fw/2, my=fy+fh/2;
+    var paH=fh*0.56, paW=fw*0.155, paY=fy+(fh-paH)/2;
+    var gaH=fh*0.26, gaW=fw*0.055, gaY=fy+(fh-gaH)/2;
+    var cr=Math.max(56,Math.min(fh*0.20, fw*0.13)), spot=fw*0.10, c=Math.max(14,fw/80);
+    svg.innerHTML =
+      rect(fx,fy,fw,fh,3)
+      +'<line x1="'+mx+'" y1="'+fy+'" x2="'+mx+'" y2="'+(fy+fh)+'" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>'
+      +circ(mx,my,cr)+dot(mx,my,5)
+      +rect(fx,paY,paW,paH,2)+rect(fx,gaY,gaW,gaH,2)+dot(fx+spot,my,4)
+      +rect(fx+fw-paW,paY,paW,paH,2)+rect(fx+fw-gaW,gaY,gaW,gaH,2)+dot(fx+fw-spot,my,4)
+      +arc('M '+(fx+c)+' '+fy+' A '+c+' '+c+' 0 0 1 '+fx+' '+(fy+c))
+      +arc('M '+(fx+fw-c)+' '+fy+' A '+c+' '+c+' 0 0 0 '+(fx+fw)+' '+(fy+c))
+      +arc('M '+fx+' '+(fy+fh-c)+' A '+c+' '+c+' 0 0 1 '+(fx+c)+' '+(fy+fh))
+      +arc('M '+(fx+fw)+' '+(fy+fh-c)+' A '+c+' '+c+' 0 0 0 '+(fx+fw-c)+' '+(fy+fh));
+  }
+
+  /* ---- scattered pixel-art players (fixed, subtle) ---- */
+  var PL=[[0.06,0.20],[0.15,0.74],[0.30,0.42],[0.49,0.82],[0.67,0.30],
+          [0.85,0.66],[0.93,0.22],[0.42,0.15],[0.75,0.85],[0.22,0.93]];
   function placeSprites(){
     var layer=document.getElementById('sprite-layer');
     if(!layer||!window.SPRITES||!SPRITES.length) return;
-    var W=document.documentElement.clientWidth||document.body.clientWidth;
-    var H=document.body.scrollHeight;
-    if(H<400) return;
-    layer.style.height=H+'px'; layer.innerHTML='';
+    var W=window.innerWidth, H=window.innerHeight; layer.innerHTML='';
     PL.forEach(function(p,i){
       var src=SPRITES[i%SPRITES.length]; if(!src) return;
-      var sz=p[2], img=document.createElement('img');
-      img.src=src; img.setAttribute('aria-hidden','true');
+      var sz=40+(i%3)*8, rot=(i%2?1:-1)*(4+i%9);
+      var img=document.createElement('img'); img.src=src; img.setAttribute('aria-hidden','true');
       img.style.cssText='position:absolute;left:'+Math.round(p[0]*W-sz/2)+'px;top:'+
-        Math.round(p[1]*H-sz/2)+'px;width:'+sz+'px;height:auto;opacity:0.90;'+
-        'transform:rotate('+p[3]+'deg);image-rendering:pixelated;image-rendering:crisp-edges;';
+        Math.round(p[1]*H-sz/2)+'px;width:'+sz+'px;height:auto;opacity:0.55;transform:rotate('+
+        rot+'deg);image-rendering:pixelated;image-rendering:crisp-edges;';
       layer.appendChild(img);
     });
   }
-  document.addEventListener('DOMContentLoaded',placeSprites);
-  [600,1500,3000,6000].forEach(function(t){setTimeout(placeSprites,t);});
-  window.addEventListener('resize',placeSprites);
+
+  /* ---- deck: scroll-snap reveal + side dot navigation ---- */
+  function initDeck(){
+    if(document.querySelector('.deck-dots')) return;
+    var pages=Array.prototype.slice.call(document.querySelectorAll('.page'));
+    if(!pages.length) return;
+    var nav=document.createElement('div'); nav.className='deck-dots';
+    pages.forEach(function(pg,i){
+      var b=document.createElement('button'); b.setAttribute('aria-label','Seite '+(i+1));
+      b.addEventListener('click',function(){ pg.scrollIntoView({behavior:'smooth'}); });
+      nav.appendChild(b);
+    });
+    document.body.appendChild(nav);
+    var dots=nav.children;
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && e.intersectionRatio>=0.5){
+          e.target.classList.add('in-view');
+          var idx=pages.indexOf(e.target);
+          for(var k=0;k<dots.length;k++){ dots[k].classList.toggle('active', k===idx); }
+          if(window.Plotly){
+            var plots=e.target.querySelectorAll('.js-plotly-plot');
+            for(var j=0;j<plots.length;j++){ try{ Plotly.Plots.resize(plots[j]); }catch(_){} }
+          }
+        }
+      });
+    },{threshold:[0.5]});
+    pages.forEach(function(p){ io.observe(p); });
+  }
+
+  function boot(){ drawField(); placeSprites(); initDeck(); }
+  document.addEventListener('DOMContentLoaded', boot);
+  [400,1000,2200,4500].forEach(function(t){ setTimeout(function(){ drawField(); placeSprites(); initDeck(); }, t); });
+  window.addEventListener('resize', function(){ drawField(); placeSprites(); });
 })();
 </script>
 ```
@@ -285,6 +162,7 @@ def hex_to_rgba(h, a=0.35):
 def themed(fig, height=460):
     fig.update_layout(
         height=height,
+        dragmode=False,
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0.22)',
         font=dict(color='rgba(255,255,255,0.82)',
@@ -313,19 +191,23 @@ def themed(fig, height=460):
 def ch(fig):
     return fig.to_html(
         full_html=False, include_plotlyjs=False,
-        config={'responsive': True, 'displayModeBar': False}
+        config={'responsive': True, 'displayModeBar': False,
+                'scrollZoom': False, 'doubleClick': False}
     )
 
 def sec(label, h2, story, chart_str, hl='', hl_type='gold', cap='', bridge=''):
     hl_s  = f'<div class="highlight-box {hl_type}"><p>{hl}</p></div>' if hl else ''
     cap_s = f'<div class="chart-caption">{cap}</div>' if cap else ''
-    br_s  = f'<div class="section-bridge">{bridge}</div>' if bridge else ''
-    return (f'<div class="section-wrap"><div class="section">'
-            f'<h2>{h2}</h2>'
+    br_s  = f'<p class="bridge-line">{bridge}</p>' if bridge else ''
+    return (f'<section class="page"><div class="page-inner spread">'
+            f'<div class="col-text">'
             f'<p class="section-label">{label}</p>'
+            f'<h2>{h2}</h2>'
             f'<p class="story-text">{story}</p>'
-            f'<div class="chart-wrap">{chart_str}</div>{cap_s}{hl_s}'
-            f'</div></div>{br_s}')
+            f'{hl_s}{br_s}'
+            f'</div>'
+            f'<div class="col-chart">{chart_str}{cap_s}</div>'
+            f'</div></section>')
 
 # ══════════════════════════════════════════════════════════
 # DATA: Section 1 — Die Schere
@@ -522,43 +404,54 @@ display(HTML(f'<script>{_sprites_js}</script>'))
 ```{python}
 #| label: hero
 _logo_strip = ''.join([
-    f'<div class="league-badge" style="background:{LCOLORS[lg]}">'
+    f'<div class="league-badge">'
     f'<img src="{_LOGOS[lg]}" alt="{LNAMES[lg]}">'
     f'</div>'
     for lg in TOP5 if _LOGOS.get(lg)
 ])
 
 display(HTML(f'''
-<div class="hero">
-  <div class="hero-content">
-    <p class="hero-eyebrow">Top-5-Ligen Europa · Marktwert · Transfer · 2010–2024</p>
-    <h1>Eine Liga.<br>Ein anderes Spiel.</h1>
-    <div class="league-logos">{_logo_strip}</div>
-    <p class="hero-subtitle">
-      Die Premier League ist die reichste Fussball-Liga der Welt — aber wie gross ist der Abstand
-      wirklich? 15 Saisons, 5 Ligen, Milliarden von Euro. Das Ungleichgewicht ist grösser
-      als die meisten ahnen.
-    </p>
-    <div class="kpi-row">
-      <div class="kpi-card accent">
-        <span class="kpi-number gold">€{_pl_2024:.1f}B</span>
-        <span class="kpi-label">Premier League Gesamtmarktwert 2024</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-number">{_ratio_24:.1f}×</span>
-        <span class="kpi-label">PL vs. Ø andere Top-4-Ligen (2024)</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-number">€{_net_pl_total/1e9:.1f}B</span>
-        <span class="kpi-label">PL Netto-Kaufsumme inter-liga (2012–2024)</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-number">+{_pl_tax_med:.0f}%</span>
-        <span class="kpi-label">Median-Aufschlag bei PL-Transfers (PL Tax)</span>
+<section class="page page-hero">
+  <div class="page-inner">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Top-5-Ligen Europa · Marktwert · Transfer · 2010–2024</p>
+      <h1>Eine Liga.<br>Ein anderes Spiel.</h1>
+      <div class="league-logos">{_logo_strip}</div>
+      <p class="hero-subtitle">
+        Die Premier League ist die reichste Fussball-Liga der Welt — aber wie gross ist der Abstand
+        wirklich? 15 Saisons, 5 Ligen, Milliarden von Euro. Das Ungleichgewicht ist grösser
+        als die meisten ahnen.
+      </p>
+      <div class="kpi-row">
+        <div class="kpi-card accent">
+          <span class="kpi-number gold">€{_pl_2024:.1f}B</span>
+          <span class="kpi-label">Premier League Gesamtmarktwert 2024</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-number">{_ratio_24:.1f}×</span>
+          <span class="kpi-label">PL vs. Ø andere Top-4-Ligen (2024)</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-number">€{_net_pl_total/1e9:.1f}B</span>
+          <span class="kpi-label">PL Netto-Kaufsumme inter-liga (2012–2024)</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-number">+{_pl_tax_med:.0f}%</span>
+          <span class="kpi-label">Median-Aufschlag bei PL-Transfers (PL Tax)</span>
+        </div>
+        <div class="kpi-card placeholder">
+          <span class="kpi-number muted">…</span>
+          <span class="kpi-label">Platzhalter</span>
+        </div>
+        <div class="kpi-card placeholder">
+          <span class="kpi-number muted">…</span>
+          <span class="kpi-label">Platzhalter</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  <div class="scroll-hint">Scrollen<span>↓</span></div>
+</section>
 '''))
 ```
 
@@ -674,6 +567,7 @@ fig = go.Figure(go.Sankey(
 ))
 fig.update_layout(
     height=440,
+    dragmode=False,
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     font=dict(color='rgba(255,255,255,0.82)',
@@ -814,6 +708,7 @@ fig = go.Figure(go.Treemap(
 ))
 fig.update_layout(
     height=500,
+    dragmode=False,
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     font=dict(color='rgba(255,255,255,0.88)',
@@ -987,15 +882,20 @@ display(HTML(sec(
 ```
 
 ```{=html}
-<div class="page-footer">
-  <p style="font-size:1.3rem;font-style:italic;color:rgba(255,255,255,0.82);
-            margin-bottom:1rem;max-width:720px;margin-left:auto;margin-right:auto;">
-    Die Premier League spielt nicht in einer anderen Liga.<br>
-    Sie spielt in einer anderen Realität.
-  </p>
-  Datenquelle: Transfermarkt.de &nbsp;·&nbsp;
-  Top-5-Ligen Europa &nbsp;·&nbsp;
-  Saisons 2010–2024 &nbsp;·&nbsp;
-  Plotly 2.35
-</div>
+<section class="page page-end">
+  <div class="page-inner">
+    <div class="end-card">
+      <p class="kicker">
+        Die Premier League spielt nicht in einer anderen Liga.<br>
+        Sie spielt in einer anderen Realität.
+      </p>
+      <p class="end-meta">
+        Datenquelle: Transfermarkt.de &nbsp;·&nbsp;
+        Top-5-Ligen Europa &nbsp;·&nbsp;
+        Saisons 2010–2024 &nbsp;·&nbsp;
+        Plotly 2.35
+      </p>
+    </div>
+  </div>
+</section>
 ```
