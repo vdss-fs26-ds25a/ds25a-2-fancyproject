@@ -251,7 +251,7 @@ with open('_plotly_inject.html', 'w', encoding='utf-8') as _hf:
 
 TOP5    = ['GB1','ES1','L1','IT1','FR1']
 LNAMES  = {'GB1':'Premier League','ES1':'La Liga','L1':'Bundesliga','IT1':'Serie A','FR1':'Ligue 1'}
-LCOLORS = {'GB1':'#04f5ff','ES1':'#ffffff','L1':'#e90052','IT1':'#38003c','FR1':'#00ff85'}
+LCOLORS = {'GB1':'#04f5ff','ES1':'#ffffff','L1':'#d10214','IT1':'#38003c','FR1':'#00ff85'}
 
 # ── Load JSONL (club-level per season) ─────────────────────
 rows = []
