@@ -487,7 +487,7 @@ display(HTML(f'''
         und zeigen die Entwicklung der fünf besten europäischen Fussballligen anhand Visualisierungen.
         Schon 2010 lagen die Ligen nicht gleichauf, und der Vorsprung an der Spitze ist seither sichtlich gewachsen...
       </p>
-      <p class="hero-source">Datengrundlage{_tm_credit}</p>
+      <p class="hero-source">Datenquelle{_tm_credit}</p>
     </div>
   </div>
   <div class="scroll-hint">Scrollen<span>↓</span></div>
