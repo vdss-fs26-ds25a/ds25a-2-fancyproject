@@ -1,6 +1,6 @@
 # Projektcharta
 
-## Context and Scope
+## Kontext und Umfang
 
 Dieses Projekt befindet sich im Bereich Sportdatenanalyse und Datenvisualisierung mit Fokus auf den europäischen Spitzenfussball. Ziel ist die Entwicklung eines interaktiven Dashboards zur Visualisierung und Analyse von Marktwerten, Transfersummen und weiteren Geldgeschäften im europäischen Fussball zwischen 2010 und 2025.
 
@@ -171,7 +171,7 @@ Das Dashboard wird als interaktive Webanwendung auf GitHub Pages veröffentlicht
 
 ---
 
-## Situation Assessment
+## Situationsanalyse
 
 ### Ressourcen
 
@@ -220,14 +220,14 @@ Ein interaktives Dashboard mit:
 | Kommunikativ | Vergleichbare Darstellung komplexer Finanzdaten               |
 | Erlebnis     | Interaktive Exploration und Datenentdeckung                   |
 
-### Visual Encodings
+### Visuelle Kodierungen
 
 * **Liniendiagramme:** Marktwert- und Transferentwicklung über Zeit
 * **Balkendiagramme:** Rankings und Liga-Vergleiche
 * **Tabellen:** Detaildaten und Kennzahlen
 * **Heatmaps:** Transferaktivität und Ausgabenmuster
 
-### Interactivity
+### Interaktivität
 
 * Filter nach Liga, Club und Zeitraum
 * Drill-down von Liga → Club → Saison
@@ -259,11 +259,11 @@ Das Dashboard wird automatisiert mittels GitHub Actions auf GitHub Pages veröff
 
 ## Project Plan
 
-Der detaillierte Projektplan wird in einer späteren Version ergänzt und umfasst:
+Der Projektplan gilt als Leitfaden für die Arbeiten im Datenvisualisierungsprojekt:
 
-* Datenakquise und Scraper-Entwicklung
-* Datenbereinigung und Analyse
-* Entwicklung der Visualisierungen
-* Dashboard-Implementierung
-* Testing und Optimierung
-* Deployment und Dokumentation
+| Zeitraum      | Arbeiten                                             |
+| ------------- | -----------------------------------------------------|
+| Woche 1-6     | Festsetzung der Idee, Datenakquise                   |
+| Woche 7-9     | Datenverarbeitung, erste Dashboard-Entwurfe          |
+| Woche 10-12   | Abschluss des Dashboards, sonstige Schreibarbeiten   |
+| Woche 13-14   | Abschlussarbeiten, Vorbeiretung für die Präsentation |                             
