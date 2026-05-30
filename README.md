@@ -40,21 +40,22 @@ Siehe Datei /resources/sources.md
 ## Lizenz
 Weitere Informationen finden sich in der `LICENSE`-Datei.
 
-## Projektstruktur
+## Ordnerstruktur
 
 ```text
 .
-├── docs/                 # Hauptverzeichnis für das Quarto-Dashboard
-│   ├── assets/           # Visualisierungen & Grafiken
-│   ├── data/             # Roh- und verarbeitete Datensätze (JSONL/CSV)
-│   ├── logos/            # Ligalogos
-│   ├── backlog.qmd       # Methodik und Projekt-Backlog
-│   ├── report.qmd        # Hauptdashboard (Einstiegspunkt)
-│   ├── _quarto.yml       # Quarto-Konfiguration
-│   └── ...
-├── eda/                  # Explorative Datenanalyse-Skripte
-├── template-backup/      # Archivierte Vorlagen
-├── pyproject.toml        # Projekt-Abhängigkeiten 
-├── uv.lock               # Dependency Lockfile
-└── README.md
+├── docs/                   # Verzeichnis für Quarto-Skripte und alle Logic elements des Dashboards
+│   ├── assets/             # Grafiken, Design-elemente
+│   ├── data/               # Datensätze
+│   ├── logos/              # Logos
+│   ├── data_report.qmd     # Skript Datenbericht
+│   ├── index.qmd           # Skript Hauptseite Dashboard
+│   ├── project_charta.qmd  # Skript Projektcharta
+│   ├── styles.css          # Stylesheet 
+│   └── (...)
+├── resources/               # Berichte, Präsentationen, PDFs, andere Abgaben ausserhalb von Quarto
+├── template-backup/         # Back-up der Vorlagenskripts
+├── LICENSE                  # Lizenz
+├── README.md                # Anleitung
+└── (...)
 ```
