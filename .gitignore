@@ -1,6 +1,20 @@
 # Mac Stuff
 .DS_Store
 
+# Large data files (root level duplicates)
+/data/
+/assets/sprite_*.png
+/assets/generated_image.png
+/assets/from PIL import Image.py
+/plotly.min.js
+/_plotly_inject.html
+/report.html
+/report.qmd
+/report.quarto_ipynb*
+
+# Plotly inject (generated at render time)
+docs/_plotly_inject.html
+
 # Quarto in docs
 docs/.quarto/
 

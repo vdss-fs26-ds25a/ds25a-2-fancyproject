@@ -360,12 +360,14 @@ tr_pl = tr_pl[tr_pl['mv_m'] >= 5].copy()
 # ══════════════════════════════════════════════════════════
 # KPIs for hero
 # ══════════════════════════════════════════════════════════
-_pl_2024  = mv_pivot.loc[2024, 'GB1']
-_es_2024  = mv_pivot.loc[2024, 'ES1']
-_ratio_24 = ratio_s[ratio_s['season']==2024]['ratio'].values[0]
-_net_pl_total = tr5[tr5['to_league']=='GB1']['transfer_fee'].sum() - \
-                tr5[tr5['from_league']=='GB1']['transfer_fee'].sum()
-_pl_tax_med = tr_pl['premium'].median()
+_total_mv_2024   = mv_pivot.loc[2024, TOP5].sum()
+_total_mv_2010   = mv_pivot.loc[2010, TOP5].sum()
+_mv_growth       = int((_total_mv_2024 - _total_mv_2010) / _total_mv_2010 * 100)
+_total_transfers = tr5['transfer_fee'].sum() / 1e9
+_top_league      = mv_pivot.loc[2024, TOP5].idxmax()
+_top_league_name = LNAMES[_top_league]
+_top_league_mv   = mv_pivot.loc[2024, _top_league]
+_num_transfers   = len(tr5)
 
 # ── Load SVG logos as base64 data URIs ────────────────────
 import os as _os, base64 as _b64_logo
@@ -433,28 +435,28 @@ _logo_strip = ''.join([
 _kpi_grid = f'''
       <div class="kpi-row">
         <div class="kpi-card accent">
-          <span class="kpi-number gold">€{_pl_2024:.1f}B</span>
-          <span class="kpi-label">Premier League Gesamtmarktwert 2024</span>
+          <span class="kpi-number gold">€{_total_mv_2024:.1f}B</span>
+          <span class="kpi-label">Gesamtmarktwert Top 5 Ligen 2024</span>
         </div>
         <div class="kpi-card">
-          <span class="kpi-number">{_ratio_24:.1f}×</span>
-          <span class="kpi-label">PL vs. Ø andere Top-4-Ligen (2024)</span>
+          <span class="kpi-number">+{_mv_growth}%</span>
+          <span class="kpi-label">Marktwert-Wachstum seit 2010</span>
         </div>
         <div class="kpi-card">
-          <span class="kpi-number">€{_net_pl_total/1e9:.1f}B</span>
-          <span class="kpi-label">PL Netto-Kaufsumme inter-liga (2012–2024)</span>
+          <span class="kpi-number">€{_total_transfers:.1f}B</span>
+          <span class="kpi-label">Transferausgaben (2010–2024)</span>
         </div>
         <div class="kpi-card">
-          <span class="kpi-number">+{_pl_tax_med:.0f}%</span>
-          <span class="kpi-label">Median-Aufschlag bei PL-Transfers (PL Tax)</span>
+          <span class="kpi-number">{_num_transfers:,}</span>
+          <span class="kpi-label">Analysierte Transfers zwischen Top-5-Ligen</span>
         </div>
-        <div class="kpi-card placeholder">
-          <span class="kpi-number muted">…</span>
-          <span class="kpi-label">Platzhalter</span>
+        <div class="kpi-card">
+          <span class="kpi-number gold">€{_top_league_mv:.1f}B</span>
+          <span class="kpi-label">Wertvollste Liga 2024 ({_top_league_name})</span>
         </div>
-        <div class="kpi-card placeholder">
-          <span class="kpi-number muted">…</span>
-          <span class="kpi-label">Platzhalter</span>
+        <div class="kpi-card">
+          <span class="kpi-number">15</span>
+          <span class="kpi-label">Analysierte Saisons (2010–2024)</span>
         </div>
       </div>'''
 
@@ -522,7 +524,7 @@ fig.add_annotation(x=2016, y=0.97, yref='paper', text='TV-Deal 2016',
 
 display(HTML(sec(
     'Akt I · Die Schere',
-    'Premier League: doppelt so wertvoll wie jede andere Liga.',
+    'Die Schere öffnet sich...',
     ('Der Gesamtmarktwert aller Klubs pro Saison — in den fünf grössten europäischen Ligen. '
      'Bis 2015 lagen die Ligen näher beieinander. Mit dem neuen TV-Vertrag der Premier League 2016 '
      'öffnete sich die Schere schlagartig. Heute ist die PL mehr als doppelt so wertvoll wie jede '
@@ -530,7 +532,7 @@ display(HTML(sec(
     ch(fig),
     hl=('Der TV-Vertrag 2016 brachte der Premier League rund <strong>£5,1 Milliarden</strong> '
         'über drei Saisons — mehr als jede andere Liga an TV-Geldern in ihrer Geschichte erhalten hatte. '
-        'Das Geld verwandelte sich direkt in Marktwert.'),
+        'Das Geld wurde direkt in Marktwert investiert.'),
     hl_type='gold',
     cap='Quelle: Transfermarkt.de · Gesamtmarktwert aller Erstliga-Klubs je Saison (Saisonbeginn)'
 )))
@@ -564,13 +566,13 @@ fig.update_layout(
 themed(fig, height=340)
 
 display(HTML(sec(
-    'Akt I · Fortsetzung',
-    'Vor 2016: 1.3×. Heute: 2.4×.',
+    'Akt I · Die Schere',
+    'Der TV-Deal als Kipp-Punkt.',
     ('Wie viel grösser ist die Premier League im Vergleich zum Durchschnitt der anderen vier '
      'Top-Ligen? Diese eine Linie erzählt die Geschichte komprimiert. Zwischen 2010 und 2015 '
-     'lag der Faktor relativ stabil bei 1.2–1.4. Dann: Kipp-Punkt.'),
+     'lag der Faktor relativ stabil bei 1.6–1.8. Dann kam der Zuwachs.'),
     ch(fig),
-    bridge='Wohin fliesst das Geld? Direkt in den Transfermarkt.'
+    bridge='Aber wohin genau fliesst das Geld?'
 )))
 ```
 
@@ -627,9 +629,9 @@ display(HTML(sec(
     hl=('Die vier grössten Geldflüsse in die PL: aus Ligue 1 <strong>€2.4B</strong>, '
         'aus der Bundesliga <strong>€2.3B</strong>, aus La Liga <strong>€2.1B</strong>, '
         'aus der Serie A <strong>€1.9B</strong>. '
-        'Summe: <strong>€8.7 Milliarden</strong> netto Abfluss aus den Konkurrenzligen.'),
+        'Total <strong>€6.9 Milliarden</strong> netto Ausgaben von der Insel'),
     hl_type='red',
-    cap='Nur Transfers zwischen verschiedenen Top-5-Ligen · mit bekannter Ablösesumme · 2012–2024'
+    cap='Nur Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · 2012–2024'
 )))
 ```
 
@@ -657,7 +659,7 @@ fig.update_layout(
 themed(fig, height=430)
 
 display(HTML(sec(
-    'Akt II · Fortsetzung',
+    'Akt II · Transfer-Dominanz',
     'PL-Klubs geben netto am meisten aus — jede Saison.',
     ('Die Netto-Transferbilanz zeigt: Wer kauft mehr als er verkauft? '
      'Negative Werte bedeuten Nettokäufer (mehr ausgegeben als eingenommen). '
@@ -711,12 +713,12 @@ fig.update_layout(
 themed(fig, height=400)
 
 display(HTML(sec(
-    'Akt III · Spielerwert-Konzentration',
+    'Akt III · Marktwert-Konzentration',
     'Die teuersten 500 Spieler Europas — und wo sie spielen.',
     ('Jeder Punkt ist ein Spieler: sein aktueller Marktwert auf der X-Achse, '
      'seine Liga auf der Y-Achse. Die Punkte sind leicht gestreut um die Ligalinie. '
-     'Das Muster ist sofort sichtbar: Im oberen Wertebereich — ab €40M — '
-     'dominiert eine Farbe überwältigend.'),
+     'Das Muster ist sofort sichtbar: Im oberen Wertebereich (hier ab €40M aufwärts) '
+     'beginnt eine Farbe zu dominieren.'),
     ch(fig),
     hl=('Die Premier League stellt <strong>654</strong> der 2006 wertvollsten Spieler Europas '
         '(MV ≥ €5M) — mehr als La Liga (316), Serie A (381), Bundesliga (320) und '
@@ -758,7 +760,7 @@ fig.update_layout(
 )
 
 display(HTML(sec(
-    'Akt III · Fortsetzung',
+    'Akt III · Marktwert-Konzentration',
     'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
     ('Die Fläche jedes Feldes entspricht dem Gesamtmarktwert der Klubs — '
      'aufgeteilt nach Liga und innerhalb der Ligen nach den Top-12-Klubs (Saison 2024). '
@@ -770,46 +772,50 @@ display(HTML(sec(
 ```
 
 ```{python}
-#| label: s4a-mv-group
-# ── Chart 4A: Slope — avg final position by MV quartile group ─
-# Shows how predictive squad wealth is across leagues.
+#| label: s4a-mv-corr
+# ── Chart 4A: Pearson correlation MV vs. final rank per league per season ─
+from scipy.stats import pearsonr
+
+corr_rows = []
+for lg in TOP5:
+    for ssn, grp in scatter_df[scatter_df['competition_id']==lg].groupby('season'):
+        if len(grp) >= 5:
+            r, _ = pearsonr(grp['mv_m'], -grp['rank'])
+            corr_rows.append({'competition_id': lg, 'season': ssn, 'r': round(r, 3)})
+corr_df = pd.DataFrame(corr_rows)
+
 fig = go.Figure()
 for lg in TOP5:
-    _d = grp_avg[grp_avg['competition_id']==lg].copy()
-    _d['mv_grp'] = pd.Categorical(_d['mv_grp'], categories=_grp_order, ordered=True)
-    _d = _d.sort_values('mv_grp')
-    _lw = 2.8 if lg == 'GB1' else 1.8
+    _d = corr_df[corr_df['competition_id']==lg].sort_values('season')
     fig.add_trace(go.Scatter(
-        x=_d['mv_grp'],
-        y=_d['avg_rank'],
+        x=_d['season'], y=_d['r'],
         mode='lines+markers',
         name=LNAMES[lg],
-        line=dict(color=LCOLORS[lg], width=_lw),
-        marker=dict(size=9 if lg=='GB1' else 7,
-                    color=LCOLORS[lg],
-                    line=dict(color='rgba(0,0,0,0.4)', width=1)),
-        hovertemplate='%{x}: Ø Platz %{y:.1f}<extra>' + LNAMES[lg] + '</extra>'
+        line=dict(color=LCOLORS[lg], width=2),
+        marker=dict(size=5, color=LCOLORS[lg]),
+        hovertemplate='<b>%{x}</b>: r = %{y:.2f}<extra>' + LNAMES[lg] + '</extra>'
     ))
+fig.add_hline(y=0, line_color='rgba(255,255,255,0.2)', line_dash='dot')
 fig.update_layout(
-    xaxis=dict(title='Kaderwert-Gruppe (nach prozentualem Rang)',
-               tickfont=dict(size=11)),
-    yaxis=dict(title='Ø Abschlusstabellenplatz', autorange='reversed',
-               tickvals=list(range(1, 20, 2))),
+    xaxis_title='Saison',
+    yaxis=dict(title='Pearson-Korrelation (Kaderwert ↔ Tabellenplatz)', range=[-0.1, 1.05]),
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
 themed(fig, height=420)
 
 display(HTML(sec(
-    'Akt IV · Kauft Geld Tabellenplätze?',
-    'Wer viel zahlt, landet oben — aber die PL bestraft Armut am härtesten.',
-    ('Drei Gruppen: die reichsten 25% der Klubs einer Liga, das Mittelfeld, das untere Drittel. '
-     'Auf der Y-Achse steht ihr durchschnittlicher Abschlusstabellenplatz (2012–2024). '
-     'Je steiler die Linie, desto stärker sagt Geld den Erfolg vorher.'),
+    'Akt IV · Marktwert = Leistung?',
+    'Je reicher der Kader, desto besser der Platz — in allen fünf Ligen.',
+    ('Die Pearson-Korrelation misst, wie stark der Kaderwert den Tabellenplatz voraussagt '
+     '(1.0 = perfekte Übereinstimmung, 0 = kein Zusammenhang). '
+     'Ein Wert über 0.7 gilt als starker Zusammenhang. '
+     'Die Linien zeigen: In jeder der fünf Ligen kauft Geld seit Jahren zuverlässig Punkte.'),
     ch(fig),
-    hl=('In der <strong>Bundesliga</strong> ist die Linie flacher als erwartet — Bayern verzerrt das Bild. '
-        'In der <strong>Premier League</strong> ist der Abstieg von Kaderwert-Gruppe 1 zu Gruppe 3 '
-        'besonders steil: Klubs ohne grosses Budget landen strukturell im hinteren Tabellendrittel.'),
-    cap='Durchschnittswerte 2012–2024 · Kaderwert-Gruppe = proportionaler Rang innerhalb der Liga'
+    hl=('Die Korrelation liegt in allen Ligen konstant zwischen 0.6 und 0.9 — '
+        'mit leichten Schwankungen je nach Saison. '
+        '<strong>Geld erklärt den Erfolg ligaübergreifend</strong>, '
+        'nicht nur in einer einzigen Liga.'),
+    cap='Pearson-Korrelation pro Saison und Liga · Basis: Kaderwert und Abschlusstabellenplatz (2012–2024)'
 )))
 ```
 
@@ -839,83 +845,68 @@ fig.update_layout(
 themed(fig, height=390)
 
 display(HTML(sec(
-    'Akt IV · Fortsetzung',
-    'Reich unter Reichen: 4 Klubs kontrollieren über die Hälfte des PL-Wertes.',
+    'Akt IV · Marktwert = Leistung?',
+    'Reichtum konzentriert sich.',
     ('Wie viel Prozent des gesamten Kaderwerts einer Liga entfällt auf die vier reichsten Klubs? '
      'Ein hoher Wert bedeutet: Wenige Klubs haben fast alles, der Rest kämpft um Reste. '
-     'Die Premier League — trotz höchstem Gesamt-Reichtum — ist auch intern am stärksten '
-     'gespalten. Die Schere öffnet sich seit 2016 auch innerhalb der Liga.'),
+     'In jeder der fünf Ligen konzentriert sich der Reichtum an der Spitze'),
     ch(fig),
-    hl=('Selbst innerhalb der reichsten Liga der Welt gibt es eine Zweiklassengesellschaft. '
-        'Manchester City, Arsenal, Liverpool — und dann der Rest. '
-        '<strong>Geld schafft Ungleichheit auf zwei Ebenen:</strong> zwischen den Ligen und '
-        'innerhalb der Premier League selbst.'),
-    bridge='Woher kommt dieses Talent überhaupt — und zahlt die PL zu viel?'
+    hl=('In jeder Liga gibt es eine Zweiklassengesellschaft. Die Reichen holen auf, die Armen fallen zurück. Geld schafft Ungleichheit auf zwei Ebenen: zwischen den Ligen — und innerhalb jeder Liga selbst.'),
+    bridge='Woher kommt dieses Talent überhaupt — und zahlen die reichen Ligen zu viel dafür?'
 )))
 ```
 
 ```{python}
 #| label: s5a-pl-tax
-# ── Chart 5A: Scatter — PL tax (fee vs market value) ──────
-_max_val = max(tr_pl['mv_m'].max(), tr_pl['fee_m'].max())
-_diag_x  = [0, _max_val]
+# ── Chart 5A: Median premium % per season per buying league ──
+_tax_all = []
+for lg in TOP5:
+    _d = tr[(tr['to_league'] == lg) &
+            (tr['from_league'] != lg) &
+            (tr['from_league'].isin(TOP5)) &
+            (tr['transfer_fee'] > 1e6) &
+            (tr['market_value_in_eur'] > 5e6) &
+            (tr['transfer_season'].str[:2].apply(lambda x: 2000+int(x) if x.isdigit() else int(x)).between(2012, 2024))].copy()
+    _d['fee_m'] = _d['transfer_fee'] / 1e6
+    _d['mv_m']  = _d['market_value_in_eur'] / 1e6
+    _d['premium'] = ((_d['fee_m'] / _d['mv_m']) - 1) * 100
+    _grp = _d.groupby('transfer_season')['premium'].median().reset_index()
+    _grp['league'] = lg
+    _tax_all.append(_grp)
+tax_df = pd.concat(_tax_all).rename(columns={'transfer_season': 'season', 'premium': 'med_pct'})
 
 fig = go.Figure()
-# Diagonal: fee == market value
-fig.add_trace(go.Scatter(
-    x=_diag_x, y=_diag_x,
-    mode='lines', name='Fee = Marktwert',
-    line=dict(color='rgba(255,255,255,0.28)', width=1.5, dash='dot'),
-    hoverinfo='skip'
-))
-# Points per source league
-for lg in ['ES1','L1','IT1','FR1']:
-    _d = tr_pl[tr_pl['from_league']==lg]
+fig.add_hline(y=0, line_color='rgba(255,255,255,0.2)', line_dash='dot')
+for lg in TOP5:
+    _d = tax_df[tax_df['league']==lg].sort_values('season')
     fig.add_trace(go.Scatter(
-        x=_d['mv_m'], y=_d['fee_m'],
-        mode='markers', name=f'von {LNAMES[lg]}',
-        marker=dict(
-            color=LCOLORS[lg], size=7, opacity=0.65,
-            line=dict(color='rgba(0,0,0,0.3)', width=0.5)
-        ),
-        text=_d['player_name'],
-        customdata=np.column_stack([_d['transfer_season'], _d['premium'].round(0)]),
-        hovertemplate=(
-            '<b>%{text}</b> (%{customdata[0]})<br>'
-            'Marktwert: €%{x:.1f}M<br>'
-            'Ablöse: €%{y:.1f}M<br>'
-            'Aufschlag: +%{customdata[1]:.0f}%<extra>' + LNAMES[lg] + '</extra>'
-        )
+        x=_d['season'], y=_d['med_pct'].round(1),
+        mode='lines+markers',
+        name=LNAMES[lg],
+        line=dict(color=LCOLORS[lg], width=2),
+        marker=dict(size=5, color=LCOLORS[lg]),
+        hovertemplate='<b>%{x}</b>: +%{y:.1f}%<extra>' + LNAMES[lg] + '</extra>'
     ))
 fig.update_layout(
-    xaxis=dict(title='Marktwert zum Zeitpunkt des Transfers (Mio. €)', range=[0, _max_val * 1.05]),
-    yaxis=dict(title='Tatsächliche Ablösesumme (Mio. €)', range=[0, _max_val * 1.05]),
+    xaxis_title='Saison',
+    yaxis=dict(title='Median-Aufschlag gegenüber Marktwert (%)', ticksuffix='%'),
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
-themed(fig, height=490)
-# Annotation
-fig.add_annotation(
-    x=_max_val * 0.55, y=_max_val * 0.62,
-    text='Über der Linie = PL zahlt Aufschlag',
-    showarrow=False,
-    font=dict(color='rgba(212,168,48,0.7)', size=10),
-    bgcolor='rgba(0,0,0,0)'
-)
+themed(fig, height=420)
 
 display(HTML(sec(
-    'Akt V · Brain Drain & PL Tax',
-    'Die Premier League zahlt systematisch über Marktwert.',
-    ('Bei jedem Punkt ist der X-Wert der offizielle Marktwert des Spielers zum Zeitpunkt '
-     'des Transfers — und der Y-Wert die tatsächlich bezahlte Ablöse. '
-     'Punkte über der diagonalen Linie: Die PL zahlte mehr als der Spieler "wert" war. '
-     'Das ist die sogenannte <em>PL Tax</em>.'),
+    'Akt V · Transfer-Aufschläge',
+    'Die Premier League zahlt am meisten über Marktwert — aber sie ist nicht allein.',
+    ('Für jeden Transfer innerhalb der Top-5-Ligen wurde der prozentuale Aufschlag '
+     'gegenüber dem offiziellen Transfermarkt-Wert berechnet. '
+     'Dargestellt ist der Median-Aufschlag pro Saison und Käuferliga. '
+     'Ein Wert von +33% bedeutet: Diese Liga zahlte im Schnitt ein Drittel mehr als der Spieler "wert" war.'),
     ch(fig),
-    hl=('Der Median-Aufschlag liegt bei <strong>+27%</strong> über dem offiziellen Marktwert — '
-        'das heisst, PL-Klubs zahlen im Schnitt ein Viertel mehr als der Transfermarkt-Wert. '
-        'Bei Transfers über €50M steigt dieser Aufschlag oft auf 50–100%. '
-        '<strong>Die PL Tax ist real. Und sie treibt die Preise global.</strong>'),
+    hl=('Die Premier League zahlt strukturell den höchsten Aufschlag — '
+        'doch auch andere Ligen überzahlen in bestimmten Saisons deutlich. '
+        '<strong>Der sogenannte Premier-League-Tax setzt den Marktpreis, dem alle folgen müssen.</strong>'),
     hl_type='red',
-    cap='Transfers TO Premier League · Ablöse > €1M · Marktwert > €5M · 2012–2024'
+    cap='Transfers zwischen Top-5-Ligen · Ablöse > €1M, Marktwert > €5M von 2012–2024'
 )))
 ```
 
