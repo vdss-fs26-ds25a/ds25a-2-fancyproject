@@ -154,3 +154,6 @@ docs/build/
 # R/Jupyter History
 .Rhistory
 docs/.Rhistory
+
+# freeze ordner
+_freeze/
