@@ -32,7 +32,12 @@ execute:
   function arc(d){return '<path d="'+d+'" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>';}
   function drawField(){
     var svg=document.getElementById('field-svg'); if(!svg) return;
-    var W=window.innerWidth, H=window.innerHeight; if(H<200) return;
+    /* clientWidth/Height = the content area, EXCLUDING the scrollbar. The card
+       blocks are centred in this same area, so the halfway line (at W/2) lands
+       exactly on the block's centred divider. Using innerWidth here would shift
+       the line half a scrollbar to the right of the divider. */
+    var d=document.documentElement;
+    var W=d.clientWidth, H=d.clientHeight; if(H<200) return;
     svg.setAttribute('viewBox','0 0 '+W+' '+H);
     svg.setAttribute('width',W); svg.setAttribute('height',H);
     var pad=Math.round(Math.min(W,H)*0.05);
@@ -58,7 +63,7 @@ execute:
   function placeSprites(){
     var layer=document.getElementById('sprite-layer');
     if(!layer||!window.SPRITES||!SPRITES.length) return;
-    var W=window.innerWidth, H=window.innerHeight; layer.innerHTML='';
+    var d=document.documentElement, W=d.clientWidth, H=d.clientHeight; layer.innerHTML='';
     PL.forEach(function(p,i){
       var src=SPRITES[i%SPRITES.length]; if(!src) return;
       var sz=40+(i%3)*8, rot=(i%2?1:-1)*(4+i%9);

@@ -32,10 +32,6 @@ html {
   font-size: 18px;
   scroll-behavior: smooth;
   overflow-anchor: none;
-  /* Reserve the scrollbar's width on BOTH edges so page content stays centred
-     in the true viewport. Without this the centred block sits ~half a scrollbar
-     to the left of the pitch's halfway line (drawn by the fixed SVG at 50vw). */
-  scrollbar-gutter: stable both-edges;
 }
 html.snap-on { scroll-snap-type: y proximity; }
 body {
@@ -65,7 +61,7 @@ body {
       var(--sb) 7.69%, var(--sb) 15.38%);
 }
 #field-svg {
-  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  position: fixed; inset: 0; width: 100%; height: 100%;
   z-index: -2; pointer-events: none;
 }
 #sprite-layer {
@@ -99,33 +95,38 @@ strong { font-weight: 600; color: var(--w); }
 }
 .page-inner { width: 100%; max-width: 1180px; }
 
-
+/* Single unified block: one card holding both columns, split by a divider.
+   align-items:stretch makes both columns fill the full block height, so the
+   divider runs edge to edge. min-height standardizes every block to --block-h
+   (charts centered with breathing room) while never clipping longer text. */
 .spread {
-  position: relative;                 
+  position: relative;                 /* anchor for the centred divider */
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);   
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);   /* equal → boundary on block centre */
   align-items: stretch;
   min-height: var(--block-h);
   background: rgba(var(--ink),0.55);
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 16px;
   backdrop-filter: blur(4px);
-  overflow: hidden;                 
+  overflow: hidden;                 /* keeps the columns clipped to the rounded card */
 }
-
+/* The divider: a 2px line centred exactly on the block's mid-line, matching the
+   2px pitch halfway line. The block is centred in the content area and the field
+   is now drawn across that same area (see drawField in index.qmd), so the block
+   centre and the halfway line coincide — the two sit directly on top of each other. */
 .spread::after {
   content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
   width: 2px; transform: translateX(-1px);
   background: var(--divider); pointer-events: none;
 }
-
-
+/* Left: narration — reads top-down like a column of newsprint. */
 .col-text {
   min-width: 0;
   padding: clamp(1.5rem, 2.8vw, 2.5rem);
   padding-right: clamp(1.5rem, 2.2vw, 2rem);
 }
-
+/* Right: plot — vertically centered in the shared block height. */
 .col-chart {
   min-width: 0;
   display: flex; flex-direction: column; justify-content: center;
@@ -296,13 +297,13 @@ strong { font-weight: 600; color: var(--w); }
 @media (max-width: 900px) {
   html.snap-on { scroll-snap-type: none; }
   .spread { grid-template-columns: 1fr; min-height: 0; }
-  .spread::after { display: none; }            
+  .spread::after { display: none; }            /* no vertical divider when stacked */
   .page { min-height: 100vh; padding: 7vh 6vw; }
   .col-text { padding-right: clamp(1.5rem, 2.8vw, 2.5rem); }
   .col-chart {
     order: 2; justify-content: flex-start;
     padding-left: clamp(1.2rem, 2vw, 1.6rem);
-    border-top: 2px solid var(--divider);      
+    border-top: 2px solid var(--divider);      /* divider runs horizontally when stacked */
   }
   .deck-dots { display: none; }
 }
