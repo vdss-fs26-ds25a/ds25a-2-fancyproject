@@ -1,7 +1,6 @@
 # VDSS Team 2: Das grosse Geld im Europäischen Fussball
 
 [![Action](https://img.shields.io/badge/zum_Dashboard-blue?style=for-the-badge&logo=quarto)](https://vdss-fs26-ds25a.github.io/ds25a-2-fancyproject) [![Quarto](https://img.shields.io/badge/Quarto-000000?style=flat&logo=quarto&logoColor=white)](https://quarto.org)
-[![Jupyter](https://img.shields.io/badge/Jupyter-f37626?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org)
 [![uv](https://img.shields.io/badge/uv-deed00?style=flat&logo=uv&logoColor=black)](https://astral.sh/uv)
 
 ## Projektbeschreibung
