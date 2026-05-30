@@ -379,6 +379,13 @@ for _lg, _fn in _LOGO_FILES.items():
     except:
         _LOGOS[_lg] = ''
 
+# ── Transfermarkt wordmark (PNG) as base64 data URI ───────
+try:
+    with open('logos/transfermarkt-logo.png','rb') as _tmf:
+        _TM_LOGO = 'data:image/png;base64,' + _b64_logo.b64encode(_tmf.read()).decode()
+except:
+    _TM_LOGO = ''
+
 # ── Sprite background removal ─────────────────────────────
 def _remove_bg(path, tol=22):
     img = _PILImage.open(path).convert('RGBA')
@@ -421,18 +428,9 @@ _logo_strip = ''.join([
     for lg in TOP5 if _LOGOS.get(lg)
 ])
 
-display(HTML(f'''
-<section class="page page-hero">
-  <div class="page-inner">
-    <div class="hero-content">
-      <p class="hero-eyebrow">Top-5-Ligen Europa · Marktwert · Transfer · 2010–2024</p>
-      <h1>Eine Liga.<br>Ein anderes Spiel.</h1>
-      <div class="league-logos">{_logo_strip}</div>
-      <p class="hero-subtitle">
-        Die Premier League ist die reichste Fussball-Liga der Welt — aber wie gross ist der Abstand
-        wirklich? 15 Saisons, 5 Ligen, Milliarden von Euro. Das Ungleichgewicht ist grösser
-        als die meisten ahnen.
-      </p>
+# ── KPI tiles: preserved for later use (not rendered on the intro page) ──
+# To bring them back, drop {_kpi_grid} into the hero markup below.
+_kpi_grid = f'''
       <div class="kpi-row">
         <div class="kpi-card accent">
           <span class="kpi-number gold">€{_pl_2024:.1f}B</span>
@@ -458,7 +456,36 @@ display(HTML(f'''
           <span class="kpi-number muted">…</span>
           <span class="kpi-label">Platzhalter</span>
         </div>
-      </div>
+      </div>'''
+
+_tm_credit = (f'<a class="tm-logo" href="https://www.transfermarkt.de" '
+              f'target="_blank" rel="noopener"><img src="{_TM_LOGO}" '
+              f'alt="Transfermarkt.de"></a>') if _TM_LOGO else ''
+
+display(HTML(f'''
+<section class="page page-hero">
+  <div class="page-inner">
+    <div class="hero-content">
+      <p class="hero-eyebrow">VDSS · Interaktives Dashboard</p>
+      <h1>Das grosse Geld im europäischen Fussball</h1>
+      <p class="hero-subtitle">
+        Eine Analyse der Saisons 2010 bis 2024 der Top-5-Ligen Europas
+      </p>
+      <div class="league-logos">{_logo_strip}</div>
+      <p class="hero-intro">
+        Wie viel sind Fussballspieler wert — und wie sieht der finanzielle
+        Vergleich der grossen Ligen Europas aus? Dieses Dashboard verfolgt über fünfzehn Saisons,
+        wie sich die Marktwerte der Kader in den fünf grössten europäischen Ligen entwickelt
+        haben: in der englischen Premier League, der spanischen La Liga, der deutschen
+        Bundesliga, der italienischen Serie A und der französischen Ligue 1.
+      </p>
+      <p class="hero-intro">
+        Auf den folgenden Seiten erkunden wir die Daten von Transfermarkt.de, der weltweit
+        umfangreichsten Datenbank für Fussballdaten, stellen Vergleiche zwischen den Ligen auf, 
+        und zeigen die Entwicklung der fünf besten europäischen Fussballligen anhand Visualisierungen.
+        Schon 2010 lagen die Ligen nicht gleichauf, und der Vorsprung an der Spitze ist seither sichtlich gewachsen...
+      </p>
+      <p class="hero-source">Datengrundlage{_tm_credit}</p>
     </div>
   </div>
   <div class="scroll-hint">Scrollen<span>↓</span></div>
@@ -692,8 +719,8 @@ display(HTML(sec(
      'dominiert eine Farbe überwältigend.'),
     ch(fig),
     hl=('Die Premier League stellt <strong>654</strong> der 2006 wertvollsten Spieler Europas '
-        '(MV ≥ €5M). Zum Vergleich: La Liga (316), Serie A (381), Bundesliga (320) und '
-        'Ligue 1 (335). Auch der Median-Marktwert liegt mit '
+        '(MV ≥ €5M) — mehr als La Liga (316), Serie A (381), Bundesliga (320) und '
+        'Ligue 1 (335) zusammen. Und ihr Median-Marktwert liegt mit '
         '<strong>€17M</strong> weit über dem der Konkurrenz (€10M).'),
     hl_type='red',
     cap='Top 500 Spieler nach aktuellem/letztem Marktwert (Transfermarkt.de)'
