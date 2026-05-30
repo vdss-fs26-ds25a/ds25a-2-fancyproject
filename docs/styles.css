@@ -20,6 +20,12 @@
   --gold: #d4a830;
   --disp: 'Oswald','Arial Narrow',sans-serif;
   --body: 'Barlow','Segoe UI','Helvetica Neue',sans-serif;
+  /* One standardized height for every two-column block. Sized to the first
+     content page (the "Premier League: doppelt so wertvoll" spread, whose
+     headline-driven text column is the tallest element in the deck).
+     Charts are shorter than this and get centered inside it. Tune in ONE place. */
+  --block-h: 700px;
+  --divider: rgba(255,255,255,0.16);   /* the line between narration and plot */
 }
 
 html {
@@ -89,25 +95,35 @@ strong { font-weight: 600; color: var(--w); }
 }
 .page-inner { width: 100%; max-width: 1180px; }
 
+/* Single unified block: one card holding both columns, split by a divider.
+   align-items:stretch makes both columns fill the full block height, so the
+   divider runs edge to edge. min-height standardizes every block to --block-h
+   (charts centered with breathing room) while never clipping longer text. */
 .spread {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.12fr);
-  gap: clamp(1.6rem, 3.5vw, 3.6rem);
-  align-items: center;
+  align-items: stretch;
+  min-height: var(--block-h);
+  background: rgba(var(--ink),0.55);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+  overflow: hidden;                 /* keeps the columns clipped to the rounded card */
 }
+/* Left: narration — reads top-down like a column of newsprint. */
 .col-text {
-  background: rgba(var(--ink),0.56);
-  border: 1px solid rgba(255,255,255,0.09);
-  border-radius: 14px;
-  padding: clamp(1.4rem, 2.6vw, 2.4rem);
-  backdrop-filter: blur(4px);
+  min-width: 0;
+  padding: clamp(1.5rem, 2.8vw, 2.5rem);
+  padding-right: clamp(1.5rem, 2.2vw, 2rem);
 }
+/* Right: plot — vertically centered in the shared block height. The left border
+   IS the divider; it spans the full height because the column is stretched. */
 .col-chart {
-  background: rgba(var(--ink),0.50);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 12px 12px 6px;
-  backdrop-filter: blur(4px);
+  min-width: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(1.2rem, 2vw, 1.6rem);
+  padding-left: clamp(1.5rem, 2.2vw, 2rem);
+  border-left: 1px solid var(--divider);
 }
 
 .section-label {
@@ -256,26 +272,31 @@ strong { font-weight: 600; color: var(--w); }
 .deck-dots button:hover { border-color: #fff; }
 .deck-dots button.active { background: var(--gold); border-color: var(--gold); transform: scale(1.25); }
 
-.col-text, .col-chart, .hero-content, .end-card {
+.spread, .hero-content, .end-card {
   opacity: 0; transform: translateY(28px);
   transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
 }
+.page.in-view .spread,
 .page.in-view .hero-content,
 .page.in-view .end-card { opacity: 1; transform: none; }
-.page.in-view .col-text  { opacity: 1; transform: none; transition-delay: .05s; }
-.page.in-view .col-chart { opacity: 1; transform: none; transition-delay: .16s; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .col-text, .col-chart, .hero-content, .end-card { opacity: 1 !important; transform: none !important; transition: none; }
+  .spread, .hero-content, .end-card { opacity: 1 !important; transform: none !important; transition: none; }
   .scroll-hint span { animation: none; }
 }
 
 @media (max-width: 900px) {
   html.snap-on { scroll-snap-type: none; }
-  .spread { grid-template-columns: 1fr; gap: 1.2rem; }
+  .spread { grid-template-columns: 1fr; min-height: 0; }
   .page { min-height: 100vh; padding: 7vh 6vw; }
-  .col-chart { order: 2; }
+  .col-text { padding-right: clamp(1.5rem, 2.8vw, 2.5rem); }
+  .col-chart {
+    order: 2; justify-content: flex-start;
+    padding-left: clamp(1.2rem, 2vw, 1.6rem);
+    border-left: none;
+    border-top: 1px solid var(--divider);   /* divider runs horizontally when stacked */
+  }
   .deck-dots { display: none; }
 }
 
