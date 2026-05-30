@@ -601,7 +601,7 @@ display(HTML(sec(
     hl=('Die vier grössten Geldflüsse in die PL: aus Ligue 1 <strong>€2.4B</strong>, '
         'aus der Bundesliga <strong>€2.3B</strong>, aus La Liga <strong>€2.1B</strong>, '
         'aus der Serie A <strong>€1.9B</strong>. '
-        'Total <strong>€6.9 Milliarden</strong> netto Zufluss auf die Insel'),
+        'Total <strong>€6.9 Milliarden</strong> netto Ausgaben von der Insel'),
     hl_type='red',
     cap='Nur Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · 2012–2024'
 )))
