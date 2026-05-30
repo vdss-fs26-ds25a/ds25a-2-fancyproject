@@ -12,8 +12,8 @@
 /report.qmd
 /report.quarto_ipynb*
 
-# Plotly inject 
 docs/_plotly_inject.html
+docs/plotly.min.js
 
 # QUARTO 
 docs/.quarto/
