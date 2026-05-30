@@ -39,7 +39,6 @@ Die Webpage  im .html-Format befindet sich danach im Ordner `docs/build/`.
 Weitere Informationen finden sich in der `LICENSE`-Datei.
 
 ## Projektstruktur
-Das Repository ist strukturiert, um Dashboard-Logik, Daten und explorative Analysen sauber zu trennen:
 
 ```text
 .
