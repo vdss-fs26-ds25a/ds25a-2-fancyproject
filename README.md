@@ -35,6 +35,9 @@ Stelle sicher, dass [uv](https://github.com/astral-sh/uv) auf deinem System inst
 
 Die Webpage  im .html-Format befindet sich danach im Ordner `docs/build/`.
 
+## Quellen
+Siehe Datei /resources/sources.md
+
 ## Lizenz
 Weitere Informationen finden sich in der `LICENSE`-Datei.
 
