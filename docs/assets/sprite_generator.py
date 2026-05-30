@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-# ---- CONFIG ----
 INPUT_FILE = "./generated_image3.png"     
 OUTPUT_DIR = "./"
 MIN_SPRITE_AREA = 5000  # Adjust if your sprites are smaller/larger
@@ -14,13 +13,13 @@ def main():
         print(f"Error: Could not find '{input_path}'.")
         return
 
-    # 1. Read the image and completely ignore any fake alpha channels
+    # Read the image and completely ignore any fake alpha channels
     img = cv2.imread(str(input_path), cv2.IMREAD_COLOR)
     if img is None:
         print("Error: Could not read image.")
         return
 
-    # 2. Convert to HSV color space to target the checkerboard
+    # Convert to HSV color space to target the checkerboard
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     
     # Checkerboards are light gray and white.
@@ -35,17 +34,13 @@ def main():
     # Invert the mask: Sprites become WHITE (255), Background becomes BLACK (0)
     mask = cv2.bitwise_not(bg_mask)
 
-    # 3. Morphological Filtering (The digital vacuum)
     kernel = np.ones((7, 7), np.uint8)
     # Erase the tiny specks of noise left by the AI's imperfect checkerboard
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=2)
     # Fill in any accidental holes inside your actual sprite
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=3)
 
-    # ---> DEBUG: Check this image to see what the script is cutting!
-    cv2.imwrite("debug_mask.png", mask)
-
-    # 4. Find contours (RETR_EXTERNAL ensures we only get the outer boundary)
+    # Find contours (RETR_EXTERNAL ensures we only get the outer boundary)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     outdir = Path(OUTPUT_DIR)
@@ -71,7 +66,7 @@ def main():
         print(f"Saved: {output_path}")
         count += 1
 
-    print(f"\nDone! Extracted {count - 1} sprites from the fake-alpha hellscape.")
+    print(f"\nDone! Extracted {count - 1} sprites")
 
 if __name__ == "__main__":
     main()
