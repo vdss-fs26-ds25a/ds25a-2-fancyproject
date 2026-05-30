@@ -12,13 +12,15 @@
 /report.qmd
 /report.quarto_ipynb*
 
-# Plotly inject (generated at render time)
+# Plotly inject 
 docs/_plotly_inject.html
 
-# Quarto in docs
+# QUARTO 
 docs/.quarto/
+docs/_freeze/
+docs/**/*.quarto_ipynb
+docs/build/
 
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -145,15 +147,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-/.quarto/
-**/*.quarto_ipynb
-
-# Quarto local build output
-docs/build/
-
 # R/Jupyter History
 .Rhistory
 docs/.Rhistory
-
-# freeze ordner
-_freeze/
