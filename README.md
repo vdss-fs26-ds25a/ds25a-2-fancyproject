@@ -45,18 +45,18 @@ Weitere Informationen finden sich in der `LICENSE`-Datei.
 
 ```text
 .
-├── docs/ # Verzeichnis für Quarto-Skripte und alle Logic elements des Dashboards
-│   ├── assets/ # Grafiken, Design-elemente
-│   ├── data/ # Datensätze
-│   ├── logos/ # Logos
-│   ├── data_report.qmd # Skript Datenbericht
-│   ├── index.qmd # Skript Hauptseite Dashboard
-│   ├── project_charta.qmd # Skript Projektcharta
-│   ├── styles.css # Stylesheet 
+├── docs/                   # Verzeichnis für Quarto-Skripte und alle Logic elements des Dashboards
+│   ├── assets/             # Grafiken, Design-elemente
+│   ├── data/               # Datensätze
+│   ├── logos/              # Logos
+│   ├── data_report.qmd     # Skript Datenbericht
+│   ├── index.qmd           # Skript Hauptseite Dashboard
+│   ├── project_charta.qmd  # Skript Projektcharta
+│   ├── styles.css          # Stylesheet 
 │   └── (...)
-├── resources/ # Berichte, Präsentation, PDFs, andere Abgaben ausserhalb von Quarto
-├── template-backup/ # Back-up der Vorlagenskripts
-├── LICENSE # Lizenz
-├── README.md # Anleitung
+├── resources/               # Berichte, Präsentationen, PDFs, andere Abgaben ausserhalb von Quarto
+├── template-backup/         # Back-up der Vorlagenskripts
+├── LICENSE                  # Lizenz
+├── README.md                # Anleitung
 └── (...)
 ```
