@@ -1,6 +1,6 @@
 # Dashboard-Quellen und Literatur
 
-Die finanziellen Aussagen und Kennzahlen unseres Dashboards stützen sich auf eine Mischung aus Transfermarkt-Daten sowie offiziellen Ligavorschriften und fundierter wissenschaftlicher Literatur.
+Die finanziellen Aussagen und Kennzahlen unseres Dashboards stützen sich auf eine Mischung aus Transfermarkt-Daten, offiziellen Ligavorschriften und wissenschaftlicher Literatur.
 
 ## Medien und Analysen
 
