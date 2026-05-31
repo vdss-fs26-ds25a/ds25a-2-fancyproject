@@ -1050,11 +1050,10 @@ display(HTML(sec(
      'Während sich das Elite-Talent 2010 noch relativ gleichmässig auf Spanien, England und '
      'Deutschland verteilte, schwillt der englische Anteil über die Jahre wie eine Welle an.'),
     _chart_html_concentration,
-    hl=('Die Premier League hortet mittlerweile mehr Hochkaräter als die anderen vier Top-Ligen '
-        'zusammen. In der jüngsten Auswertung drängt sie die anderen Ligen beinahe komplett aus der '
-        'absoluten Weltspitze.'),
+    hl=('Die Premier League hortet mittlerweile <strong> fast gleich viele </strong> Top-100-Spieler, als die anderen vier Top-Ligen '
+        'zusammen.'),
     hl_type='red',
-    cap='Die 100 wertvollsten Spieler pro Saison · Basierend auf Transfermarkt.de'
+    cap='Die 100 wertvollsten Spieler pro Saison'
 )))
 ```
 
