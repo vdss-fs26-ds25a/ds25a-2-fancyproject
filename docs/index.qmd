@@ -579,11 +579,11 @@ display(HTML(f'''
       <p class="hero-eyebrow">VDSS · Interaktives Dashboard</p>
       <h1>Das grosse Geld im europäischen Fussball</h1>
       <p class="hero-subtitle">
-        Eine Analyse der Saisons 2010 bis 2024 der Top-5-Ligen Europas
+        Dashboard zu Daten der Saisons 2010 bis 2024 der Top-5-Ligen Europas
       </p>
       <div class="league-logos">{_logo_strip}</div>
       <p class="hero-intro">
-        Wie viel sind Fussballspieler wert — und wie sieht der finanzielle
+        Wie viel sind Fussballspieler wert, und wie sieht der finanzielle
         Vergleich der grossen Ligen Europas aus? Dieses Dashboard verfolgt über fünfzehn Saisons,
         wie sich die Marktwerte der Kader in den fünf grössten europäischen Ligen entwickelt
         haben: in der englischen Premier League, der spanischen La Liga, der deutschen
