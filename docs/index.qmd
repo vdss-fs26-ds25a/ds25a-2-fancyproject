@@ -794,11 +794,10 @@ display(HTML(sec(
      'Klicken Sie auf eine Liga oder einen Club, um diese Liga heranzuzoomen und die genauen Proportionen aller Vereine zu betrachten. '
      'Nutzen Sie das Dropdown-Menü, um die Entwicklung über die Saisons hinweg zu betrachten.'),
     _chart_html_mosaic,
-    hl=('Die finanzielle Dominanz der englischen Liga ist erdrückend. '
-        '<strong>Fast das gesamte Volumen der restlichen Top-Ligen wird von einer einzigen Liga aufgewogen.</strong>'),
+    hl=('Die finanzielle Dominanz in Kadermarktwerten der Premier League ist gross. '
+        '<strong>Keine Paarung von 2 anderen Top-5-Ligen übertrifft die Kaderwerte der Premier League.</strong>'),
     hl_type='red',
-    cap='Kaderwerte der Top-5-Ligen · Basierend auf Transfermarkt-Daten',
-    bridge='Hat dieses Geld auch strukturelle Auswirkungen auf die Transfers?'
+    cap='Kaderwerte der Top-5-Ligen'
 )))
 ```
 
