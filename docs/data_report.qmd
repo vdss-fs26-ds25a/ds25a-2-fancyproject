@@ -139,10 +139,6 @@ Datenlage. Die wichtigsten Befunde:
 - **`clubs.csv.total_market_value` ist zu 100 % leer** und damit unbrauchbar.
   Der Kadermarktwert je Verein wird deshalb nicht aus dieser Datei, sondern aus
   den selbst erhobenen JSONL-Dateien bezogen (siehe Datensatz 2).
-- **Fehlende Ablösesummen:** In `transfers.csv` fehlt `transfer_fee` in rund
-  40 % der Zeilen (Leihen, ablösefreie Wechsel, unbekannte Summen). Für
-  ablösebezogene Auswertungen werden nur Transfers mit `transfer_fee > 0`
-  berücksichtigt.
 - **Fehlende Werte in `players.csv`:** stark betroffen sind `agent_name`
   (≈ 47 %), `contract_expiration_date` (≈ 35 %) und `international_caps`
   (≈ 63 %); die im Dashboard genutzten Felder (`name`, `position`,
