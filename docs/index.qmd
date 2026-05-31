@@ -701,19 +701,22 @@ _toggle_js = '''
 display(HTML(sec(
     'I',
     'Die Top-5-Ligen im Vergleich',
-    ('Jeder Balken zeigt den Kadermarktwert einer Liga in einer Saison — die Summe der '
-     'von Transfermarkt geschätzten Werte aller Erstligaspieler. Bis etwa 2015 lagen die '
-     'fünf Ligen vergleichsweise nah beieinander. Ab 2016 setzt sich die Premier League ab '
-     'und liegt zuletzt rund doppelt so hoch wie jede der anderen vier Ligen.'),
+    ('Jeder Balken steht für den Kadermarktwert einer Liga in einer Saison, also für die '
+     'zusammengezählten geschätzten Marktwerte aller Erstligaspieler. Bereits 2010 lag die '
+     'Premier League vorne, doch der Abstand zu den übrigen vier Ligen war noch überschaubar — '
+     'sie bewegten sich in einer ähnlichen Grössenordnung. In den Jahren danach wuchsen die '
+     'Werte überall, in England jedoch deutlich schneller als auf dem Kontinent. Zuletzt erreicht '
+     'die Premier League rund das Doppelte der nächstgrössten Liga und hebt sich damit klar vom '
+     'übrigen Feld ab.'),
     _chart_html + _toggle_js,
-    hl=('Zur Saison 2016/17 trat der neue Fernsehvertrag der Premier League in Kraft '
-        '(Sky und BT, rund £5,1 Mrd. für drei Spielzeiten — etwa 58 % mehr als der vorige). '
-        'Die höheren Einnahmen vergrösserten die Kaufkraft der englischen Klubs spürbar: im '
-        'Sommer 2016 überstiegen deren Transferausgaben erstmals £1 Mrd. Da sich die '
-        'Transfermarkt-Werte an Ablösen und Gehältern orientieren, zogen mit den Ausgaben '
-        'auch die geschätzten Kaderwerte an.'),
+    hl=('Zur Saison 2016/17 trat ein neuer Fernsehvertrag der Premier League in Kraft '
+        '(Sky und BT, rund £5,1 Mrd. für drei Spielzeiten und damit etwa 58 % mehr als zuvor). '
+        'Die zusätzlichen Einnahmen erhöhten die Kaufkraft der englischen Klubs spürbar; im '
+        'Sommer 2016 überstiegen ihre Transferausgaben erstmals £1 Mrd. Da sich die geschätzten '
+        'Marktwerte an Ablösen und Gehältern orientieren, stiegen mit den Ausgaben auch die '
+        'Kaderwerte.'),
     hl_type='gold',
-    cap='Quelle: Transfermarkt.de · Kadermarktwert aller Erstligaklubs je Saison (zu Saisonbeginn)'
+    cap='Kadermarktwert aller Erstligaklubs je Saison (zu Saisonbeginn)'
 )))
 ```
 
@@ -817,15 +820,15 @@ _chart_html_mosaic = fig_mosaic.to_html(
 display(HTML(sec(
     'II',
     'Kadermarktwerte nach Liga und Verein',
-    ('Die Kachelgröße spiegelt den kumulierten Kaderwert wider. '
-     'Klicken Sie auf eine Liga oder einen Club, um diese Liga heranzuzoomen und die genauen Proportionen aller Vereine zu betrachten. '
-     'Nutzen Sie das Dropdown-Menü, um die Entwicklung über die Saisons hinweg zu betrachten.'),
+    ('Dieselben Kaderwerte, hier nach Liga und Verein aufgeschlüsselt: Die Fläche jeder Kachel '
+     'entspricht dem Marktwert. Ein Klick auf eine Liga oder einen Verein vergrössert den '
+     'jeweiligen Bereich und zeigt die Anteile der einzelnen Klubs; über das Auswahlmenü lässt '
+     'sich die Saison wechseln und die Entwicklung über die Jahre verfolgen.'),
     _chart_html_mosaic,
-    hl=('Die finanzielle Dominanz der englischen Liga ist erdrückend. '
-        '<strong>Fast das gesamte Volumen der restlichen Top-Ligen wird von einer einzigen Liga aufgewogen.</strong>'),
-    hl_type='red',
-    cap='Kaderwerte der Top-5-Ligen · Basierend auf Transfermarkt-Daten',
-    bridge='Hat dieses Geld auch strukturelle Auswirkungen auf die Transfers?'
+    hl=('Auf die Premier League entfällt rund die Hälfte des gesamten Kaderwerts der fünf Ligen — '
+        '<strong>annähernd so viel wie die übrigen vier Ligen zusammen.</strong>'),
+    hl_type='gold',
+    cap='Kaderwerte der Top-5-Ligen'
 )))
 ```
 
@@ -934,18 +937,18 @@ _lines = ', '.join(f'aus {LNAMES[lg]} <strong>€{v:.1f} Mrd.</strong>'
 display(HTML(sec(
     'III',
     'Transfers zwischen Top-5-Ligen',
-    ('Links steht jede Liga als <em>Verkäufer</em>, rechts dieselbe Liga als <em>Käufer</em>. '
-     'Die Breite jedes Bandes entspricht der Transfersumme, die zwischen den beiden Ligen floss. '
-     'Über das Menü oben lässt sich eine einzelne Saison auswählen oder der gesamte '
-     'Zeitraum betrachten. Das Bild bleibt eindeutig: Der Käufer-Block der Premier League '
-     'rechts ist mit Abstand der grösste — sie zieht aus allen vier anderen Top-Ligen Talent ab.'),
+    ('Links steht jede Liga als <em>abgebende</em> Seite, rechts dieselbe Liga als '
+     '<em>aufnehmende</em> Seite; die Breite eines Bandes entspricht der Ablösesumme, die '
+     'zwischen den beiden Ligen geflossen ist. Über das Menü lässt sich eine einzelne Saison '
+     'oder der gesamte Zeitraum betrachten. Der aufnehmende Block der Premier League ist dabei '
+     'der mit Abstand grösste: Sie verpflichtet aus allen vier anderen Ligen mehr Spieler, als '
+     'sie dorthin abgibt.'),
     ch(fig),
-    hl=(f'Die grössten Geldflüsse in die Premier League (2010–2024): {_lines}. '
-        f'Insgesamt flossen <strong>€{_pl_in_total:.1f} Mrd.</strong> auf die Insel — '
-        f'zurück gingen nur <strong>€{_pl_out:.1f} Mrd.</strong> '
-        f'Macht ein Netto-Minus von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel '
-        f'zwischen den Top-5-Ligen.'),
-    hl_type='red',
+    hl=(f'Die grössten Zuflüsse in die Premier League (2010–2024): {_lines}. '
+        f'Insgesamt flossen <strong>€{_pl_in_total:.1f} Mrd.</strong> nach England, während nur '
+        f'<strong>€{_pl_out:.1f} Mrd.</strong> in die andere Richtung gingen — ein Negativsaldo '
+        f'von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel zwischen den Top-5-Ligen.'),
+    hl_type='gold',
     cap='Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · Saison über das Menü wählbar'
 )))
 ```
@@ -988,13 +991,16 @@ themed(fig, height=650)
 display(HTML(sec(
     'IV',
     'Die Transferbilanzen der Ligen',
-    ('Die kumulierte Netto-Transferbilanz zeigt den strukturellen Trend: Wer baut über die Jahre Transferüberschüsse auf, und wer häuft ein Defizit an? '
-     'Negative Werte bedeuten, dass insgesamt mehr für Spieler ausgegeben als eingenommen wurde. '
-     'Im Verlauf von 15 Jahren stürzt die Premier League geradezu ab, während sich andere Ligen als dauerhafte Nettoverkäufer etablieren.'),
+    ('Die kumulierte Netto-Transferbilanz fasst zusammen, wie sich Ausgaben und Einnahmen einer '
+     'Liga über die Jahre aufsummieren. Negative Werte bedeuten, dass insgesamt mehr für Zugänge '
+     'ausgegeben als durch Abgänge eingenommen wurde. Über den gesamten Zeitraum entfernt sich '
+     'die Premier League immer weiter ins Minus, während sich mehrere andere Ligen dauerhaft als '
+     'Nettoverkäufer einordnen.'),
     ch(fig),
-    hl=('Ligue 1 und Bundesliga sind systematische <strong>Nettoverkäufer</strong> — sie züchten Talent '
-        'und verkaufen es an die PL. Die Serie A ist seit dem Rückzug von Investoren ebenfalls '
-        'unter Druck. Nur La Liga hält sich zeitweise durch Barça/Real-Verkäufe im Gleichgewicht.')
+    hl=('Ligue 1 und Bundesliga treten regelmässig als <strong>Nettoverkäufer</strong> auf: Sie '
+        'bilden Spieler aus und geben sie überwiegend an finanzstärkere Ligen ab. Die Serie A steht '
+        'seit dem Rückzug einiger Investoren ebenfalls unter Druck, während La Liga ihre Bilanz '
+        'zeitweise durch grosse Verkäufe von Barcelona und Real Madrid ausgleicht.')
 )))
 ```
 
@@ -1067,14 +1073,13 @@ _chart_html_concentration = fig.to_html(
 display(HTML(sec(
     'V',
     'Verteilung der Top-150-Spieler nach Marktwert',
-    ('Dieses Flächendiagramm zeigt, wie viele der weltweit 150 wertvollsten Spieler pro Saison '
-     'in welcher Liga unter Vertrag standen. Das fliessende Muster macht die Veränderung auf einen Blick deutlich: '
-     'Während sich das Elite-Talent 2010 noch im Vergleich gleichmässig verteilte,' 
-     'wurde der Anteil der englischen Premier League über die Jahre grösser.'),
+    ('Das Flächendiagramm zeigt, wie sich die 150 wertvollsten Spieler einer Saison auf die fünf '
+     'Ligen verteilen. 2010 waren sie noch vergleichsweise gleichmässig verteilt; im Lauf der '
+     'Jahre verschob sich ein zunehmender Anteil in die Premier League.'),
     _chart_html_concentration,
     hl=('Die Premier League hortet mittlerweile <strong> fast gleich viele </strong> Top-150-Spieler, als die anderen vier Top-Ligen '
         'zusammen.'),
-    hl_type='red',
+    hl_type='gold',
     cap='Die 150 wertvollsten Spieler pro Saison'
 )))
 ```
@@ -1114,14 +1119,14 @@ themed(fig, height=620)
 display(HTML(sec(
     'VI',
     'Korrelation zwischen Kadermarktwert und Liga-Erfolg',
-    ('Die Pearson-Korrelation misst, wie stark der Kaderwert den Tabellenplatz voraussagt '
-     '(1.0 = perfekte Übereinstimmung, 0 = kein Zusammenhang). '
-     'Ein Wert über 0.7 gilt als starker Zusammenhang. '
-     'Die Linien zeigen: In jeder der fünf Ligen kauft Geld seit Jahren zuverlässig Punkte.'),
+    ('Die Pearson-Korrelation misst, wie eng Kaderwert und Tabellenplatz zusammenhängen '
+     '(1.0 = vollständige Übereinstimmung, 0 = kein Zusammenhang); Werte über 0.7 gelten als '
+     'starker Zusammenhang. In allen fünf Ligen liegt die Korrelation seit Jahren hoch: Wer über '
+     'den wertvolleren Kader verfügt, schliesst die Saison in der Regel weiter oben ab.'),
     ch(fig),
-    hl=('Die Korrelation liegt in allen Ligen konstant zwischen 0.6 und 0.9 — '
-        'mit leichten Schwankungen je nach Saison. '
-        '<strong>Geld korreliert ligaübergreifend mit Erfolg Erfolg.</strong>'),
+    hl=('Die Korrelation bewegt sich in allen Ligen recht stabil zwischen 0.6 und 0.9, mit '
+        'leichten Schwankungen je Saison. <strong>Der Zusammenhang zwischen Kaderwert und Erfolg '
+        'besteht damit ligaübergreifend.</strong>'),
     cap='Pearson-Korrelation pro Saison und Liga · Kaderwert und Abschlusstabellenplatz (2010–2024)'
 )))
 ```
@@ -1154,12 +1159,13 @@ themed(fig, height=600)
 display(HTML(sec(
     'VII',
     'Konzentration der Kadermarktwerte auf Top-Klubs',
-    ('Wie viel Prozent des gesamten Kaderwerts einer Liga entfällt auf die vier reichsten Klubs? '
-     'Ein hoher Wert bedeutet: Wenige Klubs haben fast alles, der Rest kämpft um Reste. '
-     'In jeder der fünf Ligen konzentriert sich der Reichtum an der Spitze'),
+    ('Dieser Anteil gibt an, welchen Teil des gesamten Kaderwerts einer Liga die vier '
+     'wertvollsten Klubs auf sich vereinen. Ein hoher Wert zeigt, dass sich der Wert auf wenige '
+     'Vereine an der Spitze konzentriert. In allen fünf Ligen liegt dieser Anteil deutlich über '
+     'einer gleichmässigen Verteilung.'),
     ch(fig),
-    hl=('In jeder Liga gibt es eine Zweiklassengesellschaft. Die Reichen holen auf, die Armen fallen zurück. Geld schafft Ungleichheit auf zwei Ebenen: zwischen den Ligen — und innerhalb jeder Liga selbst.'),
-    bridge='Woher kommt dieses Talent überhaupt — und zahlen die reichen Ligen zu viel dafür?'
+    hl=('Ungleichheit zeigt sich damit auf zwei Ebenen: zwischen den Ligen und innerhalb jeder '
+        'einzelnen Liga, in der ein grosser Teil des Werts auf wenige Spitzenklubs entfällt.')
 )))
 ```
 
