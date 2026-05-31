@@ -20,12 +20,8 @@
   --gold: #d4a830;
   --disp: 'Oswald','Arial Narrow',sans-serif;
   --body: 'Barlow','Segoe UI','Helvetica Neue',sans-serif;
-  /* One standardized height for every two-column block. Sized to the first
-     content page (the "Premier League: doppelt so wertvoll" spread, whose
-     headline-driven text column is the tallest element in the deck).
-     Charts are shorter than this and get centered inside it. Tune in ONE place. */
   --block-h: 1000px;
-  --divider: rgba(255,255,255,0.16);   /* the line between narration and plot */
+  --divider: rgba(255,255,255,0.16);
 }
 
 html {
@@ -50,7 +46,7 @@ body {
 }
 #title-block-header, .quarto-title-block, .quarto-title-meta,
 #quarto-sidebar, .quarto-sidebar, nav.sidebar, #quarto-margin-sidebar,
-.quarto-secondary-nav, #quarto-header { display: none !important; }
+.quarto-secondary-nav { display: none !important; }
 .cell, .cell-output, .cell-output-display { margin: 0 !important; }
 
 #pitch {
@@ -65,8 +61,6 @@ body {
   z-index: -3; pointer-events: none;
 }
 
-/* The dim overlay sits ABOVE the pitch + field lines but BELOW the sprites,
-   so the background is dimmed while the player sprites stay bright. */
 #pitch-overlay {
   position: fixed; inset: 0; z-index: -2; pointer-events: none;
   background:
@@ -74,8 +68,6 @@ body {
     linear-gradient(180deg, rgba(var(--ink),0.58) 0%, rgba(var(--ink),0.40) 45%, rgba(var(--ink),0.66) 100%);
 }
 
-/* Sprites render on top of the dim (z above the overlay) but still behind the
-   content cards, which paint in the normal flow above all negative z-indices. */
 #sprite-layer {
   position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
 }
@@ -90,7 +82,6 @@ p { margin-bottom: 1rem; }
 em { font-style: italic; }
 strong { font-weight: 600; color: var(--w); }
 
-
 .page {
   min-height: 100vh;
   scroll-snap-align: start;
@@ -100,38 +91,28 @@ strong { font-weight: 600; color: var(--w); }
 }
 .page-inner { width: 100%; max-width: 1560px; }
 
-/* Single unified block: one card holding both columns, split by a divider.
-   align-items:stretch makes both columns fill the full block height, so the
-   divider runs edge to edge. min-height standardizes every block to --block-h
-   (charts centered with breathing room) while never clipping longer text. */
 .spread {
-  position: relative;                 /* anchor for the centred divider */
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);   /* equal → boundary on block centre */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
   min-height: var(--block-h);
   background: rgba(var(--ink),0.55);
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 16px;
   backdrop-filter: blur(4px);
-  overflow: hidden;                 /* keeps the columns clipped to the rounded card */
+  overflow: hidden;
 }
-/* The divider: a 2px line centred exactly on the block's mid-line, matching the
-   2px pitch halfway line. The block is centred in the content area and the field
-   is now drawn across that same area (see drawField in index.qmd), so the block
-   centre and the halfway line coincide — the two sit directly on top of each other. */
 .spread::after {
   content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
   width: 2px; transform: translateX(-1px);
   background: var(--divider); pointer-events: none;
 }
-/* Left: narration — reads top-down like a column of newsprint. */
 .col-text {
   min-width: 0;
   padding: clamp(1.5rem, 2.8vw, 2.5rem);
   padding-right: clamp(1.5rem, 2.2vw, 2rem);
 }
-/* Right: plot — vertically centered in the shared block height. */
 .col-chart {
   min-width: 0;
   display: flex; flex-direction: column; justify-content: center;
@@ -302,13 +283,13 @@ strong { font-weight: 600; color: var(--w); }
 @media (max-width: 900px) {
   html.snap-on { scroll-snap-type: none; }
   .spread { grid-template-columns: 1fr; min-height: 0; }
-  .spread::after { display: none; }            /* no vertical divider when stacked */
+  .spread::after { display: none; }
   .page { min-height: 100vh; padding: 7vh 6vw; }
   .col-text { padding-right: clamp(1.5rem, 2.8vw, 2.5rem); }
   .col-chart {
     order: 2; justify-content: flex-start;
     padding-left: clamp(1.2rem, 2vw, 1.6rem);
-    border-top: 2px solid var(--divider);      /* divider runs horizontally when stacked */
+    border-top: 2px solid var(--divider);
   }
   .deck-dots { display: none; }
 }
@@ -330,7 +311,6 @@ strong { font-weight: 600; color: var(--w); }
   html.snap-on { scroll-snap-type: none; }
   .page { min-height: 100vh; padding: 5vh 5vw; }
 }
-
 
 @media (max-width: 560px) {
   html { font-size: 16px; }
