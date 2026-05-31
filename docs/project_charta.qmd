@@ -205,6 +205,23 @@ Der Projektplan gilt als Leitfaden für die Arbeiten im Datenvisualisierungsproj
 | Woche 1-6     | Festsetzung der Idee, Datenakquise                   |
 | Woche 7-9     | Datenverarbeitung, erste Dashboard-Entwurfe          |
 | Woche 10-12   | Abschluss des Dashboards, sonstige Schreibarbeiten   |
-| Woche 13-14   | Abschlussarbeiten, Vorbeiretung für die Präsentation |                             
+| Woche 13-14   | Abschlussarbeiten, Vorbeiretung für die Präsentation |                
+
+## 8 Rollen und Kontaktdetails
+
+Jay Bärtschi;
+Zuständig für die Code-Implementierung des Dashboards,
+baertjay@students.zhaw.ch
+
+John Wiese;
+Zuständig für die Datenakquise und sämtliche Data-Engineering Aufgaben,
+wiesejoh@students.zhaw.ch
+
+Noa Medved;
+Zuständig für die Dokumentation der gesamten Arbeit,
+medvenoa@students.zhaw.ch
+
+
+
 
 
