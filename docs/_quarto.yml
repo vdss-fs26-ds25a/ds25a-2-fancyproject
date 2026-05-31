@@ -5,17 +5,23 @@ lang: en
 language:
   section-title-appendices: "Appendix"
 website:
-  bread-crumbs: false       
   title: "Football Dashboard"
-  search: false
+  search: false                  
   navbar:
-    background: "#0a160a"        
-    foreground: "#ffffff"      
+    background: "#3c7726"        
+    foreground: "#3c7726"        
     left:
+      - href: index.qmd
+        text: Dashboard
       - href: project_charta.qmd
         text: Projektcharta
       - href: data_report.qmd
         text: Datenbericht
+  sidebar:
+    style: "floating"
+    search: false                
+    contents:
+      - index.qmd
 format:
   html:
     theme: cosmo
