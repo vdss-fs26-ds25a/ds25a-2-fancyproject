@@ -1,8 +1,5 @@
 <div align="center">
-
-# Das grosse Geld im Europäischen Fussball
-
-#### Marktwerte, Transfers und Geldströme im europäischen Spitzenfussball · 2010–2025
+<img src="resources/preview.png" alt="Dashboard-Vorschau" width="820">
 
 <br>
 
