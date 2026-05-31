@@ -9,7 +9,7 @@ website:
   search: false                  
   navbar:
     background: "#3c7726"        
-    foreground: "#3c7726"        
+    foreground: "#ffffff"        
     left:
       - href: index.qmd
         text: Dashboard
