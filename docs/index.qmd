@@ -816,6 +816,88 @@ _chart_html_mosaic = fig_mosaic.to_html(
     config={'responsive': True, 'displayModeBar': False, 'scrollZoom': False}
 )
 
+# ── Club crest overlay (additive, fail-safe) ───────────────────────────────
+# Plotly's treemap has no native per-tile image support, so a small script reads
+# each rendered tile's geometry and overlays the club crest, repositioning on
+# every redraw (zoom, season change, resize). Wrapped in try/catch: if anything
+# fails the treemap is untouched and only the crests are skipped. Crest URLs come
+# straight from the dataset's club_image_url field (transparent PNGs).
+import json as _json_logos
+_logo_src = (df.dropna(subset=['club_image_url'])
+               .sort_values('season')
+               .groupby('club_id')['club_image_url'].last())
+_club_logo_map = {str(int(_k)): _v for _k, _v in _logo_src.items()
+                  if isinstance(_v, str) and _v.startswith('http')}
+
+_mosaic_logos_js = '''
+<script>
+(function(){
+  var ID = "__CHARTID__";
+  var LOGOS = __LOGOS__;
+  function gd(){ return document.getElementById(ID); }
+  function layer(g){
+    var ov = g.querySelector(':scope > .crest-layer');
+    if(!ov){
+      ov = document.createElement('div');
+      ov.className = 'crest-layer';
+      ov.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:5;';
+      if(getComputedStyle(g).position === 'static'){ g.style.position = 'relative'; }
+      g.appendChild(ov);
+    }
+    return ov;
+  }
+  function draw(){
+    try{
+      var g = gd(); if(!g) return;
+      var ov = layer(g); ov.innerHTML = '';
+      var base = g.getBoundingClientRect();
+      g.querySelectorAll('g.slice').forEach(function(s){
+        var path = s.querySelector('path'); if(!path) return;
+        var r = path.getBoundingClientRect();
+        if(r.width < 34 || r.height < 34) return;            // skip tiny / hidden tiles
+        var id = null, d = s.__data__;
+        if(d){
+          if(d.data && d.data.id != null) id = d.data.id;
+          else if(d.data && d.data.i != null) id = d.data.i;
+          else if(d.id != null) id = d.id;
+        }
+        if(id == null) return;
+        var cid = String(id).split('_')[0];
+        var url = LOGOS[cid]; if(!url) return;               // leagues / root carry no crest
+        var size = Math.max(18, Math.min(66, Math.min(r.width, r.height) * 0.42));
+        var left = (r.left - base.left) + r.width  / 2 - size / 2;
+        var top  = (r.top  - base.top ) + r.height * 0.58 - size / 2;
+        var img = document.createElement('img');
+        img.src = url; img.referrerPolicy = 'no-referrer'; img.loading = 'lazy'; img.alt = '';
+        img.onerror = function(){ this.remove(); };
+        img.style.cssText = 'position:absolute;left:' + left + 'px;top:' + top +
+          'px;width:' + size + 'px;height:' + size +
+          'px;object-fit:contain;opacity:0.95;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));';
+        ov.appendChild(img);
+      });
+    }catch(e){ /* additive only — never break the chart */ }
+  }
+  function bind(){
+    var g = gd();
+    if(!g || typeof Plotly === 'undefined' || !g.on){ return setTimeout(bind, 200); }
+    g.on('plotly_afterplot', draw);
+    g.on('plotly_relayout', draw);
+    g.on('plotly_restyle', draw);
+    g.on('plotly_treemapclick', function(){ setTimeout(draw, 60); });
+    window.addEventListener('resize', function(){
+      clearTimeout(window.__crestT); window.__crestT = setTimeout(draw, 150);
+    });
+    setTimeout(draw, 350); draw();
+  }
+  if(document.readyState !== 'loading'){ bind(); }
+  else { document.addEventListener('DOMContentLoaded', bind); }
+})();
+</script>
+'''
+_mosaic_logos_js = (_mosaic_logos_js
+                    .replace('__CHARTID__', _chart_id_mosaic)
+                    .replace('__LOGOS__', _json_logos.dumps(_club_logo_map)))
+
 display(HTML(sec(
     'II',
     'Kadermarktwerte nach Liga und Verein',
@@ -823,7 +905,7 @@ display(HTML(sec(
      'entspricht dem Marktwert. Ein Klick auf eine Liga oder einen Verein vergrössert den '
      'jeweiligen Bereich und zeigt die Anteile der einzelnen Klubs; über das Auswahlmenü lässt '
      'sich die Saison wechseln und die Entwicklung über die Jahre verfolgen.'),
-    _chart_html_mosaic,
+    _chart_html_mosaic + _mosaic_logos_js,
     hl=('Auf die Premier League entfällt rund die Hälfte des gesamten Kaderwerts der fünf Ligen — '
         '<strong>annähernd so viel wie die übrigen vier Ligen zusammen.</strong>'),
     hl_type='gold',
@@ -1020,48 +1102,69 @@ pv5 = pv5[pv5['season'].between(2010, 2024)]
 season_pv = pv5.sort_values('date').groupby(['season', 'player_id']).last().reset_index()
 season_pv['mv_m'] = season_pv['market_value_in_eur'] / 1e6
 
-# Filter to the top 150 most valuable players per season
-top150_per_season = season_pv.groupby('season', group_keys=False).apply(lambda x: x.nlargest(150, 'mv_m'))
-
-# Aggregate player counts per league per season and pivot for the area chart
-league_counts = top150_per_season.groupby(['season', 'player_club_domestic_competition_id']).size().reset_index(name='count')
-pivot_counts = league_counts.pivot(index='season', columns='player_club_domestic_competition_id', values='count').fillna(0)
-
-# Ensure all seasons are present
+# Build per-league counts for every slider step (Top-N, N = 10 … 150)
 seasons_range = list(range(2010, 2025))
-pivot_counts = pivot_counts.reindex(seasons_range).fillna(0)
+_N_values = list(range(10, 151, 10))          # 10, 20, … 150
+_default_N = 150
+
+def _counts_for_N(n):
+    _topN = (season_pv.sort_values('mv_m', ascending=False)
+                      .groupby('season', group_keys=False).head(n))
+    _lc = (_topN.groupby(['season', 'player_club_domestic_competition_id'])
+                 .size().reset_index(name='count'))
+    _pv = _lc.pivot(index='season', columns='player_club_domestic_competition_id',
+                    values='count').reindex(seasons_range).fillna(0)
+    return _pv
+
+_pivots = {n: _counts_for_N(n) for n in _N_values}
+
+def _col(piv, lg):
+    return list((piv[lg] if lg in piv.columns else pd.Series(0, index=seasons_range)).values)
 
 fig = go.Figure()
-
-# Generate smooth stacked area traces
-# TOP5 order puts GB1 at the bottom, creating a beautiful "rising tide" effect
+# Initial traces at the default N. TOP5 order puts GB1 at the bottom (rising tide).
 for lg in TOP5:
-    _color = LCOLORS[lg]
-    # Use the hex_to_rgba helper from your setup block for a softer fill
-    _rgba_fill = hex_to_rgba(_color, 0.75) 
-    
-    # Safely get the column data, or a series of 0s if the league dropped out entirely
-    _y_data = pivot_counts[lg] if lg in pivot_counts.columns else pd.Series(0, index=pivot_counts.index)
-    
     fig.add_trace(go.Scatter(
-        x=pivot_counts.index,
-        y=_y_data,
+        x=seasons_range,
+        y=_col(_pivots[_default_N], lg),
         name=LNAMES[lg],
         mode='lines',
-        line=dict(width=2, color=_color, shape='spline', smoothing=0.8),
-        stackgroup='one', # This makes it stack dynamically
-        fillcolor=_rgba_fill,
+        line=dict(width=2, color=LCOLORS[lg], shape='spline', smoothing=0.8),
+        stackgroup='one',
+        fillcolor=hex_to_rgba(LCOLORS[lg], 0.75),
         hovertemplate='<b>%{x}</b><br>' + LNAMES[lg] + ': %{y} Spieler<extra></extra>'
+    ))
+
+# Slider: each step restyles the five y-series and rescales the y-axis to N.
+_steps = []
+for n in _N_values:
+    _steps.append(dict(
+        method='update',
+        label=str(n),
+        args=[{'y': [_col(_pivots[n], lg) for lg in TOP5]},
+              {'yaxis.range': [0, n]}]
     ))
 
 fig.update_layout(
     xaxis_title='Saison',
-    yaxis_title='Anzahl Spieler (Top 150)',
-    # Lock the Y-axis to 150 since we are strictly looking at the top 150 players
-    yaxis=dict(range=[0, 150], fixedrange=True),
-    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
+    yaxis=dict(title='Anzahl der wertvollsten Spieler', range=[0, _default_N], fixedrange=True),
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0),
+    sliders=[dict(
+        active=_N_values.index(_default_N),
+        steps=_steps,
+        x=0.0, xanchor='left', y=-0.16, yanchor='top', len=1.0,
+        pad=dict(t=10, b=10),
+        currentvalue=dict(prefix='Top ', suffix=' Spieler', xanchor='left',
+                          font=dict(color='rgba(255,255,255,0.92)', size=15)),
+        bgcolor='rgba(255,255,255,0.18)', bordercolor='rgba(255,255,255,0.28)', borderwidth=1,
+        tickcolor='rgba(255,255,255,0.45)', ticklen=4,
+        font=dict(color='rgba(255,255,255,0.62)', size=12),
+        activebgcolor=LCOLORS['GB1']
+    )]
 )
 themed(fig, height=650)
+# Extra bottom room so the slider clears the x-axis title.
+fig.update_layout(margin=dict(l=68, r=20, t=36, b=104))
 
 _chart_id_concentration = 'chart-concentration'
 _chart_html_concentration = fig.to_html(
@@ -1072,14 +1175,16 @@ _chart_html_concentration = fig.to_html(
 display(HTML(sec(
     'V',
     'Verteilung der Top-150-Spieler nach Marktwert',
-    ('Das Flächendiagramm zeigt, wie sich die 150 wertvollsten Spieler einer Saison auf die fünf '
-     'Ligen verteilen. 2010 waren sie noch vergleichsweise gleichmässig verteilt; im Lauf der '
-     'Jahre verschob sich ein zunehmender Anteil in die Premier League.'),
+    ('Das Flächendiagramm zeigt, wie sich die wertvollsten Spieler einer Saison auf die fünf '
+     'Ligen verteilen. Über den Regler lässt sich einstellen, wie viele Spieler betrachtet '
+     'werden — von den Top 10 bis zu den Top 150. 2010 waren sie noch vergleichsweise '
+     'gleichmässig verteilt; im Lauf der Jahre verschob sich ein zunehmender Anteil in die '
+     'Premier League.'),
     _chart_html_concentration,
     hl=('Die Premier League hortet mittlerweile <strong> fast gleich viele </strong> Top-150-Spieler, als die anderen vier Top-Ligen '
         'zusammen.'),
     hl_type='gold',
-    cap='Die 150 wertvollsten Spieler pro Saison'
+    cap='Die wertvollsten Spieler pro Saison · Anzahl über den Regler wählbar (Top 10 – Top 150)'
 )))
 ```
 
