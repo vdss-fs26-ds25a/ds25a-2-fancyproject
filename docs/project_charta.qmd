@@ -209,7 +209,7 @@ Der Projektplan gilt als Leitfaden für die Arbeiten im Datenvisualisierungsproj
 | Woche 1-6     | Festsetzung der Idee, Datenakquise                   |
 | Woche 7-9     | Datenverarbeitung, erste Dashboard-Entwurfe          |
 | Woche 10-12   | Abschluss des Dashboards, sonstige Schreibarbeiten   |
-| Woche 13-14   | Abschlussarbeiten, Vorbeiretung für die Präsentation |                
+| Woche 13-14   | Abschlussarbeiten, Vorbereitung für die Präsentation |                
 
 ## Rollen und Kontaktdetails
 
