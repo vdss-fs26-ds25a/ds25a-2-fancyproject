@@ -6,8 +6,10 @@ language:
   section-title-appendices: "Appendix"
 website:
   title: "Football Dashboard"
-  search: true
+  search: false                  
   navbar:
+    background: "#3c7726"        
+    foreground: "#3c7726"        
     left:
       - href: index.qmd
         text: Dashboard
@@ -17,7 +19,7 @@ website:
         text: Datenbericht
   sidebar:
     style: "floating"
-    search: true
+    search: false                
     contents:
       - index.qmd
 format:
