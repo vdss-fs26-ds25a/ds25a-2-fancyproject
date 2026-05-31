@@ -1238,14 +1238,12 @@ display(HTML(sec(
   <div class="page-inner">
     <div class="end-card">
       <p class="kicker">
-        Die Premier League spielt nicht in einer anderen Liga.<br>
-        Sie spielt in einer anderen Realität.
+        Dashboard für VDSS FS26<br>
       </p>
       <p class="end-meta">
-        Datenquelle: Transfermarkt.de &nbsp;·&nbsp;
-        Top-5-Ligen Europa &nbsp;·&nbsp;
-        Saisons 2010–2024 &nbsp;·&nbsp;
-        Plotly 2.35
+        Jay Bärtschi &nbsp;·&nbsp;
+        Noa Medved &nbsp;·&nbsp;
+        John Wiese &nbsp;·&nbsp;
       </p>
     </div>
   </div>
