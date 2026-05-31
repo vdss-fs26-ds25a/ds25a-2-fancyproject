@@ -12602,7 +12602,7 @@ player_id,transfer_date,transfer_season,from_club_id,to_club_id,from_club_name,t
 24001,2012-08-15,12/13,12,1025,AS Roma,Bologna FC 1909,,,Gianluca Curci
 165885,2012-08-15,12/13,12,6574,AS Roma,US Sassuolo,,225000.000,Paolo Frascatore
 5868,2012-08-15,12/13,12,416,AS Roma,Torino FC,,,Matteo Brighi
-104332,2012-08-15,12/13,12,2250,AS Roma,AC Prato,50000000.000,250000.000,Alessandro Malomo
+104332,2012-08-15,12/13,12,2250,AS Roma,AC Prato,500000.000,250000.000,Alessandro Malomo
 82423,2012-08-15,12/13,12,332,AS Roma,AS Bari,,,Alexandru Pena
 96790,2012-08-15,12/13,12,29831,AS Roma,FC Viitorul Constanta,,700000.000,Sebastian Mladen
 165900,2012-08-15,12/13,12,3037,AS Roma,Calcio Padova,,500000.000,Federico Viviani
@@ -20179,7 +20179,7 @@ player_id,transfer_date,transfer_season,from_club_id,to_club_id,from_club_name,t
 162952,2020-01-15,19/20,800,607,Atalanta BC,Venezia FC,,250000.000,Gaetano Monachello
 264514,2020-01-15,19/20,800,4172,Atalanta BC,AC Pisa 1909,,1500000.000,Luca Vido
 395102,2020-01-15,19/20,800,7197,Atalanta BC,Potenza Calcio,,25000.000,Alessandro Santopadre
-34198,2020-01-15,19/20,800,252,Atalanta BC,Genoa CFC,100000000.000,800000.000,Andrea Masiello
+34198,2020-01-15,19/20,800,252,Atalanta BC,Genoa CFC,100.000,800000.000,Andrea Masiello
 417515,2020-01-15,19/20,800,56867,Atalanta BC,Calcio Brusaporto,,75000.000,Mbaye Seck
 486624,2020-01-15,19/20,800,1025,Atalanta BC,Bologna FC 1909,,20000000.000,Musa Barrow
 200192,2020-01-15,19/20,800,9439,Atalanta BC,Feralpisalò,,200000.000,Fabio Eguelfi
