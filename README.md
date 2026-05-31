@@ -14,7 +14,8 @@ Das Dashboard bietet Einblicke in Marktwerttrends, Transferausgaben und Vergleic
 * **Deployment:** Das Dashboard wird via GitHub Actions auf GitHub Pages bereitgestellt.
 
 ## Scraper
-Ein Dank gilt **[dcaribou](https://github.com/dcaribou)**. Die modifizierte Nutzung seines Transfermarkt-Scrapers war die Grundlage für die Datenakquise in diesem Projekt.
+Für die Vervollständigung der Datensätze und die Zusammenstellung von Saisons-Datensätzen mit einem Eintrag pro Club und pro Jahr wurde der
+Scraper von **[dcaribou](https://github.com/dcaribou)** über eine Github-Codespace geladen und leicht verändert ausgeführt.
 
 ## Dashboard lokal erstellen:
 
