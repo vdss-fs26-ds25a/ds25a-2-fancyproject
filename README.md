@@ -1,8 +1,5 @@
 <div align="center">
-
-# Das grosse Geld im Europäischen Fussball
-
-#### Marktwerte, Transfers und Geldströme im europäischen Spitzenfussball · 2010–2025
+<img src="resources/preview.png" alt="Dashboard-Vorschau" width="820">
 
 <br>
 
@@ -11,8 +8,6 @@
 <img src="docs/logos/bundesliga.svg" alt="Bundesliga" height="46">&nbsp;&nbsp;&nbsp;
 <img src="docs/logos/seriea.svg" alt="Serie A" height="46">&nbsp;&nbsp;&nbsp;
 <img src="docs/logos/ligue1.svg" alt="Ligue 1" height="46">
-
-<br><br>
 
 [![zum Dashboard](https://img.shields.io/badge/zum_Dashboard-2563eb?style=for-the-badge&logo=quarto&logoColor=white)](https://vdss-fs26-ds25a.github.io/ds25a-2-fancyproject)
 
