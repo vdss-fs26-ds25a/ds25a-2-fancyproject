@@ -54,13 +54,6 @@ execute:
       +arc('M '+(fx+fw)+' '+(fy+fh-c)+' A '+c+' '+c+' 0 0 0 '+(fx+fw-c)+' '+(fy+fh));
   }
 
-  /* ---- Page-by-Page sprite LAYOUTS ----
-     Each page gets its own arrangement of positions on the pitch (fractions of
-     the viewport). The actual sprite image for each slot is chosen at render
-     time by cycling through whatever sprites are available (see placeSprites),
-     so no page depends on a fixed sprite id existing — and every page looks
-     different from the next. Goal-mouth slots come first (x≈0.05 / 0.95),
-     then a sideline slot, then outfield players scattered uniquely per page. */
   var PAGE_LAYOUTS = [
     // PAGE 0 — hero
     [ {x:0.06,y:0.46},{x:0.94,y:0.54},{x:0.50,y:0.05},{x:0.22,y:0.50},
@@ -110,7 +103,6 @@ execute:
 
   var currentPageIndex = 0;
 
-  /* Collect only the sprites that actually loaded (non-empty data URIs). */
   function availableSprites(){
     var out=[];
     if(window.SPRITES){
@@ -129,10 +121,6 @@ execute:
     var d=document.documentElement, W=d.clientWidth, H=d.clientHeight;
     layer.innerHTML='';
 
-    // Rotate the sprite set per page so adjacent pages don't share a starting
-    // sprite. Step of 7 is coprime to typical sprite counts, so even small sets
-    // (e.g. 3 sprites) produce a different sequence on every page. Consecutive
-    // slots (i, i+1) always differ, so no two neighbours share a sprite.
     var off = currentPageIndex * 7;
 
     layout.forEach(function(pos, i){
@@ -152,7 +140,6 @@ execute:
     });
   }
 
-  /* ---- deck: delayed-snap + reveal + dot/keyboard navigation ---- */
   if('scrollRestoration' in history){ try{ history.scrollRestoration='manual'; }catch(e){} }
   try{ window.scrollTo(0,0); }catch(e){}
 
@@ -462,11 +449,8 @@ _top_league_name = LNAMES[_top_league]
 _top_league_mv   = mv_pivot.loc[2024, _top_league]
 _num_transfers   = len(tr5)
 
-# ── Intro-tile metrics ─────────────────────────────────────
-# Number of distinct seasons covered by the dataset (2010–2024).
+# Introseite Merkzahlen zu Datensatz
 _n_seasons = int(df['season'].nunique())
-# Distinct clubs that appeared in any top-5 league across all seasons
-# (more than 5×20 because promotion/relegation churns the membership).
 _n_teams = int(df['club_id'].dropna().nunique())
 # Total transfers considered: every move with a known fee that touches a
 # top-5 league (incoming or outgoing) across the 15 seasons. Reference
@@ -540,15 +524,15 @@ _intro_tiles = f'''
       <div class="kpi-row">
         <div class="kpi-card accent">
           <span class="kpi-number gold">{_n_seasons}</span>
-          <span class="kpi-label">Analysierte Saisons (2010–2024)</span>
+          <span class="kpi-label">Saisons (2010–2024)</span>
         </div>
         <div class="kpi-card">
           <span class="kpi-number">{_n_teams}</span>
-          <span class="kpi-label">Teams in den Top-5-Ligen</span>
+          <span class="kpi-label">Teams</span>
         </div>
         <div class="kpi-card">
           <span class="kpi-number">{_transfers_fmt}</span>
-          <span class="kpi-label">Berücksichtigte Transfers</span>
+          <span class="kpi-label">Transfers</span>
         </div>
         <div class="kpi-card placeholder">
           <span class="kpi-number muted">—</span>
