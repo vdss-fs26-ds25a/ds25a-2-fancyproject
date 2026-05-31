@@ -1,78 +1,332 @@
 ---
-title: "Data Report"
+title: "Datenbericht"
 format: html
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
 # Datenbericht
 
+Dieser Bericht dokumentiert alle im Projekt verwendeten Daten, um die
+Nachvollziehbarkeit und Reproduzierbarkeit der Ergebnisse sicherzustellen und
+eine systematische Erweiterung der Datenbasis zu ermöglichen. Er beschreibt
+zunächst die Rohdaten (Herkunft, Beschaffung, Schema und Qualität) und
+anschliessend die daraus abgeleiteten, verarbeiteten Datensätze, die die
+Grundlage der Visualisierungen im Dashboard bilden.
+
+Sämtliche Daten stammen von [Transfermarkt.de](https://www.transfermarkt.de),
+einer öffentlich zugänglichen Datenbank für Fussballdaten. Es handelt sich um
+öffentliche Sportdaten ohne sensible personenbezogene Inhalte; die Nutzung
+erfolgt rein akademisch und nicht-kommerziell.
+
 ## Rohdaten
 
-### Übersicht Rohdaten
+### Übersicht Rohdaten {#tbl-raw-overview}
+
+: Übersicht der im Projekt verwendeten Rohdatensätze.
 
 | Name | Quelle | Speicherort |
-| :--- | :--- | :--- |
-| Transfermarkt CSVs | Kaggle (User `dcaribou`) | `\docs\data\transfermarkt\` |
-| Season-Long JSONL | Transfermarkt (via `dcaribou` Scraper) | `\docs\data\` |
+|---|---|---|
+| Transfermarkt CSVs | Kaggle-Datensatz *davidcariboo/player-scores* (User `dcaribou`), ursprünglich von Transfermarkt.de | `docs/data/transfermarkt/` |
+| Saison-JSONL (Top-5-Ligen) | Eigenes Scraping von Transfermarkt.de mit angepasstem `dcaribou`-Scraper | `docs/data/` |
+
+Die Rohdaten verteilen sich auf zwei Quellen: einen etablierten relationalen
+Kaggle-Datensatz (fünf CSV-Dateien) und einen selbst erhobenen Datensatz mit
+Kaderkennzahlen je Saison und Liga (fünf JSONL-Dateien). Beide lassen sich über
+die Vereins-ID (`club_id`) und die Spieler-ID (`player_id`) miteinander
+verknüpfen.
 
 ### Details Datensatz 1: Transfermarkt CSVs
 
-Dieser Datensatz enthält historische und aktuelle Fussball-Relationaldaten 
-(Vereine, Spiele, Spieler, Marktwerte und Transfers). Die Daten stammen vom 
-Kaggle-User `dcaribou`, sind lokal gespeichert und umfassen die Dateien 
-`clubs.csv`, `games.csv`, `player_valuations.csv`, `players.csv` und 
-`transfers.csv`. Da es sich um öffentlich zugängliche Sportdaten handelt, 
-gibt es keine Bedenken hinsichtlich sensibler personenbezogener Daten. 
-Die Nutzung erfolgt rein akademisch und nicht-kommerziell.
+Der Datensatz enthält historische und aktuelle relationale Fussballdaten:
+Vereine, Spiele, Spieler, Marktwert-Verläufe und Transfers. Er stammt vom
+Kaggle-User `dcaribou` ([davidcariboo/player-scores](https://www.kaggle.com/datasets/davidcariboo/player-scores)),
+der die Daten regelmässig von Transfermarkt.de aktualisiert, und umfasst fünf
+Dateien.
+
+- **Beschaffung:** Download des öffentlichen Kaggle-Datensatzes; die fünf
+  CSV-Dateien wurden unverändert unter `docs/data/transfermarkt/` abgelegt. Ein
+  neues Teammitglied kann die Daten über die Kaggle-Seite eigenständig erneut
+  beziehen.
+- **Rechtliches / Governance:** öffentliche Daten, akademische und
+  nicht-kommerzielle Nutzung; keine sensiblen personenbezogenen Daten.
+- **Rolle im Projekt:** unabhängige Variablen (Marktwerte, Transfersummen,
+  Spielergebnisse) zur Beschreibung des finanziellen und sportlichen Vergleichs
+  der Ligen.
+
+Die fünf Dateien stehen über gemeinsame Schlüssel in Beziehung
+(`club_id`, `player_id`, `game_id`):
+
+| Datei | Zeilen | Spalten | Inhalt |
+|---|---:|---:|---|
+| `clubs.csv` | 796 | 17 | Vereinsstammdaten (Liga, Kadergrösse, Stadion, Trainer) |
+| `players.csv` | 47'702 | 26 | Spielerstammdaten (Geburt, Position, Vertrag, Marktwert) |
+| `games.csv` | 86'983 | 23 | Einzelspiele (Tore, Aufstellung, Schiedsrichter, Zuschauer) |
+| `transfers.csv` | 38'968 | 10 | Transfers (abgebender/aufnehmender Verein, Ablöse, Marktwert) |
+| `player_valuations.csv` | 616'377 | 6 | Marktwert-Verläufe einzelner Spieler über die Zeit |
 
 #### Datenkatalog
 
-| Spaltenindex | Spaltenname | Datentyp | Werte (Regeln) | Kurzbeschreibung |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | `club_id` | Integer | > 0 | Eindeutige ID für Vereine |
-| 2 | `player_id` | Integer | > 0 | Eindeutige ID für Spieler |
-| 3 | `game_id` | Integer | > 0 | Eindeutige ID für Spiele |
-| 4 | `market_value_in_eur` | Float | >= 0 | Marktwert in Euro |
-| 5 | `transfer_fee` | Float | >= 0 | Gezahlte Ablösesumme |
-| 6 | `date` | Date | YYYY-MM-DD | Datum des Ereignisses |
+Aus Platzgründen werden hier die für das Dashboard zentralen Spalten der vier
+genutzten CSV-Dateien aufgeführt. `clubs.csv` dient ausschliesslich zur
+Zuordnung von Verein und Liga; die übrigen Stammdatenfelder (Stadion, Trainer
+usw.) werden nicht weiterverwendet.
 
-### Details Datensatz 2: Season-Long JSONL
+: Datenkatalog `transfers.csv` (alle Spalten).
 
-Hierbei handelt es sich um Vereinsstatistiken pro Saison, 
-darunter Transferbilanzen, Kaderdemografie und Stadiondaten. Um diese Daten 
-zu generieren, haben wir den Scraper von `dcaribou` leicht modifiziert 
-wiederverwendet. Dieses wurde über einen GitHub Codespace geladen, 
-um die Daten über Transfermarkt.de selbst im `.jsonl`-Format zu scrapen.
+| # | Spaltenname | Datentyp | Werte / Regeln | Kurzbeschreibung |
+|---|---|---|---|---|
+| 1 | `player_id` | Integer | > 0, FK → `players.csv` | Transferierter Spieler |
+| 2 | `transfer_date` | Date | YYYY-MM-DD | Datum des Transfers |
+| 3 | `transfer_season` | String | z. B. `10/11` | Saison im Format JJ/JJ |
+| 4 | `from_club_id` | Integer | > 0, FK → `clubs.csv` | Abgebender Verein (ID) |
+| 5 | `to_club_id` | Integer | > 0, FK → `clubs.csv` | Aufnehmender Verein (ID) |
+| 6 | `from_club_name` | String | – | Abgebender Verein (Name) |
+| 7 | `to_club_name` | String | – | Aufnehmender Verein (Name) |
+| 8 | `transfer_fee` | Float | ≥ 0, ca. 40 % fehlend | Ablösesumme in EUR |
+| 9 | `market_value_in_eur` | Float | ≥ 0, ca. 18 % fehlend | Marktwert zum Transferzeitpunkt |
+| 10 | `player_name` | String | – | Spielername |
 
-#### Datenkatalog
+: Datenkatalog `player_valuations.csv` (alle Spalten).
 
-| Spaltenindex | Spaltenname | Datentyp | Werte (Regeln) | Kurzbeschreibung |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | `club_id` | Integer | > 0 | Foreign Key zu `clubs.csv` |
-| 2 | `season` | Integer | z.B. 2023 | Startjahr der Saison |
-| 3 | `name` | String | - | Voller Vereinsname |
-| 4 | `total_market_value` | Integer | >= 0 | Marktwert Kader |
-| 5 | `squad_size` | String | - | Anzahl Spieler |
-| 6 | `average_age` | String | - | Durchschnittsalter |
-| 7 | `foreigners_percentage` | String | - | Ausländeranteil |
-| 8 | `net_transfer_record` | Integer | - | Transferbilanz |
-| 9 | `stadium_seats` | String | - | Stadionkapazität |
-| 10 | `league_position` | Integer/Null | 1-20 | Tabellenplatz |
+| # | Spaltenname | Datentyp | Werte / Regeln | Kurzbeschreibung |
+|---|---|---|---|---|
+| 1 | `player_id` | Integer | > 0, FK → `players.csv` | Bewerteter Spieler |
+| 2 | `date` | Date | YYYY-MM-DD (2000–2026) | Stichtag der Bewertung |
+| 3 | `market_value_in_eur` | Integer | ≥ 10'000 | Geschätzter Marktwert in EUR |
+| 4 | `current_club_name` | String | – | Verein zum Stichtag |
+| 5 | `current_club_id` | Float | > 0, FK → `clubs.csv` | Verein zum Stichtag (ID) |
+| 6 | `player_club_domestic_competition_id` | String | z. B. `GB1`, ca. 12 % fehlend | Liga des Vereins zum Stichtag |
+
+: Datenkatalog `players.csv` (für das Dashboard genutzte Spalten).
+
+| # | Spaltenname | Datentyp | Werte / Regeln | Kurzbeschreibung |
+|---|---|---|---|---|
+| 1 | `player_id` | Integer | > 0 (Primärschlüssel) | Eindeutige Spieler-ID |
+| 2 | `name` | String | – | Vollständiger Spielername |
+| 3 | `sub_position` | String | z. B. `Centre-Forward` | Detaillierte Position |
+| 4 | `position` | String | Attack / Midfield / Defender / Goalkeeper | Grobe Position |
+| 5 | `current_club_domestic_competition_id` | String | z. B. `IT1` | Aktuelle Liga |
+| 6 | `market_value_in_eur` | Float | ≥ 0, ca. 18 % fehlend | Aktueller Marktwert |
+
+: Datenkatalog `games.csv` (für das Dashboard genutzte Spalten).
+
+| # | Spaltenname | Datentyp | Werte / Regeln | Kurzbeschreibung |
+|---|---|---|---|---|
+| 1 | `game_id` | Integer | > 0 (Primärschlüssel) | Eindeutige Spiel-ID |
+| 2 | `competition_id` | String | z. B. `GB1`, `CL` | Wettbewerb |
+| 3 | `season` | Integer | 2005–2025 | Startjahr der Saison |
+| 4 | `home_club_id` / `away_club_id` | Integer | > 0, FK → `clubs.csv` | Heim-/Gastverein |
+| 5 | `home_club_goals` / `away_club_goals` | Integer | ≥ 0 | Toranzahl Heim/Gast |
+| 6 | `competition_type` | String | `domestic_league`, `domestic_cup`, … | Art des Wettbewerbs |
+
+#### Beziehungen der Dateien
+
+Die Dateien bilden ein relationales Schema: `players.csv` und `clubs.csv`
+liefern die Stammdaten, `transfers.csv`, `games.csv` und
+`player_valuations.csv` die Ereignis- bzw. Verlaufsdaten. Verknüpft wird über
+`player_id` (Spieler) und `club_id` (Verein, in `games.csv` als
+`home_club_id` / `away_club_id`, in `transfers.csv` als
+`from_club_id` / `to_club_id`).
 
 #### Datenbeschaffenheit und Qualität
 
-Die explorative Datenanalyse fand in Quarto mit Python und 
-Plotly-Visualisierungen statt. In den JSONL-Dateien wurden 
-numerische Werte teilweise als Strings gecrawlt, die für die Analyse 
-bereinigt werden mussten. Bei `league_position` sind Nullwerte vorhanden, 
-die eine Imputation erforderten. Die Rohdaten wurden auf die relevanten Saisons
-und Ligen für die Verwendung im Dashboard gefiltert.
+Die explorative Analyse zeigt eine insgesamt gute, aber stellenweise lückenhafte
+Datenlage. Die wichtigsten Befunde:
+
+- **`clubs.csv.total_market_value` ist zu 100 % leer** und damit unbrauchbar.
+  Der Kadermarktwert je Verein wird deshalb nicht aus dieser Datei, sondern aus
+  den selbst erhobenen JSONL-Dateien bezogen (siehe Datensatz 2).
+- **Fehlende Ablösesummen:** In `transfers.csv` fehlt `transfer_fee` in rund
+  40 % der Zeilen (Leihen, ablösefreie Wechsel, unbekannte Summen). Für
+  ablösebezogene Auswertungen werden nur Transfers mit `transfer_fee > 0`
+  berücksichtigt.
+- **Fehlende Werte in `players.csv`:** stark betroffen sind `agent_name`
+  (≈ 47 %), `contract_expiration_date` (≈ 35 %) und `international_caps`
+  (≈ 63 %); die im Dashboard genutzten Felder (`name`, `position`,
+  `market_value_in_eur`) sind dagegen weitgehend vollständig.
+- **`games.csv`** enthält weit mehr als die Top-5-Ligen (u. a. Champions
+  League, Pokalwettbewerbe, Nationalmannschaften) und reicht bis 2025; für die
+  Tabellenberechnung wird auf `competition_type = domestic_league` und die fünf
+  Ligen `GB1, ES1, L1, IT1, FR1` gefiltert. `home_/away_club_position` fehlen in
+  ≈ 29 % der Zeilen und werden nicht verwendet — die Tabellenplätze werden statt
+  dessen aus den Spielergebnissen neu berechnet.
+- **`player_valuations.csv`** ist mit 616'377 Zeilen die grösste Datei und
+  deckt 2000–2026 ab; für das Dashboard relevant sind die Bewertungen ab 2010
+  für Vereine der fünf Ligen.
+
+Eine Datenqualitätsübersicht der wichtigsten numerischen Felder zeigt
+@fig-missingness.
+
+```{python}
+#| label: fig-missingness
+#| fig-cap: "Anteil fehlender Werte in zentralen Spalten der Roh-CSVs (in Prozent)."
+#| echo: true
+#| code-fold: true
+import pandas as pd
+import matplotlib.pyplot as plt
+
+BASE = 'data/transfermarkt'
+checks = [
+    ('clubs.total_market_value',        f'{BASE}/clubs.csv',             'total_market_value'),
+    ('transfers.transfer_fee',          f'{BASE}/transfers.csv',         'transfer_fee'),
+    ('transfers.market_value',          f'{BASE}/transfers.csv',         'market_value_in_eur'),
+    ('players.market_value',            f'{BASE}/players.csv',           'market_value_in_eur'),
+    ('players.contract_expiration',     f'{BASE}/players.csv',           'contract_expiration_date'),
+    ('games.home_club_position',        f'{BASE}/games.csv',             'home_club_position'),
+    ('valuations.league_id',            f'{BASE}/player_valuations.csv', 'player_club_domestic_competition_id'),
+]
+labels, miss = [], []
+for label, path, col in checks:
+    try:
+        s = pd.read_csv(path, usecols=[col])[col]
+        labels.append(label); miss.append(s.isna().mean() * 100)
+    except Exception:
+        pass
+
+order = sorted(range(len(miss)), key=lambda i: miss[i])
+labels = [labels[i] for i in order]; miss = [miss[i] for i in order]
+
+fig, ax = plt.subplots(figsize=(7, 3.6))
+bars = ax.barh(labels, miss, color='#4a8e32', edgecolor='white')
+ax.set_xlabel('Fehlende Werte (%)'); ax.set_xlim(0, 100)
+ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
+for bar, val in zip(bars, miss):
+    ax.text(bar.get_width() + 1.5, bar.get_y() + bar.get_height() / 2,
+            f'{val:.0f}%', va='center', fontsize=9)
+plt.tight_layout(); plt.show()
+```
+
+### Details Datensatz 2: Saison-JSONL (Top-5-Ligen)
+
+Dieser Datensatz enthält Vereinskennzahlen pro Saison und Liga — unter anderem
+Kadermarktwert, Transferein- und -ausgaben, Transferbilanz, Kaderdemografie und
+Stadiondaten. Er wurde selbst erhoben, weil die für das Dashboard zentrale
+Grösse (Kadermarktwert je Verein) im Kaggle-Datensatz nicht verfügbar ist
+(`clubs.csv.total_market_value` ist leer).
+
+- **Beschaffung:** Der Scraper von `dcaribou` wurde leicht angepasst und in
+  einem GitHub Codespace ausgeführt, um die Vereinskennzahlen direkt von
+  Transfermarkt.de im JSONL-Format zu erfassen. Pro Liga existiert eine Datei
+  (`GB1_long.jsonl`, `ES1_long.jsonl`, `L1_long.jsonl`, `IT1_long.jsonl`,
+  `FR1_long.jsonl`).
+- **Umfang:** insgesamt 1'466 Zeilen (eine je Verein und Saison), 183
+  unterschiedliche Vereine, Saisons 2010–2024.
+- **Rechtliches / Governance:** öffentliche Daten, akademische Nutzung; die
+  Erhebung erfolgte ausschliesslich zu Projektzwecken.
+
+| Datei | Zeilen (Verein × Saison) |
+|---|---:|
+| `GB1_long.jsonl` (Premier League) | 300 |
+| `ES1_long.jsonl` (La Liga) | 300 |
+| `IT1_long.jsonl` (Serie A) | 300 |
+| `FR1_long.jsonl` (Ligue 1) | 296 |
+| `L1_long.jsonl` (Bundesliga) | 270 |
+
+#### Datenkatalog
+
+: Datenkatalog der JSONL-Dateien (für das Dashboard genutzte Felder).
+
+| # | Feldname | Datentyp (roh) | Werte / Regeln | Kurzbeschreibung |
+|---|---|---|---|---|
+| 1 | `club_id` | Integer | > 0, FK → `clubs.csv` | Eindeutige Vereins-ID |
+| 2 | `name` | String | – | Vollständiger Vereinsname |
+| 3 | `season` | Integer | 2010–2024 | Startjahr der Saison |
+| 4 | `total_market_value` | Integer | ≥ 0 (EUR) | Kadermarktwert des Vereins |
+| 5 | `squad_size` | String → Int | z. B. `28` | Kadergrösse |
+| 6 | `average_age` | String → Float | z. B. `25.9` | Durchschnittsalter |
+| 7 | `foreigners_percentage` | String → Float | z. B. `78.6 %` | Ausländeranteil |
+| 8 | `national_team_players` | String → Int | ≥ 0 | Nationalspieler im Kader |
+| 9 | `transfer_income` | Integer | ≥ 0 (EUR) | Transfereinnahmen |
+| 10 | `transfer_spendings` | Integer | ≥ 0 (EUR) | Transferausgaben |
+| 11 | `net_transfer_record` | Integer | ± (EUR) | Transferbilanz (Einnahmen − Ausgaben) |
+| 12 | `stadium_name` | String | – | Name des Stadions |
+| 13 | `stadium_seats` | String → Int | z. B. `62.850 Seats` | Stadionkapazität |
+| 14 | `club_image_url` | String | URL (PNG) | Vereinswappen (transparent) |
+| 15 | `league_position` | – | **vollständig leer** | Tabellenplatz (nicht nutzbar) |
+
+#### Datenbeschaffenheit und Qualität
+
+Die JSONL-Daten sind grundsätzlich vollständig (eine Zeile je Verein und
+Saison), erfordern aber Typkonvertierungen und enthalten zwei nennenswerte
+Auffälligkeiten:
+
+- **Numerische Werte als formatierte Strings:** Mehrere Felder wurden als Text
+  mit Einheiten erfasst, etwa `stadium_seats` als `"62.850 Seats"` oder
+  `foreigners_percentage` als `"78.6 %"`. Diese müssen vor der Analyse bereinigt
+  und in Zahlen umgewandelt werden.
+- **`league_position` ist vollständig leer** und damit unbrauchbar. Die
+  Tabellenplätze werden statt dessen aus den Spielergebnissen in `games.csv`
+  berechnet (siehe verarbeitete Daten).
+- **Format von `net_transfer_record`:** In den JSONL-Dateien liegt das Feld als
+  Ganzzahl in Euro vor, in `clubs.csv` dagegen als formatierter String
+  (z. B. `+€5.90m`). Im Projekt wird die numerische JSONL-Variante verwendet.
+- Die unterschiedliche Zeilenzahl je Liga (270 für die Bundesliga, 296 für die
+  Ligue 1) ist korrekt: Beide Ligen umfassen 18 statt 20 Vereine, und die
+  Mitgliedschaft wechselt saisonal durch Auf- und Abstieg.
 
 ## Verarbeitete Daten
 
-### Übersicht Verarbeitete Datensätze
+Die Rohdaten werden vollständig zur Laufzeit in `index.qmd` (Setup-Zelle)
+eingelesen, bereinigt und zusammengeführt. Es entstehen keine persistenten
+Zwischendateien; die folgenden Tabellen beschreiben die im Code erzeugten
+DataFrames, die unmittelbar die Visualisierungen speisen.
+
+### Übersicht Verarbeitete Datensätze {#tbl-processed-overview}
+
+: Übersicht der im Code erzeugten, verarbeiteten Datensätze.
 
 | Name | Quelle | Speicherort |
-| :--- | :--- | :--- |
-| Gefilterte Kaggle DataFrames | `clubs.csv`, `games.csv`, etc. | index.qmd |
-| Bereinigte JSONL DataFrames | `ES1_long.jsonl`, etc. | index.qmd |
+|---|---|---|
+| `df` (Kaderkennzahlen) | fünf JSONL-Dateien, zusammengeführt und gefiltert | `index.qmd` (Setup) |
+| `tr` / `tr5` (Transfers) | `transfers.csv` + `clubs.csv` | `index.qmd` (Setup) |
+| `standings` (Tabellen) | `games.csv` | `index.qmd` (Setup) |
+| `scatter_df` (Wert ↔ Platz) | `standings` + `df` | `index.qmd` (Setup) |
+| Marktwert-Verläufe (Top-N) | `player_valuations.csv` + `players.csv` | `index.qmd` (Chart-Zelle) |
 
+### Details verarbeitete Datensätze
+
+**`df` — Kaderkennzahlen je Verein und Saison.** Die fünf JSONL-Dateien werden
+eingelesen, um die Liga (`competition_id`) ergänzt und auf die Saisons
+2010–2024 gefiltert. String-Felder mit Einheiten werden in Zahlen umgewandelt.
+`df` ist die zentrale Quelle für Kadermarktwerte, Transferbilanzen und die
+Konzentrationskennzahlen.
+
+**`tr` / `tr5` — Transfers mit Liga-Zuordnung.** `transfers.csv` wird zweimal
+mit `clubs.csv` verknüpft, um abgebender und aufnehmender Liga
+(`from_league`, `to_league`) zuzuordnen. `tr` enthält alle Transfers (Basis für
+die Rekord-Transfers je Saison über alle Ligen); `tr5` ist die Teilmenge der
+Transfers *zwischen verschiedenen* Top-5-Ligen mit bekannter Ablöse
+(`transfer_fee > 0`) und bildet die Grundlage des Sankey-Diagramms. Eine
+bekannte Fehlbuchung von Transfermarkt (eine implausible Ablöse für einen
+Wechsel zu einem unterklassigen Verein) wird im Code gezielt entfernt.
+
+**`standings` — Tabellen aus Spielergebnissen.** Da `league_position` in beiden
+Rohquellen fehlt bzw. unbrauchbar ist, werden Punkte und Tabellenplätze aus
+`games.csv` neu berechnet: gefiltert auf `domestic_league` und die fünf Ligen,
+Punkte je Spiel (3/1/0), Aggregation je Verein und Saison, anschliessend
+Rangbildung.
+
+**`scatter_df` — Kaderwert gegen Tabellenplatz.** Verknüpfung der berechneten
+Tabellen mit den Kaderwerten aus `df`; Grundlage für die Korrelationsanalyse
+(Kaderwert ↔ Erfolg) und die Konzentrationskennzahlen (Anteil der Top-4-Vereine).
+
+**Marktwert-Verläufe.** Aus `player_valuations.csv` wird je Spieler und Saison
+die jeweils letzte Bewertung bestimmt und mit `players.csv` (Name, Position)
+angereichert; daraus werden die wertvollsten Spieler je Saison und ihre
+Verteilung auf die Ligen abgeleitet.
+
+#### Eignung der Daten
+
+Die Daten sind in Umfang und Qualität ausreichend, um die Visualisierungsziele
+des Dashboards zu erfüllen. Sie decken alle fünf Ligen über fünfzehn Saisons
+durchgängig ab und erlauben Vergleiche von Kaderwerten, Transferströmen,
+Marktwert-Konzentration und sportlichem Erfolg. Die wesentlichen Einschränkungen
+— fehlende Ablösesummen, leere Felder bei Kadermarktwert und Tabellenplatz in
+den Rohquellen — werden durch Filterung (`transfer_fee > 0`), eine ergänzende
+Eigenerhebung (JSONL-Kaderwerte) und Neuberechnung (Tabellen aus `games.csv`)
+aufgefangen. Eine inhaltliche Restunsicherheit bleibt: Transfermarkt-Marktwerte
+sind geschätzte Spielerwerte und keine Vereins- oder Unternehmenswerte; dies ist
+bei der Interpretation der Visualisierungen zu berücksichtigen.
