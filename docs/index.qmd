@@ -1079,12 +1079,14 @@ fig_bar.update_layout(
 
 display(HTML(sec(
     'III-Fortsetzung',
-    'Rekord-Transfers (Alle Ligen)',
-    ('Jeder Balken zeigt den teuersten Transfer einer Saison — die jeweils höchste Ablösesumme '
-     'weltweit, unabhängig von der Liga. Auffällig ist, wie häufig die Premier League und die '
-     'Ligue 1 das obere Ende des Marktes bestimmen.'),
+    'Rekord-Transfers',
+    ('Jeder Balken zeigt den teuersten Transfer einer Saison. Der unangefochtene '
+     'Rekordtransfer in diesem Zeitraum ist der Wechsel von Neymar zu '
+     'Paris Saint-Germain in 2017 für die Summe von 222 Millionen Euro.'
+     'Seitdem überschreiten die jährlichen Rekordsummen fast durchgehend '
+     '100 Millionen Euro.'),
     ch(fig_bar),
-    hl='In den 5 Saisons von 2020/21 bis 2024/25 gab der englische Verein Chelsea F.C., unter der Leitung von Todd Boehly,'
+    hl='In den Saisons 2020/21 bis 2024/25 gab der englische Verein Chelsea F.C. '
        'total <strong>1,75 Milliarden Euro</strong> für Transfers aus. ',
     hl_type='gold',
     cap='Höchste Ablösesumme pro Saison (2010–2024) · Farbe = Liga des aufnehmenden Vereins'
