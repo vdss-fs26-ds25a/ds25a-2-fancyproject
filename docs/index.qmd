@@ -804,7 +804,7 @@ _chart_html_mosaic = fig_mosaic.to_html(
 )
 
 display(HTML(sec(
-    'I · Kadermarktwerte'
+    'I · Kadermarktwerte',
     'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
     ('Die Kachelgröße spiegelt den kumulierten Kaderwert wider. '
      'Die Visualisierung zeigt die Top-6-Clubs jeder Liga, während der Rest gebündelt dargestellt wird. '
