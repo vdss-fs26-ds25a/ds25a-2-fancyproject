@@ -1,78 +1,104 @@
 ---
-title: "Data Report"
-format: html
+## title: "Data Report"
 ---
 
-# Datenbericht
+# Data Report
 
-## Rohdaten
+All information on the data used in the project is compiled in the data report in order to ensure the traceability and reproducibility of the results and to enable a systematic expansion of the database.
 
-### Übersicht Rohdaten
+Typically, in the exploratory analysis of the acquired raw data, quality and other issues are identified, which require pre-processing, merging of individual datasets and feature engineering into processed datasets. Therefore, this template provides a separate section for the processed data, which then serves as a starting point for the modelling activities. This needs to be adapted to the specific project requirements.
 
-| Name | Quelle | Speicherort |
-| :--- | :--- | :--- |
-| Transfermarkt CSVs | Kaggle (User `dcaribou`) | `\docs\data\transfermarkt\` |
-| Season-Long JSONL | Transfermarkt (via `dcaribou` Scraper) | `\docs\data\` |
+## Raw data
 
-### Details Datensatz 1: Transfermarkt CSVs
+### Overview Raw Datasets
 
-Dieser Datensatz enthält historische und aktuelle Fussball-Relationaldaten 
-(Vereine, Spiele, Spieler, Marktwerte und Transfers). Die Daten stammen vom 
-Kaggle-User `dcaribou`, sind lokal gespeichert und umfassen die Dateien 
-`clubs.csv`, `games.csv`, `player_valuations.csv`, `players.csv` und 
-`transfers.csv`. Da es sich um öffentlich zugängliche Sportdaten handelt, 
-gibt es keine Bedenken hinsichtlich sensibler personenbezogener Daten. 
-Die Nutzung erfolgt rein akademisch und nicht-kommerziell.
+: Overview of raw datasets used in the project. {#tbl-raw-overview}
 
-#### Datenkatalog
+| Name | Source | Storage location |
+| --- | --- | --- |
+| Transfermarkt CSVs | Kaggle (user `dcaribou`) | Local: `C:\Users\jsow\Dev\ZHAW\ds25a-2-fancyproject\docs\data\transfermarkt\` |
+| Season-Long JSONL | Transfermarkt (via modified custom scraper) | Local project directory (e.g., `ES1_long.jsonl`) |
 
-| Spaltenindex | Spaltenname | Datentyp | Werte (Regeln) | Kurzbeschreibung |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | `club_id` | Integer | > 0 | Eindeutige ID für Vereine |
-| 2 | `player_id` | Integer | > 0 | Eindeutige ID für Spieler |
-| 3 | `game_id` | Integer | > 0 | Eindeutige ID für Spiele |
-| 4 | `market_value_in_eur` | Float | >= 0 | Marktwert in Euro |
-| 5 | `transfer_fee` | Float | >= 0 | Gezahlte Ablösesumme |
-| 6 | `date` | Date | YYYY-MM-DD | Datum des Ereignisses |
+### Details Dataset 1: Transfermarkt CSVs
 
-### Details Datensatz 2: Season-Long JSONL
+* **Description:** This dataset contains historical and current relational football data, including clubs, games, players, player valuations, and transfers.
+* **Details of the data source/provider:** Scraped from Transfermarkt and provided by Kaggle user `dcaribou`.
+* **Information on data procurement:** The specific files utilised for this project were downloaded directly and stored locally at the path mentioned above. The utilized files are:
+* `clubs.csv`
+* `games.csv`
+* `player_valuations.csv`
+* `players.csv`
+* `transfers.csv`
 
-Hierbei handelt es sich um Vereinsstatistiken pro Saison, 
-darunter Transferbilanzen, Kaderdemografie und Stadiondaten. Um diese Daten 
-zu generieren, haben wir den Scraper von `dcaribou` leicht modifiziert 
-wiederverwendet. Dieses wurde über einen GitHub Codespace geladen, 
-um die Daten über Transfermarkt.de selbst im `.jsonl`-Format zu scrapen.
 
-#### Datenkatalog
+* **Legal aspects:** The data is scraped from Transfermarkt and is intended for non-commercial, educational, and academic use.
+* **Data governance aspects:** Publicly available sports data; no personal sensitive data outside of public professional athletic records.
 
-| Spaltenindex | Spaltenname | Datentyp | Werte (Regeln) | Kurzbeschreibung |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | `club_id` | Integer | > 0 | Foreign Key zu `clubs.csv` |
-| 2 | `season` | Integer | z.B. 2023 | Startjahr der Saison |
-| 3 | `name` | String | - | Voller Vereinsname |
-| 4 | `total_market_value` | Integer | >= 0 | Marktwert Kader |
-| 5 | `squad_size` | String | - | Anzahl Spieler |
-| 6 | `average_age` | String | - | Durchschnittsalter |
-| 7 | `foreigners_percentage` | String | - | Ausländeranteil |
-| 8 | `net_transfer_record` | Integer | - | Transferbilanz |
-| 9 | `stadium_seats` | String | - | Stadionkapazität |
-| 10 | `league_position` | Integer/Null | 1-20 | Tabellenplatz |
+#### Data Catalogue
 
-#### Datenbeschaffenheit und Qualität
+: Data catalogue for Dataset 1 (Representative subset across the 5 core CSVs). {#tbl-data-catalogue-1}
 
-Die explorative Datenanalyse fand in Quarto mit Python und 
-Plotly-Visualisierungen statt. In den JSONL-Dateien wurden 
-numerische Werte teilweise als Strings gecrawlt, die für die Analyse 
-bereinigt werden mussten. Bei `league_position` sind Nullwerte vorhanden, 
-die eine Imputation erforderten. Die Rohdaten wurden auf die relevanten Saisons
-und Ligen für die Verwendung im Dashboard gefiltert.
+| Column index | Column name | Datatype | Values (Range, validation rules) | Short description |
+| --- | --- | --- | --- | --- |
+| 1 | `club_id` | Integer | > 0 | Unique identifier for clubs (`clubs.csv`). |
+| 2 | `player_id` | Integer | > 0 | Unique identifier for players (`players.csv`, `transfers.csv`, etc.). |
+| 3 | `game_id` | Integer | > 0 | Unique identifier for matches (`games.csv`). |
+| 4 | `market_value_in_eur` | Float | >= 0 | Player's market value in Euros. |
+| 5 | `transfer_fee` | Float | >= 0 | The fee paid for a player transfer. |
+| 6 | `date` | Date | YYYY-MM-DD | Date of matches, valuations, or transfers. |
 
-## Verarbeitete Daten
+### Details Dataset 2: Season-Long JSONL
 
-### Übersicht Verarbeitete Datensätze
+* **Description:** Granular, season-long aggregates of club statistics including financial records (transfer income/spending), squad demographics (average age, foreigner percentages), and stadium details.
+* **Details of the data source/provider:** Scraped directly from Transfermarkt.
+* **Information on data procurement:** We decided to reuse `dcaribou`'s scraper, slightly modified, to create our season-long files. To achieve this technically, we utilized a **GitHub Codespace**. This allowed us to clone the repository, modify the scraper logic to fit our exact target leagues and timeframes, and run it in an isolated cloud environment without local dependency issues. The output was generated in `.jsonl` format (e.g., `ES1_long.jsonl`).
+* **Legal aspects:** Non-commercial, educational use.
+* **Data governance aspects:** Publicly available sports data.
 
-| Name | Quelle | Speicherort |
-| :--- | :--- | :--- |
-| Gefilterte Kaggle DataFrames | `clubs.csv`, `games.csv`, etc. | index.qmd |
-| Bereinigte JSONL DataFrames | `ES1_long.jsonl`, etc. | index.qmd |
+#### Data Catalogue
+
+: Data catalogue for Dataset 2 (Based on sample entry `ES1_long.jsonl`). {#tbl-data-catalogue-2}
+
+| Column index | Column name | Datatype | Values (Range, validation rules) | Short description |
+| --- | --- | --- | --- | --- |
+| 1 | `club_id` | Integer | > 0 | Foreign key linking back to `clubs.csv`. |
+| 2 | `season` | Integer | e.g., 2023 | The starting year of the football season. |
+| 3 | `name` | String | e.g., "Rayo Vallecano" | Full club name. |
+| 4 | `total_market_value` | Integer | >= 0 | Combined market value of the squad in Euros. |
+| 5 | `squad_size` | String | e.g., "27" | Number of players in the squad (requires numeric cast). |
+| 6 | `average_age` | String | e.g., "28.8" | Average age of the squad (requires float cast). |
+| 7 | `foreigners_percentage` | String | e.g., "51.9 %" | Percentage of foreign players (requires cleaning). |
+| 8 | `net_transfer_record` | Integer | Negative or Positive | Transfer income minus transfer spendings. |
+| 9 | `stadium_seats` | String | e.g., "14.708 Seats" | Capacity of the home stadium (requires cleaning). |
+| 10 | `league_position` | Integer/Null | 1 to 20, or Null | League standing (contains nulls needing imputation). |
+
+#### Data Characteristics and Quality
+
+Exploratory data analysis was conducted within **Quarto** using **Python** and interactive visualisations via **Plotly**. Key characteristics and quality issues identified in the raw data include:
+
+* **Formatting and Datatypes:** In the JSONL files, several numerical variables were scraped as strings with text formatting (e.g., `foreigners_percentage` as "51.9 %" and `stadium_seats` as "14.708 Seats"). These require string manipulation and casting to standard numeric types (floats and integers) for analysis.
+* **Missing Values:** The `league_position` variable contains `null` values that must be addressed. Additionally, manual checks for data integrity and correctness were required across the `dcaribou` datasets to ensure consistency.
+* **Scope:** The raw `dcaribou` CSVs contain a massive amount of historical and global data. The data quality is sufficient, but the sheer volume necessitates strict filtering to isolate the relevant time periods and leagues for our specific project scope.
+
+## Processed Data
+
+### Overview Processed Datasets
+
+: Overview of processed datasets used in the project. {#tbl-processed-overview}
+
+| Name | Source | Storage location |
+| --- | --- | --- |
+| Filtered Kaggle Dataframes | `clubs.csv`, `games.csv`, etc. | Handled in-memory via Python/Quarto environment |
+| Cleaned Season-Long Dataframes | `ES1_long.jsonl`, etc. | Handled in-memory via Python/Quarto environment |
+
+### Details Processed Dataset 1: Filtered & Cleaned Dataframes
+
+* **Description:** This represents the combined and cleaned state of the raw CSV and JSONL datasets, ready for exploratory visualisations and modelling within our Quarto documents.
+* **Details and reasons for the processing steps:**
+* **Filtering:** The raw Kaggle datasets were heavily filtered to include only the specific leagues and relevant time periods required for the project.
+* **Data Cleaning & Type Casting:** As identified in the EDA, string variables from the JSONL files (`stadium_seats`, `foreigners_percentage`, `average_age`) were stripped of text characters (like " Seats" or " %") and cast to appropriate numeric data types using Python (Pandas).
+* **Integrity Checks:** Manual checks were implemented to ensure data correctness and referential integrity between the `club_id` in the newly scraped JSONL files and the existing Kaggle CSVs.
+
+
+* **How can the data be accessed:** The transformations are scripted directly in Python within the Quarto environment, meaning the processed data exists as accessible DataFrames ready for Plotly integration.
 
