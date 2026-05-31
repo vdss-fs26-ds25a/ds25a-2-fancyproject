@@ -711,10 +711,9 @@ display(HTML(sec(
     _chart_html + _toggle_js,
     hl=('Zur Saison 2016/17 trat ein neuer Fernsehvertrag der Premier League in Kraft '
         '(Sky und BT, rund £5,1 Mrd. für drei Spielzeiten und damit etwa 58 % mehr als zuvor). '
-        'Die zusätzlichen Einnahmen erhöhten die Kaufkraft der englischen Klubs spürbar; im '
-        'Sommer 2016 überstiegen ihre Transferausgaben erstmals £1 Mrd. Da sich die geschätzten '
-        'Marktwerte an Ablösen und Gehältern orientieren, stiegen mit den Ausgaben auch die '
-        'Kaderwerte.'),
+        'Die zusätzlichen Einnahmen erhöhten die finanzielle Schlagkraft der englischen Klubs '
+        'deutlich. Da sich die geschätzten Marktwerte an Ablösen und Gehältern orientieren, zogen '
+        'in den Folgejahren auch die Kaderwerte spürbar an.'),
     hl_type='gold',
     cap='Kadermarktwert aller Erstligaklubs je Saison (zu Saisonbeginn)'
 )))
