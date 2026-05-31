@@ -678,7 +678,7 @@ _toggle_js = '''
 
 display(HTML(sec(
     'I · Kadermarktwerte',
-    'Fünf Ligen, wachsender Abstand.',
+    'Die Top-5-Ligen im Vergleich',
     ('Jeder Balken zeigt den Kadermarktwert einer Liga in einer Saison — die Summe der '
      'von Transfermarkt geschätzten Werte aller Erstligaspieler. Bis etwa 2015 lagen die '
      'fünf Ligen vergleichsweise nah beieinander. Ab 2016 setzt sich die Premier League ab '
@@ -910,8 +910,8 @@ _lines = ', '.join(f'aus {LNAMES[lg]} <strong>€{v:.1f} Mrd.</strong>'
                    for lg, v in _ranked.items())
 
 display(HTML(sec(
-    'II · Transfer-Dominanz',
-    'Das Geld fliesst in eine Richtung.',
+    'II · Transfers',
+    'Transfers zwischen Top-5-Ligen',
     ('Links steht jede Liga als <em>Verkäufer</em>, rechts dieselbe Liga als <em>Käufer</em>. '
      'Die Breite jedes Bandes entspricht der Transfersumme, die zwischen den beiden Ligen floss. '
      'Über das Menü oben lässt sich eine einzelne Saison auswählen oder der gesamte '
@@ -964,8 +964,8 @@ fig.update_layout(
 themed(fig, height=650)
 
 display(HTML(sec(
-    'III · Transfer-Dominanz',
-    'PL-Klubs geben netto am meisten aus — jede Saison.',
+    'III · Transfers',
+    'Die Transferbilanzen der Ligen',
     ('Die kumulierte Netto-Transferbilanz zeigt den strukturellen Trend: Wer baut über die Jahre Transferüberschüsse auf, und wer häuft ein Defizit an? '
      'Negative Werte bedeuten, dass insgesamt mehr für Spieler ausgegeben als eingenommen wurde. '
      'Im Verlauf von 15 Jahren stürzt die Premier League geradezu ab, während sich andere Ligen als dauerhafte Nettoverkäufer etablieren.'),
@@ -1090,8 +1090,8 @@ fig.update_layout(
 themed(fig, height=620)
 
 display(HTML(sec(
-    'IV · Marktwert = Leistung?',
-    'Je reicher der Kader, desto besser der Platz — in allen fünf Ligen.',
+    'IV · Kadermarktwert',
+    'Korrelation zwischen Kadermarktwert und Liga-Erfolg',
     ('Die Pearson-Korrelation misst, wie stark der Kaderwert den Tabellenplatz voraussagt '
      '(1.0 = perfekte Übereinstimmung, 0 = kein Zusammenhang). '
      'Ein Wert über 0.7 gilt als starker Zusammenhang. '
@@ -1099,9 +1099,8 @@ display(HTML(sec(
     ch(fig),
     hl=('Die Korrelation liegt in allen Ligen konstant zwischen 0.6 und 0.9 — '
         'mit leichten Schwankungen je nach Saison. '
-        '<strong>Geld erklärt den Erfolg ligaübergreifend</strong>, '
-        'nicht nur in einer einzigen Liga.'),
-    cap='Pearson-Korrelation pro Saison und Liga · Basis: Kaderwert und Abschlusstabellenplatz (2010–2024)'
+        '<strong>Geld korreliert ligaübergreifend mit Erfolg Erfolg.</strong>'),
+    cap='Pearson-Korrelation pro Saison und Liga · Kaderwert und Abschlusstabellenplatz (2010–2024)'
 )))
 ```
 
@@ -1131,68 +1130,14 @@ fig.update_layout(
 themed(fig, height=600)
 
 display(HTML(sec(
-    'IV · Marktwert = Leistung?',
-    'Reichtum konzentriert sich.',
+    'IV · Kadermarktwert',
+    'Konzentration der Kadermarktwerte auf Top-Klubs',
     ('Wie viel Prozent des gesamten Kaderwerts einer Liga entfällt auf die vier reichsten Klubs? '
      'Ein hoher Wert bedeutet: Wenige Klubs haben fast alles, der Rest kämpft um Reste. '
      'In jeder der fünf Ligen konzentriert sich der Reichtum an der Spitze'),
     ch(fig),
     hl=('In jeder Liga gibt es eine Zweiklassengesellschaft. Die Reichen holen auf, die Armen fallen zurück. Geld schafft Ungleichheit auf zwei Ebenen: zwischen den Ligen — und innerhalb jeder Liga selbst.'),
     bridge='Woher kommt dieses Talent überhaupt — und zahlen die reichen Ligen zu viel dafür?'
-)))
-```
-
-```{python}
-#| label: s5a-pl-tax
-# ── Chart 5A: Median premium % per season per buying league ──
-_tax_all = []
-for lg in TOP5:
-    _d = tr[(tr['to_league'] == lg) &
-            (tr['from_league'] != lg) &
-            (tr['from_league'].isin(TOP5)) &
-            (tr['transfer_fee'] > 1e6) &
-            (tr['market_value_in_eur'] > 5e6) &
-            (tr['transfer_season'].str[:2].apply(lambda x: 2000+int(x) if x.isdigit() else int(x)).between(2010, 2024))].copy()
-    _d['fee_m'] = _d['transfer_fee'] / 1e6
-    _d['mv_m']  = _d['market_value_in_eur'] / 1e6
-    _d['premium'] = ((_d['fee_m'] / _d['mv_m']) - 1) * 100
-    _grp = _d.groupby('transfer_season')['premium'].median().reset_index()
-    _grp['league'] = lg
-    _tax_all.append(_grp)
-tax_df = pd.concat(_tax_all).rename(columns={'transfer_season': 'season', 'premium': 'med_pct'})
-
-fig = go.Figure()
-fig.add_hline(y=0, line_color='rgba(255,255,255,0.2)', line_dash='dot')
-for lg in TOP5:
-    _d = tax_df[tax_df['league']==lg].sort_values('season')
-    fig.add_trace(go.Scatter(
-        x=_d['season'], y=_d['med_pct'].round(1),
-        mode='lines+markers',
-        name=LNAMES[lg],
-        line=dict(color=LCOLORS[lg], width=2),
-        marker=dict(size=5, color=LCOLORS[lg]),
-        hovertemplate='<b>%{x}</b>: +%{y:.1f}%<extra>' + LNAMES[lg] + '</extra>'
-    ))
-fig.update_layout(
-    xaxis_title='Saison',
-    yaxis=dict(title='Median-Aufschlag gegenüber Marktwert (%)', ticksuffix='%'),
-    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
-)
-themed(fig, height=620)
-
-display(HTML(sec(
-    'V · Transfer-Aufschläge',
-    'Die Premier League zahlt am meisten über Marktwert — aber sie ist nicht allein.',
-    ('Für jeden Transfer innerhalb der Top-5-Ligen wurde der prozentuale Aufschlag '
-     'gegenüber dem offiziellen Transfermarkt-Wert berechnet. '
-     'Dargestellt ist der Median-Aufschlag pro Saison und Käuferliga. '
-     'Ein Wert von +33% bedeutet: Diese Liga zahlte im Schnitt ein Drittel mehr als der Spieler "wert" war.'),
-    ch(fig),
-    hl=('Die Premier League zahlt strukturell den höchsten Aufschlag — '
-        'doch auch andere Ligen überzahlen in bestimmten Saisons deutlich. '
-        '<strong>Der sogenannte Premier-League-Tax setzt den Marktpreis, dem alle folgen müssen.</strong>'),
-    hl_type='red',
-    cap='Transfers zwischen Top-5-Ligen · Ablöse > €1M, Marktwert > €5M von 2010–2024'
 )))
 ```
 
