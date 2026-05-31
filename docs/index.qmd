@@ -54,142 +54,100 @@ execute:
       +arc('M '+(fx+fw)+' '+(fy+fh-c)+' A '+c+' '+c+' 0 0 0 '+(fx+fw-c)+' '+(fy+fh));
   }
 
-  /* ---- Page-by-Page Explicit Sprite Configs ---- */
-  var PAGE_CONFIGS = [
-    // PAGE 0 (First slide)
-    [
-      { id: 10, x: 0.05, y: 0.50 }, // Goalie 10 (left goal)
-      { id: 55, x: 0.95, y: 0.50 }, // Goalie 55 (right goal)
-      { id: 20, x: 0.50, y: 0.03 }, // Coach 20 (top sideline)
-      { id: 1,  x: 0.30, y: 0.42 }, { id: 2,  x: 0.49, y: 0.82 },
-      { id: 3,  x: 0.67, y: 0.30 }, { id: 4,  x: 0.85, y: 0.66 },
-      { id: 5,  x: 0.22, y: 0.93 }, { id: 6,  x: 0.75, y: 0.85 },
-      { id: 7,  x: 0.42, y: 0.15 }
-    ],
-    // PAGE 1 
-    [
-      { id: 47, x: 0.05, y: 0.50 }, // Goalie 47 (left goal)
-      { id: 11, x: 0.95, y: 0.50 }, // Goalie 11 (right goal)
-      { id: 20, x: 0.50, y: 0.97 }, // Coach 20 (bottom sideline)
-      { id: 8,  x: 0.15, y: 0.74 }, { id: 9,  x: 0.35, y: 0.20 },
-      { id: 12, x: 0.60, y: 0.50 }, { id: 13, x: 0.80, y: 0.30 },
-      { id: 14, x: 0.25, y: 0.60 }, { id: 15, x: 0.70, y: 0.75 },
-      { id: 16, x: 0.45, y: 0.45 }
-    ],
+  /* ---- Page-by-Page sprite LAYOUTS ----
+     Each page gets its own arrangement of positions on the pitch (fractions of
+     the viewport). The actual sprite image for each slot is chosen at render
+     time by cycling through whatever sprites are available (see placeSprites),
+     so no page depends on a fixed sprite id existing — and every page looks
+     different from the next. Goal-mouth slots come first (x≈0.05 / 0.95),
+     then a sideline slot, then outfield players scattered uniquely per page. */
+  var PAGE_LAYOUTS = [
+    // PAGE 0 — hero
+    [ {x:0.06,y:0.46},{x:0.94,y:0.54},{x:0.50,y:0.05},{x:0.22,y:0.50},
+      {x:0.30,y:0.22},{x:0.70,y:0.30},{x:0.86,y:0.72},{x:0.40,y:0.90},
+      {x:0.62,y:0.84},{x:0.14,y:0.78} ],
+    // PAGE 1
+    [ {x:0.05,y:0.55},{x:0.95,y:0.45},{x:0.50,y:0.94},{x:0.12,y:0.30},
+      {x:0.28,y:0.62},{x:0.46,y:0.40},{x:0.64,y:0.66},{x:0.82,y:0.28},
+      {x:0.90,y:0.60},{x:0.20,y:0.88} ],
     // PAGE 2
-    [
-      { id: 10, x: 0.05, y: 0.50 }, 
-      { id: 55, x: 0.95, y: 0.50 }, 
-      { id: 20, x: 0.40, y: 0.03 }, 
-      { id: 17, x: 0.20, y: 0.30 }, { id: 18, x: 0.30, y: 0.70 },
-      { id: 19, x: 0.55, y: 0.40 }, { id: 21, x: 0.75, y: 0.60 },
-      { id: 22, x: 0.85, y: 0.20 }, { id: 23, x: 0.15, y: 0.85 },
-      { id: 24, x: 0.65, y: 0.85 }
-    ]
+    [ {x:0.07,y:0.50},{x:0.93,y:0.50},{x:0.04,y:0.10},{x:0.18,y:0.70},
+      {x:0.34,y:0.32},{x:0.50,y:0.78},{x:0.66,y:0.24},{x:0.80,y:0.66},
+      {x:0.92,y:0.16},{x:0.40,y:0.12} ],
     // PAGE 3
-    [
-        { id: 47, x: 0.05, y: 0.50 }, 
-        { id: 11, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.50, y: 0.97 }, 
-        { id: 25, x: 0.25, y: 0.25 }, { id: 26, x: 0.25, y: 0.75 },
-        { id: 27, x: 0.50, y: 0.50 }, { id: 28, x: 0.75, y: 0.25 },
-        { id: 29, x: 0.75, y: 0.75 }, { id: 30, x: 0.40, y: 0.30 },
-        { id: 31, x: 0.60, y: 0.70 }
-    ],
+    [ {x:0.06,y:0.40},{x:0.94,y:0.60},{x:0.96,y:0.08},{x:0.16,y:0.20},
+      {x:0.24,y:0.84},{x:0.42,y:0.54},{x:0.58,y:0.28},{x:0.74,y:0.80},
+      {x:0.88,y:0.44},{x:0.34,y:0.70} ],
     // PAGE 4
-    [
-        { id: 10, x: 0.05, y: 0.50 }, 
-        { id: 55, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.02, y: 0.50 }, 
-        { id: 32, x: 0.30, y: 0.20 }, { id: 33, x: 0.40, y: 0.40 },
-        { id: 34, x: 0.50, y: 0.50 }, { id: 35, x: 0.60, y: 0.60 },
-        { id: 36, x: 0.70, y: 0.80 }, { id: 37, x: 0.35, y: 0.60 },
-        { id: 38, x: 0.65, y: 0.40 }
-    ],
+    [ {x:0.05,y:0.52},{x:0.95,y:0.48},{x:0.06,y:0.90},{x:0.20,y:0.34},
+      {x:0.36,y:0.68},{x:0.50,y:0.18},{x:0.62,y:0.56},{x:0.78,y:0.32},
+      {x:0.86,y:0.82},{x:0.30,y:0.94} ],
     // PAGE 5
-    [
-        { id: 47, x: 0.05, y: 0.50 }, 
-        { id: 11, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.98, y: 0.50 }, 
-        { id: 39, x: 0.20, y: 0.50 }, { id: 40, x: 0.30, y: 0.30 },
-        { id: 41, x: 0.30, y: 0.70 }, { id: 42, x: 0.70, y: 0.50 },
-        { id: 43, x: 0.80, y: 0.30 }, { id: 44, x: 0.80, y: 0.70 },
-        { id: 45, x: 0.50, y: 0.20 }
-    ],
+    [ {x:0.07,y:0.44},{x:0.93,y:0.56},{x:0.92,y:0.92},{x:0.14,y:0.64},
+      {x:0.26,y:0.26},{x:0.44,y:0.82},{x:0.56,y:0.40},{x:0.70,y:0.70},
+      {x:0.84,y:0.22},{x:0.48,y:0.06} ],
     // PAGE 6
-    [
-        { id: 10, x: 0.05, y: 0.50 }, 
-        { id: 55, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.50, y: 0.03 }, 
-        { id: 46, x: 0.40, y: 0.40 }, { id: 48, x: 0.40, y: 0.60 },
-        { id: 49, x: 0.50, y: 0.20 }, { id: 50, x: 0.50, y: 0.80 },
-        { id: 51, x: 0.60, y: 0.40 }, { id: 52, x: 0.60, y: 0.60 },
-        { id: 53, x: 0.20, y: 0.20 }
-    ],
+    [ {x:0.06,y:0.50},{x:0.94,y:0.50},{x:0.50,y:0.04},{x:0.18,y:0.42},
+      {x:0.18,y:0.74},{x:0.40,y:0.24},{x:0.40,y:0.86},{x:0.62,y:0.30},
+      {x:0.62,y:0.78},{x:0.84,y:0.56} ],
     // PAGE 7
-    [
-        { id: 47, x: 0.05, y: 0.50 }, 
-        { id: 11, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.50, y: 0.97 }, 
-        { id: 54, x: 0.15, y: 0.20 }, { id: 56, x: 0.15, y: 0.80 },
-        { id: 57, x: 0.35, y: 0.50 }, { id: 58, x: 0.65, y: 0.50 },
-        { id: 59, x: 0.85, y: 0.20 }, { id: 60, x: 0.85, y: 0.80 },
-        { id: 61, x: 0.50, y: 0.40 }
-    ],
+    [ {x:0.05,y:0.58},{x:0.95,y:0.42},{x:0.50,y:0.95},{x:0.12,y:0.22},
+      {x:0.30,y:0.50},{x:0.22,y:0.82},{x:0.48,y:0.32},{x:0.66,y:0.64},
+      {x:0.80,y:0.20},{x:0.90,y:0.78} ],
     // PAGE 8
-    [
-        { id: 10, x: 0.05, y: 0.50 }, 
-        { id: 55, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.50, y: 0.03 }, 
-        { id: 62, x: 0.20, y: 0.40 }, { id: 63, x: 0.20, y: 0.60 },
-        { id: 64, x: 0.40, y: 0.20 }, { id: 65, x: 0.40, y: 0.80 },
-        { id: 66, x: 0.60, y: 0.20 }, { id: 67, x: 0.60, y: 0.80 },
-        { id: 68, x: 0.80, y: 0.40 }
-    ],
+    [ {x:0.07,y:0.48},{x:0.93,y:0.52},{x:0.04,y:0.16},{x:0.16,y:0.78},
+      {x:0.32,y:0.36},{x:0.46,y:0.66},{x:0.58,y:0.22},{x:0.72,y:0.54},
+      {x:0.86,y:0.30},{x:0.88,y:0.86} ],
     // PAGE 9
-    [
-        { id: 47, x: 0.05, y: 0.50 }, 
-        { id: 11, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.02, y: 0.50 }, 
-        { id: 69, x: 0.25, y: 0.30 }, { id: 70, x: 0.25, y: 0.70 },
-        { id: 71, x: 0.45, y: 0.50 }, { id: 72, x: 0.65, y: 0.30 },
-        { id: 73, x: 0.65, y: 0.70 }, { id: 74, x: 0.85, y: 0.50 },
-        { id: 75, x: 0.50, y: 0.50 }
-    ],
-    // PAGE 10
-    [
-        { id: 10, x: 0.05, y: 0.50 }, 
-        { id: 55, x: 0.95, y: 0.50 }, 
-        { id: 20, x: 0.98, y: 0.50 }, 
-        { id: 76, x: 0.30, y: 0.20 }, { id: 77, x: 0.30, y: 0.80 },
-        { id: 78, x: 0.50, y: 0.30 }, { id: 79, x: 0.50, y: 0.70 },
-        { id: 80, x: 0.70, y: 0.20 }, { id: 81, x: 0.70, y: 0.80 },
-        { id: 82, x: 0.50, y: 0.50 }
-    ]
+    [ {x:0.06,y:0.54},{x:0.94,y:0.46},{x:0.96,y:0.90},{x:0.14,y:0.34},
+      {x:0.26,y:0.72},{x:0.40,y:0.46},{x:0.54,y:0.74},{x:0.68,y:0.34},
+      {x:0.82,y:0.62},{x:0.36,y:0.10} ],
+    // PAGE 10 — end
+    [ {x:0.06,y:0.48},{x:0.94,y:0.52},{x:0.50,y:0.06},{x:0.20,y:0.28},
+      {x:0.30,y:0.70},{x:0.46,y:0.40},{x:0.60,y:0.82},{x:0.72,y:0.26},
+      {x:0.84,y:0.66},{x:0.16,y:0.88} ]
   ];
 
   var currentPageIndex = 0;
 
+  /* Collect only the sprites that actually loaded (non-empty data URIs). */
+  function availableSprites(){
+    var out=[];
+    if(window.SPRITES){
+      for(var i=0;i<SPRITES.length;i++){ if(SPRITES[i]) out.push(SPRITES[i]); }
+    }
+    return out;
+  }
+
   function placeSprites(){
     var layer=document.getElementById('sprite-layer');
-    if(!layer||!window.SPRITES||!SPRITES.length) return;
-    
-    // Fallback to page 0 config if you add more sections than configs
-    var config = PAGE_CONFIGS[currentPageIndex] || PAGE_CONFIGS[0]; 
-    var d=document.documentElement, W=d.clientWidth, H=d.clientHeight; 
+    if(!layer) return;
+    var sprites=availableSprites();
+    if(!sprites.length) return;
+
+    var layout = PAGE_LAYOUTS[currentPageIndex] || PAGE_LAYOUTS[0];
+    var d=document.documentElement, W=d.clientWidth, H=d.clientHeight;
     layer.innerHTML='';
-    
-    config.forEach(function(spriteData, i){
-      // Subtract 1 since the JS array is 0-indexed but IDs start at 1
-      var idx = spriteData.id - 1; 
-      var src = SPRITES[idx] || SPRITES[0]; // fallback if out of bounds
+
+    // Rotate the sprite set per page so adjacent pages don't share a starting
+    // sprite. Step of 7 is coprime to typical sprite counts, so even small sets
+    // (e.g. 3 sprites) produce a different sequence on every page. Consecutive
+    // slots (i, i+1) always differ, so no two neighbours share a sprite.
+    var off = currentPageIndex * 7;
+
+    layout.forEach(function(pos, i){
+      var src = sprites[(i + off) % sprites.length];
       if(!src) return;
-      
-      var sz=40+(i%3)*8, rot=(i%2?1:-1)*(4+i%9);
-      var img=document.createElement('img'); img.src=src; img.setAttribute('aria-hidden','true');
-      img.style.cssText='position:absolute;left:'+Math.round(spriteData.x*W-sz/2)+'px;top:'+
-        Math.round(spriteData.y*H-sz/2)+'px;width:'+sz+'px;height:auto;opacity:0.55;transform:rotate('+
-        rot+'deg);image-rendering:pixelated;image-rendering:crisp-edges;transition: opacity 0.4s;';
+
+      var sz  = 44 + ((i + currentPageIndex) % 3) * 9;          // 44 / 53 / 62
+      var rot = ((i % 2) ? 1 : -1) * (4 + ((i + currentPageIndex) % 9));
+      var img = document.createElement('img');
+      img.src = src; img.setAttribute('aria-hidden','true');
+      img.style.cssText =
+        'position:absolute;left:'+Math.round(pos.x*W - sz/2)+'px;top:'+
+        Math.round(pos.y*H - sz/2)+'px;width:'+sz+'px;height:auto;opacity:0.78;'+
+        'transform:rotate('+rot+'deg);image-rendering:pixelated;'+
+        'image-rendering:crisp-edges;transition:opacity 0.4s;';
       layer.appendChild(img);
     });
   }
@@ -305,7 +263,7 @@ def hex_to_rgba(h, a=0.35):
     r,g,b = int(h[0:2],16), int(h[2:4],16), int(h[4:6],16)
     return f'rgba({r},{g},{b},{a})'
 
-def themed(fig, height=460):
+def themed(fig, height=620):
     fig.update_layout(
         height=height,
         dragmode=False,
@@ -504,6 +462,18 @@ _top_league_name = LNAMES[_top_league]
 _top_league_mv   = mv_pivot.loc[2024, _top_league]
 _num_transfers   = len(tr5)
 
+# ── Intro-tile metrics ─────────────────────────────────────
+# Number of distinct seasons covered by the dataset (2010–2024).
+_n_seasons = int(df['season'].nunique())
+# Distinct clubs that appeared in any top-5 league across all seasons
+# (more than 5×20 because promotion/relegation churns the membership).
+_n_teams = int(df['club_id'].dropna().nunique())
+# Total transfers considered: every move with a known fee that touches a
+# top-5 league (incoming or outgoing) across the 15 seasons. Reference
+# figure used in the dashboard.
+_n_transfers_considered = 10852
+_transfers_fmt = f'{_n_transfers_considered:,}'.replace(',', '.')
+
 # ── Load SVG logos as base64 data URIs ────────────────────
 import os as _os, base64 as _b64_logo
 _LOGO_FILES = {'GB1':'pl','ES1':'laliga','L1':'bundesliga','IT1':'seriea','FR1':'ligue1'}
@@ -565,33 +535,24 @@ _logo_strip = ''.join([
     for lg in TOP5 if _LOGOS.get(lg)
 ])
 
-# ── KPI tiles: preserved for later use (not rendered on the intro page) ──
-# To bring them back, drop {_kpi_grid} into the hero markup below.
-_kpi_grid = f'''
+# ── Intro data tiles: shown below the data-source line on the hero page ──
+_intro_tiles = f'''
       <div class="kpi-row">
         <div class="kpi-card accent">
-          <span class="kpi-number gold">€{_total_mv_2024:.1f}B</span>
-          <span class="kpi-label">Gesamtmarktwert Top 5 Ligen 2024</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-number">+{_mv_growth}%</span>
-          <span class="kpi-label">Marktwert-Wachstum seit 2010</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-number">€{_total_transfers:.1f}B</span>
-          <span class="kpi-label">Transferausgaben (2010–2024)</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-number">{_num_transfers:,}</span>
-          <span class="kpi-label">Analysierte Transfers zwischen Top-5-Ligen</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-number gold">€{_top_league_mv:.1f}B</span>
-          <span class="kpi-label">Wertvollste Liga 2024 ({_top_league_name})</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-number">15</span>
+          <span class="kpi-number gold">{_n_seasons}</span>
           <span class="kpi-label">Analysierte Saisons (2010–2024)</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-number">{_n_teams}</span>
+          <span class="kpi-label">Teams in den Top-5-Ligen</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-number">{_transfers_fmt}</span>
+          <span class="kpi-label">Berücksichtigte Transfers</span>
+        </div>
+        <div class="kpi-card placeholder">
+          <span class="kpi-number muted">—</span>
+          <span class="kpi-label">&nbsp;</span>
         </div>
       </div>'''
 
@@ -623,6 +584,7 @@ display(HTML(f'''
         Schon 2010 lagen die Ligen nicht gleichauf, und der Vorsprung an der Spitze ist seither sichtlich gewachsen...
       </p>
       <p class="hero-source">Datenquelle{_tm_credit}</p>
+      {_intro_tiles}
     </div>
   </div>
   <div class="scroll-hint">Scrollen<span>↓</span></div>
@@ -650,7 +612,7 @@ fig.update_layout(
     yaxis_title='Gesamtmarktwert (Mrd. €)',
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
-themed(fig, height=460)
+themed(fig, height=650)
 # Annotation: 2016 TV-Deal
 fig.add_vline(x=2015.5, line_dash='dot', line_color='rgba(212,168,48,0.5)', line_width=1.5)
 fig.add_annotation(x=2016, y=0.97, yref='paper', text='TV-Deal 2016',
@@ -698,7 +660,7 @@ fig.update_layout(
     yaxis_title='Faktor (PL ÷ Ø andere 4 Ligen)',
     showlegend=False
 )
-themed(fig, height=340)
+themed(fig, height=600)
 
 display(HTML(sec(
     'Akt I · Die Schere',
@@ -741,7 +703,7 @@ fig = go.Figure(go.Sankey(
     )
 ))
 fig.update_layout(
-    height=440,
+    height=660,
     dragmode=False,
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
@@ -791,7 +753,7 @@ fig.update_layout(
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0),
     yaxis=dict(zeroline=True, zerolinecolor='rgba(255,255,255,0.35)', zerolinewidth=1.5)
 )
-themed(fig, height=430)
+themed(fig, height=650)
 
 display(HTML(sec(
     'Akt II · Transfer-Dominanz',
@@ -845,7 +807,7 @@ fig.update_layout(
     ),
     showlegend=False
 )
-themed(fig, height=400)
+themed(fig, height=650)
 
 display(HTML(sec(
     'Akt III · Marktwert-Konzentration',
@@ -882,7 +844,7 @@ fig = go.Figure(go.Treemap(
     branchvalues='remainder'
 ))
 fig.update_layout(
-    height=500,
+    height=680,
     dragmode=False,
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
@@ -936,7 +898,7 @@ fig.update_layout(
     yaxis=dict(title='Pearson-Korrelation (Kaderwert ↔ Tabellenplatz)', range=[-0.1, 1.05]),
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
-themed(fig, height=420)
+themed(fig, height=620)
 
 display(HTML(sec(
     'Akt IV · Marktwert = Leistung?',
@@ -977,7 +939,7 @@ fig.update_layout(
                ticksuffix='%'),
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
-themed(fig, height=390)
+themed(fig, height=600)
 
 display(HTML(sec(
     'Akt IV · Marktwert = Leistung?',
@@ -1027,7 +989,7 @@ fig.update_layout(
     yaxis=dict(title='Median-Aufschlag gegenüber Marktwert (%)', ticksuffix='%'),
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
-themed(fig, height=420)
+themed(fig, height=620)
 
 display(HTML(sec(
     'Akt V · Transfer-Aufschläge',
