@@ -240,8 +240,8 @@ Grösse (Kadermarktwert je Verein) im Kaggle-Datensatz nicht verfügbar ist
 | 11 | `net_transfer_record` | Integer | ± (EUR) | Transferbilanz (Einnahmen − Ausgaben) |
 | 12 | `stadium_name` | String | – | Name des Stadions |
 | 13 | `stadium_seats` | String → Int | z. B. `62.850 Seats` | Stadionkapazität |
-| 14 | `club_image_url` | String | URL (PNG) | Vereinswappen (transparent) |
-| 15 | `league_position` | – | **vollständig leer** | Tabellenplatz (nicht nutzbar) |
+| 14 | `club_image_url` | String | URL (PNG) | Vereinswappen |
+| 15 | `league_position` | – | **vollständig leer** | Tabellenplatz |
 
 #### Datenbeschaffenheit und Qualität
 
@@ -320,8 +320,8 @@ Die Daten sind in Umfang und Qualität ausreichend, um die Visualisierungsziele
 des Dashboards zu erfüllen. Sie decken alle fünf Ligen über fünfzehn Saisons
 durchgängig ab und erlauben Vergleiche von Kaderwerten, Transferströmen,
 Marktwert-Konzentration und sportlichem Erfolg. Die wesentlichen Einschränkungen
-— fehlende Ablösesummen, leere Felder bei Kadermarktwert und Tabellenplatz in
-den Rohquellen — werden durch Filterung (`transfer_fee > 0`), eine ergänzende
+— leere Felder bei Kadermarktwert und Tabellenplatz in
+den Rohquellen — werden durch Filterung, eine ergänzende
 Eigenerhebung (JSONL-Kaderwerte) und Neuberechnung (Tabellen aus `games.csv`)
 aufgefangen. Eine inhaltliche Restunsicherheit bleibt: Transfermarkt-Marktwerte
 sind geschätzte Spielerwerte und keine Vereins- oder Unternehmenswerte; dies ist
