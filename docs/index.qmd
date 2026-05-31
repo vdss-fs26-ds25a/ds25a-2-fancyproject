@@ -1092,7 +1092,8 @@ display(HTML(sec(
         'mit einem Marktwert über €40M.'),
     hl_type='red',
     cap='Die 300 wertvollsten Spieler pro Saison · Basierend auf Transfermarkt.de'
-)))```
+)))
+```
 
 ```{python}
 #| label: s4a-mv-corr
