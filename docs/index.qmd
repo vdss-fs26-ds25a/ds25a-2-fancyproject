@@ -221,9 +221,6 @@ from PIL import Image as _PILImage
 from IPython.display import HTML, display
 warnings.filterwarnings('ignore')
 
-# Write plotly.min.js inline into _plotly_inject.html so Quarto includes it in <head>.
-# include-in-header is processed by Pandoc BEFORE --embed-resources, so the JS
-# lands inline in the final self-contained HTML — bypassing the file:// CORS block.
 _pjs_path = _os.path.join(_os.path.dirname(plotly.__file__), 'package_data', 'plotly.min.js')
 with open(_pjs_path, 'r', encoding='utf-8') as _pf:
     _pjs = _pf.read()
