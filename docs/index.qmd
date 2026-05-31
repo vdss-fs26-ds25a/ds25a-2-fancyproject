@@ -4,7 +4,7 @@ format:
     self-contained: true
     toc: false
     page-layout: full
-    theme: none
+    theme: darkly
     css: styles.css
     include-in-header: _plotly_inject.html
 execute:

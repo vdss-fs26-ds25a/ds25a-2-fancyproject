@@ -1,6 +1,6 @@
 ---
-
 ## title: "Data Report"
+---
 
 # Data Report
 
@@ -101,3 +101,4 @@ Exploratory data analysis was conducted within **Quarto** using **Python** and i
 
 
 * **How can the data be accessed:** The transformations are scripted directly in Python within the Quarto environment, meaning the processed data exists as accessible DataFrames ready for Plotly integration.
+
