@@ -317,7 +317,7 @@ def sec(label, h2, story, chart_str, hl='', hl_type='gold', cap='', bridge=''):
             f'</div></section>')
 
 # ══════════════════════════════════════════════════════════
-# DATA: Section 1 — Kadermarktwerte
+# 1 — Kadermarktwerte
 # ══════════════════════════════════════════════════════════
 mv_df = df.groupby(['competition_id','season'])['total_market_value'].sum().reset_index()
 mv_pivot = mv_df.pivot(index='season', columns='competition_id', values='total_market_value').fillna(0) / 1e9
@@ -328,7 +328,7 @@ ratio_s = pd.DataFrame({
 })
 
 # ══════════════════════════════════════════════════════════
-# DATA: Section 2 — Transfer-Dominanz
+# Transfers
 # ══════════════════════════════════════════════════════════
 tr = tr_raw.copy()
 tr['yr'] = tr['transfer_season'].apply(parse_season)
@@ -696,21 +696,130 @@ display(HTML(sec(
 ```
 
 ```{python}
-#| label: s2a-sankey
-# ── Chart 2A: Bipartite Sankey — inter-liga transfer flows ──────────────────
-# The original single-column Sankey put every league on BOTH sides of the same
-# axis, so each node was simultaneously a source and a target. That makes the
-# graph effectively cyclic and Plotly's layout tangles it into an unreadable
-# knot. The fix is the standard one for "who-buys-from-whom" flows: split every
-# league into a SELLING node (left column) and a BUYING node (right column).
-# The graph is now a clean two-layer DAG — readable, and the Premier League's
-# giant right-hand (buying) node tells the whole story at a glance.
-#
-# A season dropdown lets the reader scrub through 2012/13 … 2024/25 or view the
-# full-period aggregate. The link STRUCTURE is constant (all 20 directed league
-# pairs), only the link VALUES change per season — so the layout stays stable
-# and the dropdown just restyles values + labels.
+#| label: s1b-mosaic
+# ── Chart 1B: Treemap (Mosaic) — squad market value per club/league ─
+seasons_desc = sorted(df['season'].unique(), reverse=True)
+fig_mosaic = go.Figure()
 
+for i, y in enumerate(seasons_desc):
+    _ids = [f'Root_{y}']
+    _labels = ['Gesamt']
+    _parents = ['']
+    _values = [0]
+    _colors = ['rgba(0,0,0,0)']
+    _texts = ['']
+    
+    for lg in TOP5:
+        # Get clubs for this league/season, sorted by market value
+        _d = df[(df['season'] == y) & (df['competition_id'] == lg)].sort_values('total_market_value', ascending=False)
+        _lg_id = f'{lg}_{y}'
+        _lg_val = int(_d['total_market_value'].sum() / 1e6)
+        
+        # Add the League node
+        _ids.append(_lg_id)
+        _labels.append(LNAMES[lg])
+        _parents.append(f'Root_{y}')
+        _values.append(0)  # branchvalues='remainder' means children add up
+        _colors.append(LCOLORS[lg])
+        _texts.append(f'€{_lg_val/1000:.1f}B')
+        
+        # Extract Top 6 clubs and "the rest"
+        _top = _d.iloc[:6]
+        _rest = _d.iloc[6:]
+        
+        # Add individual top club nodes
+        for _, r in _top.iterrows():
+            _cname = r['name']
+            _cid = f"{r['club_id']}_{y}"
+            _mv = int(r['total_market_value'] / 1e6)
+            
+            _ids.append(_cid)
+            _labels.append(_cname)
+            _parents.append(_lg_id)
+            _values.append(_mv)
+            _colors.append(hex_to_rgba(LCOLORS[lg], 0.8)) # slightly brighter than rest bundle
+            _texts.append(f'€{_mv}M')
+            
+        # Bundle the remaining clubs into a single mosaic square
+        if len(_rest) > 0:
+            _rest_val = int(_rest['total_market_value'].sum() / 1e6)
+            _num_rest = len(_rest)
+            _rid = f"rest_{lg}_{y}"
+            
+            _ids.append(_rid)
+            _labels.append(f"+{_num_rest} weitere")
+            _parents.append(_lg_id)
+            _values.append(_rest_val)
+            _colors.append(hex_to_rgba(LCOLORS[lg], 0.35)) # dim to differentiate
+            _texts.append(f'€{_rest_val}M')
+
+    # Add trace for this specific year
+    fig_mosaic.add_trace(go.Treemap(
+        ids=_ids,
+        labels=_labels,
+        parents=_parents,
+        values=_values,
+        text=_texts,
+        textinfo='label+text',
+        textfont=dict(size=17, color='#111111', family='Oswald'),
+        marker=dict(colors=_colors, line=dict(width=1.5, color='rgba(255,255,255,0.7)')),
+        hovertemplate='<b>%{label}</b><br>%{text}<extra></extra>',
+        branchvalues='remainder',
+        root_color='rgba(0,0,0,0)',
+        visible=(i == 0) # Only the newest year is visible by default
+    ))
+
+# Build dropdown menu to switch years
+_buttons = []
+for i, y in enumerate(seasons_desc):
+    _visible = [False] * len(seasons_desc)
+    _visible[i] = True
+    _buttons.append(dict(
+        label=str(y),
+        method='update',
+        args=[{'visible': _visible}]
+    ))
+
+fig_mosaic.update_layout(
+    height=680,
+    dragmode=False,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    margin=dict(l=10, r=10, t=60, b=10),
+    hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)', bordercolor='rgba(255,255,255,0.18)', font=dict(color='#fff', size=14)),
+    updatemenus=[dict(
+        type='dropdown', direction='down',
+        x=0.0, xanchor='left', y=1.05, yanchor='bottom',
+        active=0, showactive=True, buttons=_buttons,
+        bgcolor='rgba(10,28,12,0.96)', bordercolor='rgba(255,255,255,0.28)', borderwidth=1,
+        font=dict(color='rgba(255,255,255,0.92)', size=14),
+        pad=dict(l=6, r=6, t=4, b=4)
+    )]
+)
+
+_chart_id_mosaic = 'chart-mosaic'
+_chart_html_mosaic = fig_mosaic.to_html(
+    full_html=False, include_plotlyjs=False, div_id=_chart_id_mosaic,
+    config={'responsive': True, 'displayModeBar': False, 'scrollZoom': False}
+)
+
+display(HTML(sec(
+    'I · Kadermarktwerte'
+    'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
+    ('Die Kachelgröße spiegelt den kumulierten Kaderwert wider. '
+     'Die Visualisierung zeigt die Top-6-Clubs jeder Liga, während der Rest gebündelt dargestellt wird. '
+     'Klicken Sie auf eine Liga, um den Fokus darauf zu legen. '
+     'Nutzen Sie das Dropdown-Menü, um die Entwicklung über die Saisons hinweg zu betrachten.'),
+    _chart_html_mosaic,
+    hl=('Die finanzielle Dominanz der englischen Liga ist erdrückend. '
+        '<strong>Fast das gesamte Volumen der restlichen Top-Ligen wird von einer einzigen Liga aufgewogen.</strong>'),
+    hl_type='red',
+    cap='Kaderwerte der Top-5-Ligen · Basierend auf Transfermarkt-Daten',
+    bridge='Hat dieses Geld auch strukturelle Auswirkungen auf die Transfers?'
+)))
+```
+
+```{python}
 _left  = {lg: i for i, lg in enumerate(TOP5)}          # selling nodes  0..4
 _right = {lg: 5 + i for i, lg in enumerate(TOP5)}      # buying  nodes  5..9
 
@@ -923,48 +1032,6 @@ display(HTML(sec(
         '<strong>€17M</strong> weit über dem der Konkurrenz (€10M).'),
     hl_type='red',
     cap='Top 500 Spieler nach aktuellem/letztem Marktwert (Transfermarkt.de)'
-)))
-```
-
-```{python}
-#| label: s3b-treemap
-# ── Chart 3B: Treemap — liga → club (2024) ─────────────────
-fig = go.Figure(go.Treemap(
-    labels=tm_labels,
-    parents=tm_parents,
-    values=tm_values,
-    text=tm_text,
-    textinfo='label+text',
-    marker=dict(
-        colors=tm_colors,
-        line=dict(width=1.5, color='rgba(0,0,0,0.5)')
-    ),
-    hovertemplate='<b>%{label}</b><br>€%{value}M<extra></extra>',
-    root_color='rgba(0,0,0,0)',
-    branchvalues='remainder'
-))
-fig.update_layout(
-    height=680,
-    dragmode=False,
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    font=dict(color='rgba(255,255,255,0.88)',
-              family='Aptos Light,Helvetica Neue,sans-serif', size=15),
-    margin=dict(l=10, r=10, t=36, b=10),
-    hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
-                    bordercolor='rgba(255,255,255,0.18)',
-                    font=dict(color='#fff', size=14))
-)
-
-display(HTML(sec(
-    'III · Marktwert-Konzentration',
-    'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
-    ('Die Fläche jedes Feldes entspricht dem Gesamtmarktwert der Klubs — '
-     'aufgeteilt nach Liga und innerhalb der Ligen nach den Top-12-Klubs (Saison 2024). '
-     'Klicke auf eine Liga, um die Klubs zu sehen. '
-     'Die Dominanz der Premier League ist räumlich unmittelbar erfahrbar.'),
-    ch(fig),
-    bridge='Hat dieses Geld auch sportliche Auswirkungen — kauft Geld Tabellenplätze?'
 )))
 ```
 
