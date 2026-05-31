@@ -227,8 +227,8 @@ with open(_pjs_path, 'r', encoding='utf-8') as _pf:
 with open('_plotly_inject.html', 'w', encoding='utf-8') as _hf:
     _hf.write(f'<script type="text/javascript">\n{_pjs}\n</script>\n')
 
-TOP5    = ['GB1','ES1','L1','IT1','FR1']
-LNAMES  = {'GB1':'Premier League','ES1':'La Liga','L1':'Bundesliga','IT1':'Serie A','FR1':'Ligue 1'}
+TOP5 = ['GB1','ES1','L1','IT1','FR1']
+LNAMES = {'GB1':'Premier League','ES1':'La Liga','L1':'Bundesliga','IT1':'Serie A','FR1':'Ligue 1'}
 # Palette tuned for the dark-green pitch: softened from the original neon tones,
 # and Serie A moved from green (which vanished against the pitch) to an azure
 # that also fits Italy's azzurri. Each hue is well separated for legibility.
