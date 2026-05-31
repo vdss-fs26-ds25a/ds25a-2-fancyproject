@@ -710,7 +710,7 @@ for i, y in enumerate(seasons_desc):
     _texts = ['']
     
     for lg in TOP5:
-        # Get clubs for this league/season, sorted by market value
+        # Get all clubs for this league/season, sorted by market value
         _d = df[(df['season'] == y) & (df['competition_id'] == lg)].sort_values('total_market_value', ascending=False)
         _lg_id = f'{lg}_{y}'
         _lg_val = int(_d['total_market_value'].sum() / 1e6)
@@ -723,13 +723,9 @@ for i, y in enumerate(seasons_desc):
         _colors.append(LCOLORS[lg])
         _texts.append(f'€{_lg_val/1000:.1f}B')
         
-        # Extract Top 6 clubs and "the rest"
-        _top = _d.iloc[:6]
-        _rest = _d.iloc[6:]
-        
-        # Add individual top club nodes
-        for _, r in _top.iterrows():
-            _cname = r['name']
+        # Add all individual club nodes dynamically
+        for _, r in _d.iterrows():
+            _cname = r['name'] if 'name' in r else r.get('club_name', f"Club {r['club_id']}")
             _cid = f"{r['club_id']}_{y}"
             _mv = int(r['total_market_value'] / 1e6)
             
@@ -737,21 +733,8 @@ for i, y in enumerate(seasons_desc):
             _labels.append(_cname)
             _parents.append(_lg_id)
             _values.append(_mv)
-            _colors.append(hex_to_rgba(LCOLORS[lg], 0.8)) # slightly brighter than rest bundle
+            _colors.append(hex_to_rgba(LCOLORS[lg], 0.72))
             _texts.append(f'€{_mv}M')
-            
-        # Bundle the remaining clubs into a single mosaic square
-        if len(_rest) > 0:
-            _rest_val = int(_rest['total_market_value'].sum() / 1e6)
-            _num_rest = len(_rest)
-            _rid = f"rest_{lg}_{y}"
-            
-            _ids.append(_rid)
-            _labels.append(f"+{_num_rest} weitere")
-            _parents.append(_lg_id)
-            _values.append(_rest_val)
-            _colors.append(hex_to_rgba(LCOLORS[lg], 0.35)) # dim to differentiate
-            _texts.append(f'€{_rest_val}M')
 
     # Add trace for this specific year
     fig_mosaic.add_trace(go.Treemap(
@@ -766,6 +749,7 @@ for i, y in enumerate(seasons_desc):
         hovertemplate='<b>%{label}</b><br>%{text}<extra></extra>',
         branchvalues='remainder',
         root_color='rgba(0,0,0,0)',
+        maxdepth=2,  # Stops navigation depth at League level. Club clicks zoom the parent league instead.
         visible=(i == 0) # Only the newest year is visible by default
     ))
 
@@ -807,8 +791,7 @@ display(HTML(sec(
     'I · Kadermarktwerte',
     'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
     ('Die Kachelgröße spiegelt den kumulierten Kaderwert wider. '
-     'Die Visualisierung zeigt die Top-6-Clubs jeder Liga, während der Rest gebündelt dargestellt wird. '
-     'Klicken Sie auf eine Liga, um den Fokus darauf zu legen. '
+     'Klicken Sie auf eine Liga oder einen Club, um diese Liga heranzuzoomen und die genauen Proportionen aller Vereine zu betrachten. '
      'Nutzen Sie das Dropdown-Menü, um die Entwicklung über die Saisons hinweg zu betrachten.'),
     _chart_html_mosaic,
     hl=('Die finanzielle Dominanz der englischen Liga ist erdrückend. '
