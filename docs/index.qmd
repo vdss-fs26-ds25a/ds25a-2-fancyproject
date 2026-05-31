@@ -476,6 +476,12 @@ _n_teams = int(df['club_id'].dropna().nunique())
 # figure used in the dashboard.
 _n_transfers_considered = 10852
 _transfers_fmt = f'{_n_transfers_considered:,}'.replace(',', "'")
+# Total transfer fee (EUR) of all moves with a known fee that involve a top-5
+# league as either buyer OR seller, 2010–2025 — summed inline from the merged
+# transfers table (tr already carries from_league / to_league).
+_fee_either_top5 = tr[(tr['from_league'].isin(TOP5) | tr['to_league'].isin(TOP5)) &
+                      tr['yr'].between(2010, 2025)]['transfer_fee'].sum()
+_total_fee_fmt = f'€{_fee_either_top5 / 1e9:.0f} Mrd.'   # ≈ €70 Mrd.
 
 # ── Load SVG logos as base64 data URIs ────────────────────
 import os as _os, base64 as _b64_logo
@@ -541,8 +547,8 @@ _logo_strip = ''.join([
 # ── Intro data tiles: shown below the data-source line on the hero page ──
 _intro_tiles = f'''
       <div class="kpi-row">
-        <div class="kpi-card accent">
-          <span class="kpi-number gold">{_n_seasons}</span>
+        <div class="kpi-card">
+          <span class="kpi-number">{_n_seasons}</span>
           <span class="kpi-label">Analysierte Saisons (2010–2024)</span>
         </div>
         <div class="kpi-card">
@@ -553,15 +559,15 @@ _intro_tiles = f'''
           <span class="kpi-number">{_transfers_fmt}</span>
           <span class="kpi-label">Berücksichtigte Transfers</span>
         </div>
-        <div class="kpi-card placeholder">
-          <span class="kpi-number muted">—</span>
-          <span class="kpi-label">&nbsp;</span>
+        <div class="kpi-card">
+          <span class="kpi-number">{_total_fee_fmt}</span>
+          <span class="kpi-label">Transfersumme von/zu Top-5-Klubs</span>
         </div>
       </div>'''
 
 _tm_credit = (f'<a class="tm-logo" href="https://www.transfermarkt.de" '
-              f'target="_blank" rel="noopener"><img src="{_TM_LOGO}" '
-              f'alt="Transfermarkt.de"></a>') if _TM_LOGO else ''
+              f'target="_blank" rel="noopener" title="Zu Transfermarkt.de"><img '
+              f'src="{_TM_LOGO}" alt="Transfermarkt.de"></a>') if _TM_LOGO else ''
 
 display(HTML(f'''
 <section class="page page-hero">
