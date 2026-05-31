@@ -978,59 +978,121 @@ display(HTML(sec(
 
 ```{python}
 #| label: s3a-beeswarm
-# ── Chart 3A: Strip plot — top 500 players by MV ──────────
+# ── Chart 3A: Interactive Strip plot — top players by MV over time ──────────
+
+# 1. Map valuations to seasons
+pv = pv_raw.copy()
+pv['date'] = pd.to_datetime(pv['date'], errors='coerce')
+pv5 = pv[pv['player_club_domestic_competition_id'].isin(TOP5)].copy()
+
+# Determine season based on valuation date (valuations from July 1st onwards count towards that year's season)
+pv5['season'] = pv5['date'].dt.year - (pv5['date'].dt.month < 7).astype(int)
+pv5 = pv5[pv5['season'].between(2010, 2024)]
+
+# 2. Get the latest valuation for each player within each season
+season_pv = pv5.sort_values('date').groupby(['season', 'player_id']).last().reset_index()
+season_pv = season_pv.merge(players, on='player_id', how='left')
+season_pv['mv_m'] = season_pv['market_value_in_eur'] / 1e6
+
+# 3. Filter to the top 300 most valuable players per season to avoid massive clutter
+top_per_season = season_pv.groupby('season', group_keys=False).apply(lambda x: x.nlargest(300, 'mv_m'))
+seasons = sorted(top_per_season['season'].unique(), reverse=True)
+
 fig = go.Figure()
-for lg in TOP5:
-    _d = top500[top500['player_club_domestic_competition_id']==lg]
-    fig.add_trace(go.Scatter(
-        x=_d['mv_m'],
-        y=_d['y_pos'],
-        mode='markers',
-        name=LNAMES[lg],
-        marker=dict(
-            color=LCOLORS[lg], size=7, opacity=0.72,
-            line=dict(color='rgba(0,0,0,0.3)', width=0.6)
-        ),
-        text=_d['name'].fillna(''),
-        customdata=np.column_stack([
-            _d['sub_position'].fillna(''),
-            _d['mv_m'].round(0)
-        ]),
-        hovertemplate=(
-            '<b>%{text}</b><br>'
-            'Position: %{customdata[0]}<br>'
-            'Marktwert: €%{customdata[1]:.0f}M<extra>' + LNAMES[lg] + '</extra>'
-        )
+
+# Generate traces for each season and each league
+for ssn in seasons:
+    ssn_data = top_per_season[top_per_season['season'] == ssn]
+    for lg in TOP5:
+        _d = ssn_data[ssn_data['player_club_domestic_competition_id'] == lg]
+        
+        fig.add_trace(go.Box(
+            x=_d['mv_m'],
+            y=[LNAMES[lg]] * len(_d),
+            name=LNAMES[lg],
+            legendgroup=LNAMES[lg],
+            showlegend=(ssn == seasons[0]), # Only show one set of legend items
+            boxpoints='all',
+            jitter=0.6,
+            pointpos=0, # Centers the beeswarm directly on the axis line
+            fillcolor='rgba(0,0,0,0)',
+            line=dict(color='rgba(0,0,0,0)'), # Hides the actual box
+            marker=dict(
+                color=LCOLORS[lg], 
+                size=8, 
+                opacity=0.75,
+                line=dict(color='rgba(0,0,0,0.4)', width=0.8)
+            ),
+            text=_d['name'].fillna(''),
+            customdata=np.column_stack([
+                _d['sub_position'].fillna(''),
+                _d['mv_m'].round(1)
+            ]),
+            hovertemplate=(
+                '<b>%{text}</b><br>'
+                'Position: %{customdata[0]}<br>'
+                'Marktwert: €%{customdata[1]:.1f}M<extra>' + LNAMES[lg] + '</extra>'
+            ),
+            visible=(ssn == seasons[0]) # Only the most recent season visible by default
+        ))
+
+# Create dropdown buttons to toggle seasons
+buttons = []
+traces_per_season = len(TOP5)
+for i, ssn in enumerate(seasons):
+    visible_array = [False] * (len(seasons) * traces_per_season)
+    for j in range(traces_per_season):
+        visible_array[i * traces_per_season + j] = True
+        
+    buttons.append(dict(
+        label=f"{ssn}/{str(ssn+1)[-2:]}",
+        method="update",
+        args=[{"visible": visible_array}]
     ))
+
 fig.update_layout(
     xaxis_title='Marktwert (Mio. €)',
     yaxis=dict(
-        tickmode='array',
-        tickvals=list(range(len(TOP5))),
-        ticktext=[LNAMES[lg] for lg in TOP5],
+        title='',
+        categoryorder='array',
+        categoryarray=[LNAMES[lg] for lg in TOP5],
         tickfont=dict(color='rgba(255,255,255,0.82)', size=15),
         showgrid=False, zeroline=False
     ),
-    showlegend=False
+    updatemenus=[dict(
+        type='dropdown', direction='down',
+        x=0.0, xanchor='left', y=1.12, yanchor='bottom',
+        active=0, showactive=True, buttons=buttons,
+        bgcolor='rgba(10,28,12,0.96)', bordercolor='rgba(255,255,255,0.28)', borderwidth=1,
+        font=dict(color='rgba(255,255,255,0.92)', size=14),
+        pad=dict(l=6, r=6, t=4, b=4)
+    )],
+    # Legend pushed to the right to accommodate the dropdown menu on the left
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='right', x=1),
 )
 themed(fig, height=650)
 
+_chart_id_beeswarm = 'chart-beeswarm'
+_chart_html_beeswarm = fig.to_html(
+    full_html=False, include_plotlyjs=False, div_id=_chart_id_beeswarm,
+    config={'responsive': True, 'displayModeBar': False, 'scrollZoom': False}
+)
+
 display(HTML(sec(
     'III · Marktwert-Konzentration',
-    'Die teuersten 500 Spieler Europas — und wo sie spielen.',
+    'Die teuersten Spieler Europas — und wo sie spielen.',
     ('Jeder Punkt ist ein Spieler: sein aktueller Marktwert auf der X-Achse, '
-     'seine Liga auf der Y-Achse. Die Punkte sind leicht gestreut um die Ligalinie. '
-     'Das Muster ist sofort sichtbar: Im oberen Wertebereich (hier ab €40M aufwärts) '
-     'beginnt eine Farbe zu dominieren.'),
-    ch(fig),
-    hl=('Die Premier League stellt <strong>654</strong> der 2006 wertvollsten Spieler Europas '
-        '(MV ≥ €5M) — mehr als La Liga (316), Serie A (381), Bundesliga (320) und '
-        'Ligue 1 (335) zusammen. Und ihr Median-Marktwert liegt mit '
-        '<strong>€17M</strong> weit über dem der Konkurrenz (€10M).'),
+     'seine Liga auf der Y-Achse. Wählen Sie über das Dropdown-Menü verschiedene Saisons, '
+     'um zu sehen, wie sich die Konzentration der Top-Spieler über die Jahre verschoben hat. '
+     'Das Muster ist deutlich: Im oberen Wertebereich beginnen im Laufe der Zeit die '
+     'englischen Farben zu dominieren.'),
+    _chart_html_beeswarm,
+    hl=('Die Premier League hortet mittlerweile mehr Hochkaräter als die anderen vier Top-Ligen '
+        'zusammen. In der jüngsten Auswertung stellt sie die überwältigende Mehrheit der Spieler '
+        'mit einem Marktwert über €40M.'),
     hl_type='red',
-    cap='Top 500 Spieler nach aktuellem/letztem Marktwert (Transfermarkt.de)'
-)))
-```
+    cap='Die 300 wertvollsten Spieler pro Saison · Basierend auf Transfermarkt.de'
+)))```
 
 ```{python}
 #| label: s4a-mv-corr
