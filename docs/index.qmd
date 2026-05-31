@@ -237,7 +237,7 @@ LCOLORS = {'GB1':'#22D3E0','ES1':'#F2B705','L1':'#E8503A','IT1':'#5C8DEF','FR1':
 # ── Load JSONL (club-level per season) ─────────────────────
 rows = []
 for _lg in TOP5:
-    with open(f'data/{_lg}_long.jsonl') as _f:
+    with open(f'data/{_lg}_long.jsonl') as _f:
         for _line in _f:
             _d = json.loads(_line)
             _d['competition_id'] = _lg
