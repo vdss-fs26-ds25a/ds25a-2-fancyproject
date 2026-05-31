@@ -475,7 +475,7 @@ _n_teams = int(df['club_id'].dropna().nunique())
 # top-5 league (incoming or outgoing) across the 15 seasons. Reference
 # figure used in the dashboard.
 _n_transfers_considered = 10852
-_transfers_fmt = f'{_n_transfers_considered:,}'.replace(',', '.')
+_transfers_fmt = f'{_n_transfers_considered:,}'.replace(',', "'")
 
 # ── Load SVG logos as base64 data URIs ────────────────────
 import os as _os, base64 as _b64_logo
