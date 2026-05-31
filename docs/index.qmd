@@ -1011,7 +1011,7 @@ for ssn in seasons:
             y=[LNAMES[lg]] * len(_d),
             name=LNAMES[lg],
             legendgroup=LNAMES[lg],
-            showlegend=(ssn == seasons[0]), # Only show one set of legend items
+            showlegend=bool(ssn == seasons[0]), # Cast to standard Python bool to satisfy Plotly
             boxpoints='all',
             jitter=0.6,
             pointpos=0, # Centers the beeswarm directly on the axis line
@@ -1033,7 +1033,7 @@ for ssn in seasons:
                 'Position: %{customdata[0]}<br>'
                 'Marktwert: €%{customdata[1]:.1f}M<extra>' + LNAMES[lg] + '</extra>'
             ),
-            visible=(ssn == seasons[0]) # Only the most recent season visible by default
+            visible=bool(ssn == seasons[0]) # Cast to standard Python bool to satisfy Plotly
         ))
 
 # Create dropdown buttons to toggle seasons
