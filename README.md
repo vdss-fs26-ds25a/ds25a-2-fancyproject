@@ -9,8 +9,6 @@
 <img src="docs/logos/seriea.svg" alt="Serie A" height="46">&nbsp;&nbsp;&nbsp;
 <img src="docs/logos/ligue1.svg" alt="Ligue 1" height="46">
 
-<br><br>
-
 [![zum Dashboard](https://img.shields.io/badge/zum_Dashboard-2563eb?style=for-the-badge&logo=quarto&logoColor=white)](https://vdss-fs26-ds25a.github.io/ds25a-2-fancyproject)
 
 [![Quarto](https://img.shields.io/badge/Quarto-39729E?style=flat&logo=quarto&logoColor=white)](https://quarto.org)
