@@ -146,6 +146,11 @@ strong { font-weight: 600; color: var(--w); }
 
 .cell-output-display { margin: 0 !important; }
 .js-plotly-plot .plotly { border-radius: 6px; }
+/* Cartesian charts (bars, lines) have no zoom-box interaction — show a click
+   cursor like the treemap instead of the misleading crosshair. */
+.js-plotly-plot .nsewdrag,
+.js-plotly-plot .nsewdrag.drag,
+.js-plotly-plot .cursor-crosshair { cursor: pointer !important; }
 
 .page-hero .page-inner { max-width: 820px; text-align: center; }
 .hero-content {
@@ -243,6 +248,14 @@ strong { font-weight: 600; color: var(--w); }
   letter-spacing: 0.04em; color: var(--w50); text-transform: none; margin-top: 1px;
 }
 .hero-nav-btn:hover .hero-nav-sub { color: inherit; }
+
+/* ── Transfermarkt logo inside its pill button (matches Dokumentation button) ── */
+.tm-btn .tm-logo-img {
+  height: 22px; width: auto; border-radius: 4px; display: block;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.40);
+  transition: transform 0.18s ease;
+}
+.tm-btn:hover .tm-logo-img { transform: translateY(-1px) scale(1.03); }
 
 .kpi-row {
   display: grid; grid-template-columns: repeat(4, 1fr);

@@ -565,9 +565,15 @@ _intro_tiles = f'''
         </div>
       </div>'''
 
-_tm_credit = (f'<a class="tm-logo" href="https://www.transfermarkt.de" '
-              f'target="_blank" rel="noopener" title="Zu Transfermarkt.de"><img '
-              f'src="{_TM_LOGO}" alt="Transfermarkt.de"></a>') if _TM_LOGO else ''
+_tm_img = (f'<img class="tm-logo-img" src="{_TM_LOGO}" alt="Transfermarkt.de">'
+           if _TM_LOGO else '')
+_tm_btn = (f'<a class="hero-nav-btn tm-btn" href="https://www.transfermarkt.de" '
+           f'target="_blank" rel="noopener" title="Zu Transfermarkt.de">'
+           f'{_tm_img}'
+           f'<span class="hero-nav-text">'
+           f'<span class="hero-nav-label">Datenquelle</span>'
+           f'<span class="hero-nav-sub">Transfermarkt.de</span>'
+           f'</span></a>')
 
 display(HTML(f'''
 <section class="page page-hero">
@@ -593,7 +599,7 @@ display(HTML(f'''
         Schon 2010 lagen die Ligen nicht gleichauf, und der Vorsprung an der Spitze ist seither sichtlich gewachsen...
       </p>
       <div class="hero-source-row">
-        <p class="hero-source">Datenquelle{_tm_credit}</p>
+        {_tm_btn}
         <a class="hero-nav-btn" href="project_charta.html"
            title="Zur Dokumentation: Projektcharta &amp; Datenbericht">
           <span class="hero-nav-icon">📋</span>
@@ -722,7 +728,7 @@ for i, y in enumerate(seasons_desc):
     _labels = ['Gesamt']
     _parents = ['']
     _values = [0]
-    _colors = ['rgba(0,0,0,0)']
+    _colors = ['rgba(232,232,232,0.95)']   # light band so the dark 'Gesamt' label stays legible
     _texts = ['']
     
     for lg in TOP5:
