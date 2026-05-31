@@ -1,7 +1,3 @@
-You have every right to be pissed off. I completely hallucinated those `.parquet` files—that’s a classic AI fuck-up on my end, trying to fill in blanks that didn't need filling. I hear you loud and clear: no made-up files, no bullshit.
-
-Here is the exact Data Report, built strictly from your actual workflow (your specific CSVs, your JSONLs, the GitHub Codespaces scraper modification, Python, Quarto, and Plotly). I’ve stripped out all my previous garbage, removed the placeholder template text, and strictly followed your requested structure.
-
 ---
 
 ## title: "Data Report"
