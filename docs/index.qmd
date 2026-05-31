@@ -821,8 +821,9 @@ display(HTML(sec(
      'jeweiligen Bereich und zeigt die Anteile der einzelnen Klubs; über das Auswahlmenü lässt '
      'sich die Saison wechseln und die Entwicklung über die Jahre verfolgen.'),
     _chart_html_mosaic,
-    hl=('Auf die Premier League entfällt rund die Hälfte des gesamten Kaderwerts der fünf Ligen — '
-        '<strong>annähernd so viel wie die übrigen vier Ligen zusammen.</strong>'),
+    hl=('Während die Premier League im Jahr 2010 den Kadermarktwert des damals zweitplatzierten '
+        'Verfolgers (La Liga) um 41% übertraf, übertrifft der gesamte Kadermarktwert der PL '
+        'im Jahr 2024 die Werte <strong> der beiden Verfolger zusammen</strong> (La Liga + Serie A).'),
     hl_type='gold',
     cap='Kaderwerte der Top-5-Ligen'
 )))
@@ -946,6 +947,147 @@ display(HTML(sec(
         f'von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel zwischen den Top-5-Ligen.'),
     hl_type='gold',
     cap='Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · Saison über das Menü wählbar'
+)))
+```
+
+
+```{python}
+#| label: iii-fortsetzung
+
+# 1. Setup the logo mapping dictionary
+# Maps the dataset's 'to_club_name' to your local filename
+LOGO_MAP = {
+    'Chelsea FC': 'Chelsea_FC.png',
+    'Chelsea': 'Chelsea_FC.png',
+    'Paris Saint-Germain': 'PSG.png',
+    'PSG': 'PSG.png',
+    'Real Madrid': 'Real_Madrid_CF.png',
+    'FC Barcelona': 'FC_Barcelona.png',
+    'Manchester City': 'Manchester_City_FC.png',
+    'Man City': 'Manchester_City_FC.png',
+    'Manchester United': 'Manchester_United_FC.png',
+    'Man Utd': 'Manchester_United_FC.png',
+    'Atlético de Madrid': 'Atletico_Madrid.png',
+    'Juventus FC': 'Juventus_FC.png',
+    'Juventus': 'Juventus_FC.png'
+}
+
+# Greatest transfer per season across ALL leagues (full transfers table, not the
+# top-5 cross-league subset). Restricted to the dashboard's season window.
+# The lone guard drops a known Transfermarkt data error (a €50M phantom fee for
+# Alessandro Malomo → AC Prato in 12/13); harmless if the row is already absent.
+_tt = tr[(tr['transfer_fee'] > 0) & tr['yr'].between(2010, 2024)].copy()
+_tt = _tt[~((_tt['player_name'] == 'Alessandro Malomo') &
+            (_tt['to_club_name'] == 'AC Prato'))]
+_idx = _tt.groupby('transfer_season')['transfer_fee'].idxmax()
+_top_transfers = _tt.loc[_idx].sort_values('yr')
+
+# 2. Build Image List for Annotations
+# Embed each crest as a base64 data URI (like the league badges / sprites do).
+# A raw relative path such as "logos/x.png" is NOT inlined by Quarto's
+# self-contained build — Plotly buries it in its own JSON — so it would resolve
+# against the build/ folder at view time and silently 404. Embedding avoids that.
+def _logo_data_uri(fn):
+    try:
+        with open(f'logos/{fn}', 'rb') as _lf:
+            return 'data:image/png;base64,' + _b64_logo.b64encode(_lf.read()).decode()
+    except Exception:
+        return None
+
+_logo_uri_cache = {fn: _logo_data_uri(fn) for fn in set(LOGO_MAP.values())}
+
+# Per-bar colour by the destination club's league (reuses the deck's LCOLORS so
+# the reader already knows the legend). Only PL / La Liga / Ligue 1 ever top a
+# season; unknown/other leagues fall back to a neutral grey.
+_bar_colors = [hex_to_rgba(LCOLORS.get(lg, '#9aa'), 0.82) if lg in LCOLORS
+               else 'rgba(170,170,170,0.6)'
+               for lg in _top_transfers['to_league']]
+_bar_lines  = [LCOLORS.get(lg, '#9aa') for lg in _top_transfers['to_league']]
+
+# Headroom + logo geometry. Crests float above each bar; the box is sized in
+# data units, so we extend the y-axis above the tallest bar to guarantee even
+# the €222M Neymar crest fits inside the plot (previously it was clipped).
+_fee_max  = float(_top_transfers['transfer_fee'].max()) / 1e6
+_logo_h   = max(20.0, _fee_max * 0.12)      # crest box height in €M
+_logo_gap = _fee_max * 0.03                 # small gap above the bar
+_y_top    = _fee_max + _logo_gap + _logo_h + _fee_max * 0.04
+
+images = []
+for _, row in _top_transfers.iterrows():
+    filename = LOGO_MAP.get(row['to_club_name'])
+    src = _logo_uri_cache.get(filename) if filename else None
+    if src:
+        images.append(dict(
+            source=src, xref="x", yref="y",
+            x=row['transfer_season'],
+            y=(row['transfer_fee'] / 1e6) + _logo_gap,
+            sizex=0.9, sizey=_logo_h, sizing="contain",
+            xanchor="center", yanchor="bottom", layer="above"
+        ))
+
+# Bar Chart
+fig_bar = go.Figure()
+
+# customdata carries player + both clubs so the hover can show the full move.
+_custom = _top_transfers[['player_name', 'from_club_name', 'to_club_name']].values
+
+fig_bar.add_trace(go.Bar(
+    x=_top_transfers['transfer_season'],
+    y=_top_transfers['transfer_fee'] / 1e6,
+    marker=dict(color=_bar_colors,
+                line=dict(color=_bar_lines, width=1.2)),
+    customdata=_custom,
+    cliponaxis=False,
+    hovertemplate=('<b>%{customdata[0]}</b><br>'
+                   '%{customdata[1]} → %{customdata[2]}<br>'
+                   'Saison %{x} · €%{y:.1f} Mio.<extra></extra>')
+))
+
+# Player identity goes ON the x-axis instead of rotated inside the bar: each tick
+# reads "Saison · Nachname" on two lines, angled so even long names (Kvaratskhelia)
+# fit under narrow bars without overlapping. Surname = name minus the first token
+# (keeps compound names like "De Bruyne").
+def _surname(n):
+    parts = str(n).split()
+    return ' '.join(parts[1:]) if len(parts) > 1 else (parts[0] if parts else '')
+
+_seasons_x = list(_top_transfers['transfer_season'])
+_ticktext  = [f"<span style='color:rgba(255,255,255,0.55)'>{s}</span><br>"
+              f"<b>{_surname(n)}</b>"
+              for s, n in zip(_seasons_x, _top_transfers['player_name'])]
+
+fig_bar.update_layout(
+    height=520,
+    dragmode=False,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    font=dict(color='rgba(255,255,255,0.9)', 
+              family='Aptos Light,Helvetica Neue,sans-serif', size=15),
+    margin=dict(l=20, r=20, t=40, b=104),
+    images=images,
+    xaxis=dict(showgrid=False, title='',
+               tickmode='array', tickvals=_seasons_x, ticktext=_ticktext,
+               tickangle=-35, ticks='',
+               tickfont=dict(family='Oswald,Arial Narrow,sans-serif',
+                             size=13, color='rgba(255,255,255,0.82)')),
+    yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.1)', title='Ablöse (€M)',
+               range=[0, _y_top]),
+    hoverlabel=dict(bgcolor='rgba(10,10,10,0.9)', 
+                    bordercolor='rgba(255,255,255,0.18)', 
+                    font=dict(color='#fff', size=14))
+)
+
+display(HTML(sec(
+    'III-Fortsetzung',
+    'Rekord-Transfers (Alle Ligen)',
+    ('Jeder Balken zeigt den teuersten Transfer einer Saison — die jeweils höchste Ablösesumme '
+     'weltweit, unabhängig von der Liga. Auffällig ist, wie häufig die Premier League und die '
+     'Ligue 1 das obere Ende des Marktes bestimmen.'),
+    ch(fig_bar),
+    hl='In den 5 Saisons von 2020/21 bis 2024/25 gab der englische Verein Chelsea F.C., unter der Leitung von Todd Boehly,'
+       'total <strong>1,75 Milliarden Euro</strong> für Transfers aus. ',
+    hl_type='gold',
+    cap='Höchste Ablösesumme pro Saison (2010–2024) · Farbe = Liga des aufnehmenden Vereins'
 )))
 ```
 
