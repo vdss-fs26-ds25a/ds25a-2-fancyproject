@@ -54,6 +54,13 @@ execute:
       +arc('M '+(fx+fw)+' '+(fy+fh-c)+' A '+c+' '+c+' 0 0 0 '+(fx+fw-c)+' '+(fy+fh));
   }
 
+  /* ---- Page-by-Page sprite LAYOUTS ----
+     Each page gets its own arrangement of positions on the pitch (fractions of
+     the viewport). The actual sprite image for each slot is chosen at render
+     time by cycling through whatever sprites are available (see placeSprites),
+     so no page depends on a fixed sprite id existing — and every page looks
+     different from the next. Goal-mouth slots come first (x≈0.05 / 0.95),
+     then a sideline slot, then outfield players scattered uniquely per page. */
   var PAGE_LAYOUTS = [
     // PAGE 0 — hero
     [ {x:0.06,y:0.46},{x:0.94,y:0.54},{x:0.50,y:0.05},{x:0.22,y:0.50},
@@ -103,6 +110,7 @@ execute:
 
   var currentPageIndex = 0;
 
+  /* Collect only the sprites that actually loaded (non-empty data URIs). */
   function availableSprites(){
     var out=[];
     if(window.SPRITES){
@@ -121,6 +129,10 @@ execute:
     var d=document.documentElement, W=d.clientWidth, H=d.clientHeight;
     layer.innerHTML='';
 
+    // Rotate the sprite set per page so adjacent pages don't share a starting
+    // sprite. Step of 7 is coprime to typical sprite counts, so even small sets
+    // (e.g. 3 sprites) produce a different sequence on every page. Consecutive
+    // slots (i, i+1) always differ, so no two neighbours share a sprite.
     var off = currentPageIndex * 7;
 
     layout.forEach(function(pos, i){
@@ -140,6 +152,7 @@ execute:
     });
   }
 
+  /* ---- deck: delayed-snap + reveal + dot/keyboard navigation ---- */
   if('scrollRestoration' in history){ try{ history.scrollRestoration='manual'; }catch(e){} }
   try{ window.scrollTo(0,0); }catch(e){}
 
@@ -219,7 +232,10 @@ with open('_plotly_inject.html', 'w', encoding='utf-8') as _hf:
 
 TOP5    = ['GB1','ES1','L1','IT1','FR1']
 LNAMES  = {'GB1':'Premier League','ES1':'La Liga','L1':'Bundesliga','IT1':'Serie A','FR1':'Ligue 1'}
-LCOLORS = {'GB1':'#04f5ff','ES1':'#F1BF00','L1':'#d10214','IT1':'#008c45','FR1':'#ffffff'}
+# Palette tuned for the dark-green pitch: softened from the original neon tones,
+# and Serie A moved from green (which vanished against the pitch) to an azure
+# that also fits Italy's azzurri. Each hue is well separated for legibility.
+LCOLORS = {'GB1':'#22D3E0','ES1':'#F2B705','L1':'#E8503A','IT1':'#5C8DEF','FR1':'#E8E2CF'}
 
 # ── Load JSONL (club-level per season) ─────────────────────
 rows = []
@@ -449,8 +465,11 @@ _top_league_name = LNAMES[_top_league]
 _top_league_mv   = mv_pivot.loc[2024, _top_league]
 _num_transfers   = len(tr5)
 
-# Introseite Merkzahlen zu Datensatz
+# ── Intro-tile metrics ─────────────────────────────────────
+# Number of distinct seasons covered by the dataset (2010–2024).
 _n_seasons = int(df['season'].nunique())
+# Distinct clubs that appeared in any top-5 league across all seasons
+# (more than 5×20 because promotion/relegation churns the membership).
 _n_teams = int(df['club_id'].dropna().nunique())
 # Total transfers considered: every move with a known fee that touches a
 # top-5 league (incoming or outgoing) across the 15 seasons. Reference
@@ -524,15 +543,15 @@ _intro_tiles = f'''
       <div class="kpi-row">
         <div class="kpi-card accent">
           <span class="kpi-number gold">{_n_seasons}</span>
-          <span class="kpi-label">Saisons (2010–2024)</span>
+          <span class="kpi-label">Analysierte Saisons (2010–2024)</span>
         </div>
         <div class="kpi-card">
           <span class="kpi-number">{_n_teams}</span>
-          <span class="kpi-label">Teams</span>
+          <span class="kpi-label">Teams in den Top-5-Ligen</span>
         </div>
         <div class="kpi-card">
           <span class="kpi-number">{_transfers_fmt}</span>
-          <span class="kpi-label">Transfers</span>
+          <span class="kpi-label">Berücksichtigte Transfers</span>
         </div>
         <div class="kpi-card placeholder">
           <span class="kpi-number muted">—</span>
@@ -578,7 +597,7 @@ display(HTML(f'''
 
 ```{python}
 #| label: s1a-mv-time
-# ── Chart 1A: Grouped bar — total MV per league per season ─
+# ── Chart 1A: Grouped bar — squad market value (Kadermarktwert) per league per season ─
 fig = go.Figure()
 for lg in TOP5:
     _d = mv_df[mv_df['competition_id']==lg].sort_values('season')
@@ -587,35 +606,89 @@ for lg in TOP5:
         x=_d['season'],
         y=(_d['total_market_value']/1e9).round(2),
         marker_color=LCOLORS[lg],
-        marker_line_width=0,
-        hovertemplate='<b>%{x}</b>: €%{y:.2f}B<extra>' + LNAMES[lg] + '</extra>'
+        marker_line=dict(width=0.5, color='rgba(0,0,0,0.30)'),
+        hovertemplate='<b>%{x}</b>: €%{y:.2f} Mrd.<extra>' + LNAMES[lg] + '</extra>'
     ))
 fig.update_layout(
     barmode='group',
+    bargap=0.24,
+    bargroupgap=0.04,
     xaxis_title='Saison',
-    yaxis_title='Gesamtmarktwert (Mrd. €)',
-    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
+    yaxis_title='Kadermarktwert (Mrd. €)',
+    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0,
+                font=dict(size=12))
 )
 themed(fig, height=650)
-# Annotation: 2016 TV-Deal
-fig.add_vline(x=2015.5, line_dash='dot', line_color='rgba(212,168,48,0.5)', line_width=1.5)
-fig.add_annotation(x=2016, y=0.97, yref='paper', text='TV-Deal 2016',
-    showarrow=False, font=dict(color='rgba(212,168,48,0.85)', size=10),
-    xanchor='left')
+fig.update_layout(margin=dict(l=60, r=20, t=92, b=50))
+
+# TV-deal marker — named so the JS below can show it only while the PL is visible.
+fig.add_shape(type='line', name='tv_vline', xref='x', yref='paper',
+              x0=2015.5, x1=2015.5, y0=0, y1=1,
+              line=dict(color='rgba(212,168,48,0.55)', width=1.5, dash='dot'))
+fig.add_annotation(name='tv_anno', x=2015.5, y=0.97, xref='x', yref='paper',
+              text='TV-Vertrag 2016/17', showarrow=False,
+              xanchor='left', yanchor='top',
+              font=dict(color='rgba(212,168,48,0.9)', size=11))
+# Discoverability hint for the clickable legend.
+fig.add_annotation(x=1, y=1.16, xref='paper', yref='paper',
+              text='Tipp: Liga in der Legende an-/abwählen', showarrow=False,
+              xanchor='right', yanchor='bottom',
+              font=dict(color='rgba(255,255,255,0.5)', size=10.5))
+
+_chart_id = 'chart-schere'
+_chart_html = fig.to_html(
+    full_html=False, include_plotlyjs=False, div_id=_chart_id,
+    config={'responsive': True, 'displayModeBar': False,
+            'scrollZoom': False, 'doubleClick': False})
+
+# When the Premier League trace is hidden via the legend, hide the TV-deal marker
+# too (it only explains the PL line), and bring it back when the PL is shown again.
+_toggle_js = '''
+<script>
+(function(){
+  var ID = "%s";
+  function ready(){
+    var gd = document.getElementById(ID);
+    if(!gd || typeof Plotly === "undefined" || !gd.on){ return setTimeout(ready, 150); }
+    function plShown(){
+      var t = gd.data && gd.data[0];
+      if(!t) return true;
+      return t.visible === true || t.visible === undefined;
+    }
+    function sync(){
+      var show = plShown(), u = {};
+      (gd.layout.annotations || []).forEach(function(a, i){
+        if(a.name === "tv_anno"){ u["annotations[" + i + "].visible"] = show; }
+      });
+      (gd.layout.shapes || []).forEach(function(s, i){
+        if(s.name === "tv_vline"){ u["shapes[" + i + "].visible"] = show; }
+      });
+      if(Object.keys(u).length){ Plotly.relayout(gd, u); }
+    }
+    gd.on("plotly_restyle", sync);
+    sync();
+  }
+  ready();
+})();
+</script>
+''' % _chart_id
 
 display(HTML(sec(
     'Akt I · Die Schere',
-    'Die Schere öffnet sich...',
-    ('Der Gesamtmarktwert aller Klubs pro Saison — in den fünf grössten europäischen Ligen. '
-     'Bis 2015 lagen die Ligen näher beieinander. Mit dem neuen TV-Vertrag der Premier League 2016 '
-     'öffnete sich die Schere schlagartig. Heute ist die PL mehr als doppelt so wertvoll wie jede '
-     'andere Liga einzeln betrachtet.'),
-    ch(fig),
-    hl=('Der TV-Vertrag 2016 brachte der Premier League rund <strong>£5,1 Milliarden</strong> '
-        'über drei Saisons — mehr als jede andere Liga an TV-Geldern in ihrer Geschichte erhalten hatte. '
-        'Das Geld wurde direkt in Marktwert investiert.'),
+    'Fünf Ligen, wachsender Abstand.',
+    ('Jeder Balken zeigt den Kadermarktwert einer Liga in einer Saison — die Summe der '
+     'von Transfermarkt geschätzten Werte aller Erstligaspieler. Bis etwa 2015 lagen die '
+     'fünf Ligen vergleichsweise nah beieinander. Ab 2016 setzt sich die Premier League ab '
+     'und liegt zuletzt rund doppelt so hoch wie jede der anderen vier Ligen.'),
+    _chart_html + _toggle_js,
+    hl=('Zur Saison 2016/17 trat der neue Fernsehvertrag der Premier League in Kraft '
+        '(Sky und BT, rund £5,1 Mrd. für drei Spielzeiten — etwa 58 % mehr als der vorige). '
+        'Die höheren Einnahmen vergrösserten die Kaufkraft der englischen Klubs spürbar: im '
+        'Sommer 2016 überstiegen deren Transferausgaben erstmals £1 Mrd. Da sich die '
+        'Transfermarkt-Werte an Ablösen und Gehältern orientieren, zogen mit den Ausgaben '
+        'auch die geschätzten Kaderwerte an.'),
     hl_type='gold',
-    cap='Quelle: Transfermarkt.de · Gesamtmarktwert aller Erstliga-Klubs je Saison (Saisonbeginn)'
+    cap='Quelle: Transfermarkt.de · Kadermarktwert aller Erstligaklubs je Saison (zu Saisonbeginn)'
 )))
 ```
 
