@@ -1,34 +1,38 @@
 project:
   type: website
   output-dir: build
-
+  
 lang: en
 language:
   section-title-appendices: "Appendix"
-
+  
 website:
   title: "Football Dashboard"
   search: true
+  navbar:
+    left:
+      - href: index.qmd
+        text: Dashboard
+      - href: project_charta.qmd
+        text: Projektcharta
+      - href: data_report.qmd
+        text: Datenbericht
   sidebar:
     style: "floating"
     search: true
     contents:
       - index.qmd
-
+      
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
-
 number-sections: true
-
 csl: vancouver-brackets.csl
-
 jupyter: python3
 
 execute:
   freeze: auto
-
 editor:
   render-on-save: true
