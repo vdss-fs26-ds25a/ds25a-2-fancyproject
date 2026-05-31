@@ -273,25 +273,25 @@ def themed(fig, height=620):
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0.22)',
         font=dict(color='rgba(255,255,255,0.82)',
-                  family='Aptos Light,Helvetica Neue,sans-serif', size=12),
+                  family='Aptos Light,Helvetica Neue,sans-serif', size=15),
         legend=dict(bgcolor='rgba(0,0,0,0)', borderwidth=0,
-                    font=dict(color='rgba(255,255,255,0.75)', size=11)),
+                    font=dict(color='rgba(255,255,255,0.78)', size=14)),
         hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
                         bordercolor='rgba(255,255,255,0.18)',
-                        font=dict(color='#fff', size=12)),
-        margin=dict(l=60, r=20, t=36, b=50)
+                        font=dict(color='#fff', size=14)),
+        margin=dict(l=68, r=20, t=36, b=58)
     )
     fig.update_xaxes(
         gridcolor='rgba(255,255,255,0.07)',
         linecolor='rgba(255,255,255,0.25)',
-        tickfont=dict(color='rgba(255,255,255,0.68)'),
-        title_font=dict(color='rgba(255,255,255,0.52)', size=11)
+        tickfont=dict(color='rgba(255,255,255,0.72)', size=15),
+        title_font=dict(color='rgba(255,255,255,0.62)', size=16)
     )
     fig.update_yaxes(
         gridcolor='rgba(255,255,255,0.07)',
         linecolor='rgba(255,255,255,0)',
-        tickfont=dict(color='rgba(255,255,255,0.68)'),
-        title_font=dict(color='rgba(255,255,255,0.52)', size=11)
+        tickfont=dict(color='rgba(255,255,255,0.72)', size=15),
+        title_font=dict(color='rgba(255,255,255,0.62)', size=16)
     )
     return fig
 
@@ -317,7 +317,7 @@ def sec(label, h2, story, chart_str, hl='', hl_type='gold', cap='', bridge=''):
             f'</div></section>')
 
 # ══════════════════════════════════════════════════════════
-# DATA: Section 1 — Die Schere
+# DATA: Section 1 — Kadermarktwerte
 # ══════════════════════════════════════════════════════════
 mv_df = df.groupby(['competition_id','season'])['total_market_value'].sum().reset_index()
 mv_pivot = mv_df.pivot(index='season', columns='competition_id', values='total_market_value').fillna(0) / 1e9
@@ -616,10 +616,12 @@ fig.update_layout(
     xaxis_title='Saison',
     yaxis_title='Kadermarktwert (Mrd. €)',
     legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0,
-                font=dict(size=12))
+                font=dict(size=14))
 )
 themed(fig, height=650)
-fig.update_layout(margin=dict(l=60, r=20, t=92, b=50))
+# Generous top margin so the legend + discoverability hint sit fully inside the
+# chart box (the .spread container clips overflow, which previously cut the hint off).
+fig.update_layout(margin=dict(l=68, r=20, t=128, b=58))
 
 # TV-deal marker — named so the JS below can show it only while the PL is visible.
 fig.add_shape(type='line', name='tv_vline', xref='x', yref='paper',
@@ -628,12 +630,13 @@ fig.add_shape(type='line', name='tv_vline', xref='x', yref='paper',
 fig.add_annotation(name='tv_anno', x=2015.5, y=0.97, xref='x', yref='paper',
               text='TV-Vertrag 2016/17', showarrow=False,
               xanchor='left', yanchor='top',
-              font=dict(color='rgba(212,168,48,0.9)', size=11))
-# Discoverability hint for the clickable legend.
-fig.add_annotation(x=1, y=1.16, xref='paper', yref='paper',
+              font=dict(color='rgba(212,168,48,0.9)', size=13))
+# Discoverability hint for the clickable legend — kept low enough (y=1.10) and with
+# a large top margin so it renders fully within the chart and stays readable.
+fig.add_annotation(x=1, y=1.10, xref='paper', yref='paper',
               text='Tipp: Liga in der Legende an-/abwählen', showarrow=False,
               xanchor='right', yanchor='bottom',
-              font=dict(color='rgba(255,255,255,0.5)', size=10.5))
+              font=dict(color='rgba(255,255,255,0.62)', size=13))
 
 _chart_id = 'chart-schere'
 _chart_html = fig.to_html(
@@ -674,7 +677,7 @@ _toggle_js = '''
 ''' % _chart_id
 
 display(HTML(sec(
-    'Akt I · Die Schere',
+    'I · Kadermarktwerte',
     'Fünf Ligen, wachsender Abstand.',
     ('Jeder Balken zeigt den Kadermarktwert einer Liga in einer Saison — die Summe der '
      'von Transfermarkt geschätzten Werte aller Erstligaspieler. Bis etwa 2015 lagen die '
@@ -693,99 +696,139 @@ display(HTML(sec(
 ```
 
 ```{python}
-#| label: s1b-ratio
-# ── Chart 1B: Line — PL / avg others ratio ─────────────────
-fig = go.Figure()
-fig.add_trace(go.Scatter(
-    x=ratio_s['season'], y=ratio_s['ratio'],
-    name='PL / Ø (ES1, L1, IT1, FR1)',
-    mode='lines+markers',
-    line=dict(color=LCOLORS['GB1'], width=2.5),
-    marker=dict(size=6, color=LCOLORS['GB1']),
-    fill='tozeroy',
-    fillcolor=hex_to_rgba(LCOLORS['GB1'], 0.12),
-    hovertemplate='<b>%{x}</b>: %{y:.2f}×<extra></extra>'
-))
-fig.add_hline(y=1.0, line_dash='dot', line_color='rgba(255,255,255,0.25)',
-              annotation_text='Gleichstand', annotation_position='right',
-              annotation_font_color='rgba(255,255,255,0.45)', annotation_font_size=10)
-fig.add_vline(x=2016, line_dash='dash', line_color='rgba(212,168,48,0.55)', line_width=1.5)
-fig.add_annotation(x=2016.2, y=0.97, yref='paper', text='TV-Deal 2016',
-    showarrow=False, font=dict(color='rgba(212,168,48,0.85)', size=10), xanchor='left')
-fig.update_layout(
-    xaxis_title='Saison',
-    yaxis_title='Faktor (PL ÷ Ø andere 4 Ligen)',
-    showlegend=False
-)
-themed(fig, height=600)
-
-display(HTML(sec(
-    'Akt I · Die Schere',
-    'Der TV-Deal als Kipp-Punkt.',
-    ('Wie viel grösser ist die Premier League im Vergleich zum Durchschnitt der anderen vier '
-     'Top-Ligen? Diese eine Linie erzählt die Geschichte komprimiert. Zwischen 2010 und 2015 '
-     'lag der Faktor relativ stabil bei 1.6–1.8. Dann kam der Zuwachs.'),
-    ch(fig),
-    bridge='Aber wohin genau fliesst das Geld?'
-)))
-```
-
-```{python}
 #| label: s2a-sankey
-# ── Chart 2A: Sankey — inter-liga transfer flows ───────────
-_node_idx = {lg: i for i, lg in enumerate(TOP5)}
-_link_colors = [hex_to_rgba(LCOLORS[r['from_league']], 0.4)
-                for _, r in sankey_flows.iterrows()]
+# ── Chart 2A: Bipartite Sankey — inter-liga transfer flows ──────────────────
+# The original single-column Sankey put every league on BOTH sides of the same
+# axis, so each node was simultaneously a source and a target. That makes the
+# graph effectively cyclic and Plotly's layout tangles it into an unreadable
+# knot. The fix is the standard one for "who-buys-from-whom" flows: split every
+# league into a SELLING node (left column) and a BUYING node (right column).
+# The graph is now a clean two-layer DAG — readable, and the Premier League's
+# giant right-hand (buying) node tells the whole story at a glance.
+#
+# A season dropdown lets the reader scrub through 2012/13 … 2024/25 or view the
+# full-period aggregate. The link STRUCTURE is constant (all 20 directed league
+# pairs), only the link VALUES change per season — so the layout stays stable
+# and the dropdown just restyles values + labels.
 
-# For bright colors (#04f5ff, #00ff85, #fff), use dark text; for dark use white
-_node_font_colors = {'GB1':'#000000','ES1':'#000000','L1':'#ffffff','IT1':'#ffffff','FR1':'#000000'}
+_left  = {lg: i for i, lg in enumerate(TOP5)}          # selling nodes  0..4
+_right = {lg: 5 + i for i, lg in enumerate(TOP5)}      # buying  nodes  5..9
+
+# Fixed list of the 20 directed (seller → buyer) pairs.
+_pairs = [(s, t) for s in TOP5 for t in TOP5 if s != t]
+_src   = [_left[s]  for s, t in _pairs]
+_tgt   = [_right[t] for s, t in _pairs]
+# Colour each ribbon by its SELLING league; brighten flows landing in the PL.
+_lcol  = [hex_to_rgba(LCOLORS[s], 0.55 if t == 'GB1' else 0.34) for s, t in _pairs]
+
+def _season_label(yr):
+    return f'{yr}/{str(yr + 1)[2:]}'
+
+def _flow_view(_data):
+    """Return (values, labels) for the 20 fixed pairs from a transfer slice."""
+    g = _data.groupby(['from_league', 'to_league'])['transfer_fee'].sum().div(1e6)
+    vals, labs = [], []
+    for s, t in _pairs:
+        v = float(g.get((s, t), 0.0))
+        vals.append(round(v, 1))
+        labs.append(f'{LNAMES[s]} → {LNAMES[t]}: €{v:,.0f}M'
+                    if v > 0 else f'{LNAMES[s]} → {LNAMES[t]}: kein Transfer')
+    return vals, labs
+
+# Build every view: full aggregate first, then one per season.
+_seasons   = sorted(tr5['yr'].unique())
+_views     = [('Alle Saisons · 2012–24', tr5)] + \
+             [(_season_label(y), tr5[tr5['yr'] == y]) for y in _seasons]
+_view_vals = []
+_view_labs = []
+for _name, _slice in _views:
+    v, l = _flow_view(_slice)
+    _view_vals.append(v); _view_labs.append(l)
+
+# Column-header annotations (constant across views).
+_headers = [
+    dict(x=0.0, y=1.05, xref='paper', yref='paper', xanchor='left',
+         text='ABGEBENDE LIGA  →', showarrow=False,
+         font=dict(color='rgba(255,255,255,0.65)', size=14)),
+    dict(x=1.0, y=1.05, xref='paper', yref='paper', xanchor='right',
+         text='→  AUFNEHMENDE LIGA', showarrow=False,
+         font=dict(color='rgba(255,255,255,0.65)', size=14)),
+]
 
 fig = go.Figure(go.Sankey(
     arrangement='snap',
     node=dict(
-        pad=18, thickness=22,
+        pad=26, thickness=24,
         line=dict(color='rgba(255,255,255,0.25)', width=0.8),
-        label=[LNAMES[lg] for lg in TOP5],
-        color=[LCOLORS[lg] for lg in TOP5],
+        label=[LNAMES[lg] for lg in TOP5] + [LNAMES[lg] for lg in TOP5],
+        color=[LCOLORS[lg] for lg in TOP5] + [LCOLORS[lg] for lg in TOP5],
+        # x/y are hints that bias sellers to the left column, buyers to the right.
+        x=[0.02] * 5 + [0.98] * 5,
+        y=[0.10, 0.30, 0.50, 0.70, 0.90] * 2,
         hovertemplate='%{label}<extra></extra>'
     ),
     link=dict(
-        source=[_node_idx[r['from_league']] for _, r in sankey_flows.iterrows()],
-        target=[_node_idx[r['to_league']]   for _, r in sankey_flows.iterrows()],
-        value =[r['fee_m']                  for _, r in sankey_flows.iterrows()],
-        color =_link_colors,
-        label =[f"{LNAMES[r['from_league']]} → {LNAMES[r['to_league']]}: €{r['fee_m']:.0f}M"
-                for _, r in sankey_flows.iterrows()],
+        source=_src, target=_tgt,
+        value=_view_vals[0], color=_lcol, label=_view_labs[0],
         hovertemplate='%{label}<extra></extra>'
     )
 ))
+
+# Season dropdown — restyle link values/labels per view (structure stays fixed).
+_buttons = [
+    dict(label=_name, method='restyle',
+         args=[{'link.value': [_view_vals[i]], 'link.label': [_view_labs[i]]}])
+    for i, (_name, _) in enumerate(_views)
+]
+
 fig.update_layout(
-    height=660,
+    height=680,
     dragmode=False,
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
-    font=dict(color='rgba(255,255,255,0.82)',
-              family='Aptos Light,Helvetica Neue,sans-serif', size=12),
-    margin=dict(l=20, r=20, t=36, b=20),
-    hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
+    font=dict(color='rgba(255,255,255,0.9)',
+              family='Aptos Light,Helvetica Neue,sans-serif', size=15),
+    margin=dict(l=10, r=10, t=116, b=24),
+    hoverlabel=dict(bgcolor='rgba(10,10,10,0.9)',
                     bordercolor='rgba(255,255,255,0.18)',
-                    font=dict(color='#fff', size=12))
+                    font=dict(color='#fff', size=14)),
+    annotations=_headers,
+    updatemenus=[dict(
+        type='dropdown', direction='down',
+        x=0.0, xanchor='left', y=1.16, yanchor='top',
+        active=0, showactive=True, buttons=_buttons,
+        bgcolor='rgba(10,28,12,0.96)', bordercolor='rgba(255,255,255,0.28)',
+        borderwidth=1,
+        font=dict(color='rgba(255,255,255,0.92)', size=13.5),
+        pad=dict(l=6, r=6, t=4, b=4)
+    )]
 )
 
+# ── Dynamic highlight figures (data was refreshed, so compute, don't hard-code) ─
+_pl_in  = tr5[tr5['to_league'] == 'GB1'].groupby('from_league')['transfer_fee'].sum().div(1e9)
+_pl_out = tr5[tr5['from_league'] == 'GB1']['transfer_fee'].sum() / 1e9
+_pl_in_total = _pl_in.sum()
+_pl_net = _pl_in_total - _pl_out
+_ranked = _pl_in.sort_values(ascending=False)
+_lines = ', '.join(f'aus {LNAMES[lg]} <strong>€{v:.1f} Mrd.</strong>'
+                   for lg, v in _ranked.items())
+
 display(HTML(sec(
-    'Akt II · Transfer-Dominanz',
+    'II · Transfer-Dominanz',
     'Das Geld fliesst in eine Richtung.',
-    ('Jede Verbindung zeigt: Wie viel Geld floss bei Transfers zwischen zwei Ligen? '
-     'Die Breite der Pfeile entspricht der summierten Transfersumme 2012–2024. '
-     'Das Bild ist eindeutig: Die Premier League zieht massiv Talent an — '
-     'aus allen anderen vier Top-Ligen gleichzeitig.'),
+    ('Links steht jede Liga als <em>Verkäufer</em>, rechts dieselbe Liga als <em>Käufer</em>. '
+     'Die Breite jedes Bandes entspricht der Transfersumme, die zwischen den beiden Ligen floss. '
+     'Über das Menü oben lässt sich eine einzelne Saison auswählen oder der gesamte '
+     'Zeitraum betrachten. Das Bild bleibt eindeutig: Der Käufer-Block der Premier League '
+     'rechts ist mit Abstand der grösste — sie zieht aus allen vier anderen Top-Ligen Talent ab.'),
     ch(fig),
-    hl=('Die vier grössten Geldflüsse in die PL: aus Ligue 1 <strong>€2.4B</strong>, '
-        'aus der Bundesliga <strong>€2.3B</strong>, aus La Liga <strong>€2.1B</strong>, '
-        'aus der Serie A <strong>€1.9B</strong>. '
-        'Total <strong>€6.9 Milliarden</strong> netto Ausgaben von der Insel'),
+    hl=(f'Die grössten Geldflüsse in die Premier League (2012–2024): {_lines}. '
+        f'Insgesamt flossen <strong>€{_pl_in_total:.1f} Mrd.</strong> auf die Insel — '
+        f'zurück gingen nur <strong>€{_pl_out:.1f} Mrd.</strong> '
+        f'Macht ein Netto-Minus von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel '
+        f'zwischen den Top-5-Ligen.'),
     hl_type='red',
-    cap='Nur Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · 2012–2024'
+    cap='Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · Saison über das Menü wählbar'
 )))
 ```
 
@@ -813,7 +856,7 @@ fig.update_layout(
 themed(fig, height=650)
 
 display(HTML(sec(
-    'Akt II · Transfer-Dominanz',
+    'II · Transfer-Dominanz',
     'PL-Klubs geben netto am meisten aus — jede Saison.',
     ('Die Netto-Transferbilanz zeigt: Wer kauft mehr als er verkauft? '
      'Negative Werte bedeuten Nettokäufer (mehr ausgegeben als eingenommen). '
@@ -859,7 +902,7 @@ fig.update_layout(
         tickmode='array',
         tickvals=list(range(len(TOP5))),
         ticktext=[LNAMES[lg] for lg in TOP5],
-        tickfont=dict(color='rgba(255,255,255,0.75)', size=11.5),
+        tickfont=dict(color='rgba(255,255,255,0.82)', size=15),
         showgrid=False, zeroline=False
     ),
     showlegend=False
@@ -867,7 +910,7 @@ fig.update_layout(
 themed(fig, height=650)
 
 display(HTML(sec(
-    'Akt III · Marktwert-Konzentration',
+    'III · Marktwert-Konzentration',
     'Die teuersten 500 Spieler Europas — und wo sie spielen.',
     ('Jeder Punkt ist ein Spieler: sein aktueller Marktwert auf der X-Achse, '
      'seine Liga auf der Y-Achse. Die Punkte sind leicht gestreut um die Ligalinie. '
@@ -906,15 +949,15 @@ fig.update_layout(
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     font=dict(color='rgba(255,255,255,0.88)',
-              family='Aptos Light,Helvetica Neue,sans-serif', size=12),
+              family='Aptos Light,Helvetica Neue,sans-serif', size=15),
     margin=dict(l=10, r=10, t=36, b=10),
     hoverlabel=dict(bgcolor='rgba(10,10,10,0.88)',
                     bordercolor='rgba(255,255,255,0.18)',
-                    font=dict(color='#fff', size=12))
+                    font=dict(color='#fff', size=14))
 )
 
 display(HTML(sec(
-    'Akt III · Marktwert-Konzentration',
+    'III · Marktwert-Konzentration',
     'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
     ('Die Fläche jedes Feldes entspricht dem Gesamtmarktwert der Klubs — '
      'aufgeteilt nach Liga und innerhalb der Ligen nach den Top-12-Klubs (Saison 2024). '
@@ -958,7 +1001,7 @@ fig.update_layout(
 themed(fig, height=620)
 
 display(HTML(sec(
-    'Akt IV · Marktwert = Leistung?',
+    'IV · Marktwert = Leistung?',
     'Je reicher der Kader, desto besser der Platz — in allen fünf Ligen.',
     ('Die Pearson-Korrelation misst, wie stark der Kaderwert den Tabellenplatz voraussagt '
      '(1.0 = perfekte Übereinstimmung, 0 = kein Zusammenhang). '
@@ -999,7 +1042,7 @@ fig.update_layout(
 themed(fig, height=600)
 
 display(HTML(sec(
-    'Akt IV · Marktwert = Leistung?',
+    'IV · Marktwert = Leistung?',
     'Reichtum konzentriert sich.',
     ('Wie viel Prozent des gesamten Kaderwerts einer Liga entfällt auf die vier reichsten Klubs? '
      'Ein hoher Wert bedeutet: Wenige Klubs haben fast alles, der Rest kämpft um Reste. '
@@ -1049,7 +1092,7 @@ fig.update_layout(
 themed(fig, height=620)
 
 display(HTML(sec(
-    'Akt V · Transfer-Aufschläge',
+    'V · Transfer-Aufschläge',
     'Die Premier League zahlt am meisten über Marktwert — aber sie ist nicht allein.',
     ('Für jeden Transfer innerhalb der Top-5-Ligen wurde der prozentuale Aufschlag '
      'gegenüber dem offiziellen Transfermarkt-Wert berechnet. '
