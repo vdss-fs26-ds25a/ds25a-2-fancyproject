@@ -1055,7 +1055,8 @@ display(HTML(sec(
         'absoluten Weltspitze.'),
     hl_type='red',
     cap='Die 100 wertvollsten Spieler pro Saison · Basierend auf Transfermarkt.de'
-)))```
+)))
+```
 
 ```{python}
 #| label: s4a-mv-corr
