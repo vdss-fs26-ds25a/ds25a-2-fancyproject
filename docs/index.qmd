@@ -340,7 +340,7 @@ tr = tr.merge(clubs.rename(columns={'club_id':'to_club_id','domestic_competition
 
 tr5 = tr[tr['from_league'].isin(TOP5) & tr['to_league'].isin(TOP5) &
          (tr['transfer_fee'] > 0) & (tr['from_league'] != tr['to_league']) &
-         tr['yr'].between(2012, 2024)].copy()
+         tr['yr'].between(2010, 2024)].copy()
 
 sankey_flows = tr5.groupby(['from_league','to_league'])['transfer_fee'].sum().reset_index()
 sankey_flows['fee_m'] = (sankey_flows['transfer_fee'] / 1e6).round(1)
@@ -394,7 +394,7 @@ for _lg in TOP5:
 # ══════════════════════════════════════════════════════════
 # DATA: Section 4 — Wettbewerb
 # ══════════════════════════════════════════════════════════
-g5 = games[games['competition_id'].isin(TOP5) & games['season'].between(2012, 2024)].copy()
+g5 = games[games['competition_id'].isin(TOP5) & games['season'].between(2010, 2024)].copy()
 g5['home_pts'] = np.where(g5['home_club_goals'] > g5['away_club_goals'], 3,
                  np.where(g5['home_club_goals'] == g5['away_club_goals'], 1, 0))
 g5['away_pts'] = np.where(g5['away_club_goals'] > g5['home_club_goals'], 3,
@@ -834,7 +834,7 @@ def _flow_view(_data):
 
 # Build every view: full aggregate first, then one per season.
 _seasons   = sorted(tr5['yr'].unique())
-_views     = [('Alle Saisons · 2012–24', tr5)] + \
+_views     = [('Alle Saisons · 2010–24', tr5)] + \
              [(_season_label(y), tr5[tr5['yr'] == y]) for y in _seasons]
 _view_vals = []
 _view_labs = []
@@ -901,7 +901,6 @@ fig.update_layout(
     )]
 )
 
-# ── Dynamic highlight figures (data was refreshed, so compute, don't hard-code) ─
 _pl_in  = tr5[tr5['to_league'] == 'GB1'].groupby('from_league')['transfer_fee'].sum().div(1e9)
 _pl_out = tr5[tr5['from_league'] == 'GB1']['transfer_fee'].sum() / 1e9
 _pl_in_total = _pl_in.sum()
@@ -919,7 +918,7 @@ display(HTML(sec(
      'Zeitraum betrachten. Das Bild bleibt eindeutig: Der Käufer-Block der Premier League '
      'rechts ist mit Abstand der grösste — sie zieht aus allen vier anderen Top-Ligen Talent ab.'),
     ch(fig),
-    hl=(f'Die grössten Geldflüsse in die Premier League (2012–2024): {_lines}. '
+    hl=(f'Die grössten Geldflüsse in die Premier League (2010–2024): {_lines}. '
         f'Insgesamt flossen <strong>€{_pl_in_total:.1f} Mrd.</strong> auf die Insel — '
         f'zurück gingen nur <strong>€{_pl_out:.1f} Mrd.</strong> '
         f'Macht ein Netto-Minus von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel '
@@ -930,40 +929,50 @@ display(HTML(sec(
 ```
 
 ```{python}
-#| label: s2b-net-balance
-# ── Chart 2B: Net transfer balance per league per season ───
+#| label: s3b-net-balance
+# ── Chart 3B: Cumulative Net transfer balance per league ───
 fig = go.Figure()
+
+# 1. Sort data and calculate the cumulative sum per league
+net_df = net_df.sort_values(['competition_id', 'season'])
+net_df['cum_net_m'] = net_df.groupby('competition_id')['net_m'].cumsum()
+
+# 2. Draw thick, clear lines
 for lg in TOP5:
-    _d = net_df[net_df['competition_id']==lg].sort_values('season')
-    fig.add_trace(go.Bar(
+    _d = net_df[net_df['competition_id']==lg]
+    
+    # Make the PL line slightly thicker for emphasis
+    _lw = 3.5 if lg == 'GB1' else 2.5
+    
+    fig.add_trace(go.Scatter(
         name=LNAMES[lg],
         x=_d['season'],
-        y=_d['net_m'],
-        marker_color=LCOLORS[lg],
-        marker_line_width=0,
-        hovertemplate='<b>%{x}</b>: €%{y:+.0f}M<extra>' + LNAMES[lg] + '</extra>'
+        y=_d['cum_net_m'],
+        mode='lines+markers',
+        line=dict(color=LCOLORS[lg], width=_lw),
+        marker=dict(size=6, color=LCOLORS[lg]),
+        hovertemplate='<b>%{x}</b><br>Kumuliert: €%{y:+.0f}M<extra>' + LNAMES[lg] + '</extra>'
     ))
+
 fig.update_layout(
-    barmode='relative',
     xaxis_title='Saison',
-    yaxis_title='Netto-Transferbilanz (Mio. €)',
+    yaxis_title='Kumulierte Netto-Transferbilanz (Mio. €)',
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0),
-    yaxis=dict(zeroline=True, zerolinecolor='rgba(255,255,255,0.35)', zerolinewidth=1.5)
+    # Strong zero-line to separate the net buyers from net sellers
+    yaxis=dict(zeroline=True, zerolinecolor='rgba(255,255,255,0.5)', zerolinewidth=2)
 )
 themed(fig, height=650)
 
 display(HTML(sec(
-    'II · Transfer-Dominanz',
+    'III · Transfer-Dominanz',
     'PL-Klubs geben netto am meisten aus — jede Saison.',
-    ('Die Netto-Transferbilanz zeigt: Wer kauft mehr als er verkauft? '
-     'Negative Werte bedeuten Nettokäufer (mehr ausgegeben als eingenommen). '
-     'Die Premier League-Klubs dominieren als Nettokäufer — besonders seit 2016. '
-     'Andere Ligen profitieren als Nettoverkäufer.'),
+    ('Die kumulierte Netto-Transferbilanz zeigt den strukturellen Trend: Wer baut über die Jahre Transferüberschüsse auf, und wer häuft ein Defizit an? '
+     'Negative Werte bedeuten, dass insgesamt mehr für Spieler ausgegeben als eingenommen wurde. '
+     'Im Verlauf von 15 Jahren stürzt die Premier League geradezu ab, während sich andere Ligen als dauerhafte Nettoverkäufer etablieren.'),
     ch(fig),
     hl=('Ligue 1 und Bundesliga sind systematische <strong>Nettoverkäufer</strong> — sie züchten Talent '
         'und verkaufen es an die PL. Die Serie A ist seit dem Rückzug von Investoren ebenfalls '
-        'unter Druck. Nur La Liga hält sich zeitweise durch Barça/Real-Verkäufe im Gleichgewicht.'),
-    bridge='Wer sind diese Spieler — und wo sind die teuersten Talente jetzt?'
+        'unter Druck. Nur La Liga hält sich zeitweise durch Barça/Real-Verkäufe im Gleichgewicht.')
 )))
 ```
 
@@ -1067,7 +1076,7 @@ display(HTML(sec(
         'mit leichten Schwankungen je nach Saison. '
         '<strong>Geld erklärt den Erfolg ligaübergreifend</strong>, '
         'nicht nur in einer einzigen Liga.'),
-    cap='Pearson-Korrelation pro Saison und Liga · Basis: Kaderwert und Abschlusstabellenplatz (2012–2024)'
+    cap='Pearson-Korrelation pro Saison und Liga · Basis: Kaderwert und Abschlusstabellenplatz (2010–2024)'
 )))
 ```
 
@@ -1118,7 +1127,7 @@ for lg in TOP5:
             (tr['from_league'].isin(TOP5)) &
             (tr['transfer_fee'] > 1e6) &
             (tr['market_value_in_eur'] > 5e6) &
-            (tr['transfer_season'].str[:2].apply(lambda x: 2000+int(x) if x.isdigit() else int(x)).between(2012, 2024))].copy()
+            (tr['transfer_season'].str[:2].apply(lambda x: 2000+int(x) if x.isdigit() else int(x)).between(2010, 2024))].copy()
     _d['fee_m'] = _d['transfer_fee'] / 1e6
     _d['mv_m']  = _d['market_value_in_eur'] / 1e6
     _d['premium'] = ((_d['fee_m'] / _d['mv_m']) - 1) * 100
@@ -1158,7 +1167,7 @@ display(HTML(sec(
         'doch auch andere Ligen überzahlen in bestimmten Saisons deutlich. '
         '<strong>Der sogenannte Premier-League-Tax setzt den Marktpreis, dem alle folgen müssen.</strong>'),
     hl_type='red',
-    cap='Transfers zwischen Top-5-Ligen · Ablöse > €1M, Marktwert > €5M von 2012–2024'
+    cap='Transfers zwischen Top-5-Ligen · Ablöse > €1M, Marktwert > €5M von 2010–2024'
 )))
 ```
 
