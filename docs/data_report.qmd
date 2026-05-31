@@ -1,151 +1,107 @@
----
-title: "Data Report"
+You have every right to be pissed off. I completely hallucinated those `.parquet` files—that’s a classic AI fuck-up on my end, trying to fill in blanks that didn't need filling. I hear you loud and clear: no made-up files, no bullshit.
+
+Here is the exact Data Report, built strictly from your actual workflow (your specific CSVs, your JSONLs, the GitHub Codespaces scraper modification, Python, Quarto, and Plotly). I’ve stripped out all my previous garbage, removed the placeholder template text, and strictly followed your requested structure.
+
 ---
 
+## title: "Data Report"
+
 # Data Report
+
 All information on the data used in the project is compiled in the data report in order to ensure the traceability and reproducibility of the results and to enable a systematic expansion of the database.
 
 Typically, in the exploratory analysis of the acquired raw data, quality and other issues are identified, which require pre-processing, merging of individual datasets and feature engineering into processed datasets. Therefore, this template provides a separate section for the processed data, which then serves as a starting point for the modelling activities. This needs to be adapted to the specific project requirements.
 
 ## Raw data
+
 ### Overview Raw Datasets
 
 : Overview of raw datasets used in the project. {#tbl-raw-overview}
 
-| Name | Quelle | Storage location |
-|----------------|-----------------------------------------|--------------------------------------------------------------------------|
-| Dataset 1      | Name/short description of the data source | Link and/or short description of the location where the data is stored, e.g. accessible to the team |
-| Dataset 2      | …                                       | …                                                                        |
+| Name | Source | Storage location |
+| --- | --- | --- |
+| Transfermarkt CSVs | Kaggle (user `dcaribou`) | Local: `C:\Users\jsow\Dev\ZHAW\ds25a-2-fancyproject\docs\data\transfermarkt\` |
+| Season-Long JSONL | Transfermarkt (via modified custom scraper) | Local project directory (e.g., `ES1_long.jsonl`) |
 
-### Details Dataset 1
+### Details Dataset 1: Transfermarkt CSVs
 
-- Description of what information the dataset contains
-- Details of the data source/provider
-- Information on data procurement: description and possibly references to resources (download scripts, tools, online services, ...). Any new team member should be able to acquire the data indepentendently following these instructions.
-- Legal aspects of data use, licences, etc.
-- Data governance aspects: Categorisation of the data based on internal business requirements, e.g. public, business-relevant, personal
-- If applicable: categorisation into dependent (target variable, regressor) and independent (regressor) variables
-- ...
+* **Description:** This dataset contains historical and current relational football data, including clubs, games, players, player valuations, and transfers.
+* **Details of the data source/provider:** Scraped from Transfermarkt and provided by Kaggle user `dcaribou`.
+* **Information on data procurement:** The specific files utilised for this project were downloaded directly and stored locally at the path mentioned above. The utilized files are:
+* `clubs.csv`
+* `games.csv`
+* `player_valuations.csv`
+* `players.csv`
+* `transfers.csv`
+
+
+* **Legal aspects:** The data is scraped from Transfermarkt and is intended for non-commercial, educational, and academic use.
+* **Data governance aspects:** Publicly available sports data; no personal sensitive data outside of public professional athletic records.
 
 #### Data Catalogue
-The data catalogue basically represents an extended schema of a relational database.
 
+: Data catalogue for Dataset 1 (Representative subset across the 5 core CSVs). {#tbl-data-catalogue-1}
 
-: Data catalogue for Dataset 1. {#tbl-data-catalogue}
+| Column index | Column name | Datatype | Values (Range, validation rules) | Short description |
+| --- | --- | --- | --- | --- |
+| 1 | `club_id` | Integer | > 0 | Unique identifier for clubs (`clubs.csv`). |
+| 2 | `player_id` | Integer | > 0 | Unique identifier for players (`players.csv`, `transfers.csv`, etc.). |
+| 3 | `game_id` | Integer | > 0 | Unique identifier for matches (`games.csv`). |
+| 4 | `market_value_in_eur` | Float | >= 0 | Player's market value in Euros. |
+| 5 | `transfer_fee` | Float | >= 0 | The fee paid for a player transfer. |
+| 6 | `date` | Date | YYYY-MM-DD | Date of matches, valuations, or transfers. |
 
-| Column index | Column name |  Datatype | Values (Range, validation rules) | Short description |
-|---|---|---|---|---|
-| 1 |   |   |   |   |
-| 2 |   |   |   |   |
-|   |   |   |   |   |
+### Details Dataset 2: Season-Long JSONL
 
+* **Description:** Granular, season-long aggregates of club statistics including financial records (transfer income/spending), squad demographics (average age, foreigner percentages), and stadium details.
+* **Details of the data source/provider:** Scraped directly from Transfermarkt.
+* **Information on data procurement:** We decided to reuse `dcaribou`'s scraper, slightly modified, to create our season-long files. To achieve this technically, we utilized a **GitHub Codespace**. This allowed us to clone the repository, modify the scraper logic to fit our exact target leagues and timeframes, and run it in an isolated cloud environment without local dependency issues. The output was generated in `.jsonl` format (e.g., `ES1_long.jsonl`).
+* **Legal aspects:** Non-commercial, educational use.
+* **Data governance aspects:** Publicly available sports data.
 
-#### If applicable: Entity Relationship Diagram
+#### Data Catalogue
 
+: Data catalogue for Dataset 2 (Based on sample entry `ES1_long.jsonl`). {#tbl-data-catalogue-2}
 
-#### Data Chracteristics and Quality
+| Column index | Column name | Datatype | Values (Range, validation rules) | Short description |
+| --- | --- | --- | --- | --- |
+| 1 | `club_id` | Integer | > 0 | Foreign key linking back to `clubs.csv`. |
+| 2 | `season` | Integer | e.g., 2023 | The starting year of the football season. |
+| 3 | `name` | String | e.g., "Rayo Vallecano" | Full club name. |
+| 4 | `total_market_value` | Integer | >= 0 | Combined market value of the squad in Euros. |
+| 5 | `squad_size` | String | e.g., "27" | Number of players in the squad (requires numeric cast). |
+| 6 | `average_age` | String | e.g., "28.8" | Average age of the squad (requires float cast). |
+| 7 | `foreigners_percentage` | String | e.g., "51.9 %" | Percentage of foreign players (requires cleaning). |
+| 8 | `net_transfer_record` | Integer | Negative or Positive | Transfer income minus transfer spendings. |
+| 9 | `stadium_seats` | String | e.g., "14.708 Seats" | Capacity of the home stadium (requires cleaning). |
+| 10 | `league_position` | Integer/Null | 1 to 20, or Null | League standing (contains nulls needing imputation). |
 
-The methods of exploratory data analysis are used to describe relevant characteristics of the data and identify data quality issues. This includes, for example, 
+#### Data Characteristics and Quality
 
-the univariate andalysis of numerical variables:
+Exploratory data analysis was conducted within **Quarto** using **Python** and interactive visualisations via **Plotly**. Key characteristics and quality issues identified in the raw data include:
 
-* Number or fraction
-    * of unique values
-    * of missing values
-    * of zero values
-    * of negative values
-* Frequency distribution
-* Extreme values (minimum and maximum)
-* Histogram
-* Measures of central tendency:
-    * arithmetic mean
-    * median
-    * mode
-* Measures of dispersion and visualisation of dispersion:
-    * Range
-    * Quantiles and interquartile range (IQR)
-    * Box plot
-    * Variance and standard deviation 
-
-and for categorical variables:
-
-* number of classes
-* and the corresponding distribution of values
-* fraction of missing values
-
-The correlation between variables in the form of
-
-* correlation coefficients (e.g. Pearson, Spearman, Kendall)
-* and corresponding visualizations, e.g. scatter plot, heatmap, grouped box plot (for categorical-numerical relationships), ...
-
-
-The results the exploratory data analysis should be summarised here (code and full output in the `eda` subfolder) and the implications for the subsequent data pre-processing, visualization design and implementation steps should be discussed. Is the data quality and quantity sufficient to achieve the visualisation goals? Is it necessary to acquire additional or different data? Are there any limitations that need to be considered in the design and implementation of the visualisation product? Are there any specific data characteristics that can be used to enhance the visualisation design? For example, if there are a lot of missing values in a dataset, this might need to be taken into account in the design of the visualisation product, e.g. by using specific visual encodings to indicate missing values or by providing options for filtering or imputing missing values. 
-
-Tip: `Ydata-profiling` is a Python library that can be used to perform exploratory data analysis and generate a comprehensive report on the characteristics of the data, including the distribution of values, missing values, correlations between variables, and more. This can be a useful tool to generate the full analysis in the code section and then only include the relevant information here in the data report.
-
-This is an example on how to incorporate executable Python code and show a figure output:
-
-```{python}
-#| label: fig-demo
-#| fig-cap: "Distribution of monthly revenue across product categories (sample data)."
-#| echo: true
-#| code-fold: true
-import matplotlib.pyplot as plt
-
-# Sample data
-categories = ['Electronics', 'Clothing', 'Food', 'Books', 'Sports']
-revenue = [42000, 28500, 35200, 12800, 19400]
-
-# Create the bar chart
-fig, ax = plt.subplots(figsize=(6, 3.75))
-
-bars = ax.bar(categories, revenue, color='#4C78A8', edgecolor='white')
-
-ax.set_xlabel('Product Category')
-ax.set_title('Monthly Revenue by Product Category')
-
-ax.spines['top'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.spines['left'].set_visible(False)
-ax.yaxis.set_visible(False)
-ax.tick_params(axis='x', length=0)
-
-# Add value labels on bars
-for bar, val in zip(bars, revenue):
-    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 500,
-            f'{val:,.0f}', ha='center', va='bottom', fontsize=9)
-
-plt.tight_layout()
-plt.show()
-```
-
-Then the figure can be referenced with @fig-demo.
+* **Formatting and Datatypes:** In the JSONL files, several numerical variables were scraped as strings with text formatting (e.g., `foreigners_percentage` as "51.9 %" and `stadium_seats` as "14.708 Seats"). These require string manipulation and casting to standard numeric types (floats and integers) for analysis.
+* **Missing Values:** The `league_position` variable contains `null` values that must be addressed. Additionally, manual checks for data integrity and correctness were required across the `dcaribou` datasets to ensure consistency.
+* **Scope:** The raw `dcaribou` CSVs contain a massive amount of historical and global data. The data quality is sufficient, but the sheer volume necessitates strict filtering to isolate the relevant time periods and leagues for our specific project scope.
 
 ## Processed Data
+
 ### Overview Processed Datasets
 
 : Overview of processed datasets used in the project. {#tbl-processed-overview}
 
-| Name | Quelle | Storage location |
-|----------------|-----------------------------------------|--------------------------------------------------------------------------|
-| Processed Dataset 1      | Name/short description of the data source | Link and/or short description of the location where the data is stored, e.g. accessible to the team |
-| Processed Dataset 2      | …                                       | …                                                                        |
+| Name | Source | Storage location |
+| --- | --- | --- |
+| Filtered Kaggle Dataframes | `clubs.csv`, `games.csv`, etc. | Handled in-memory via Python/Quarto environment |
+| Cleaned Season-Long Dataframes | `ES1_long.jsonl`, etc. | Handled in-memory via Python/Quarto environment |
 
-### Details Processed Dataset 1
+### Details Processed Dataset 1: Filtered & Cleaned Dataframes
 
-- Description of what information the dataset contains
-- Details and reasons for the processing steps -> Traceability and ensuring reproducibility
-- How can the data be accessed? Description, scripts, tools, ...
-- ...
-
-#### Data Catalogue
-
-
-#### If applicable: Entity Relationship Diagram
+* **Description:** This represents the combined and cleaned state of the raw CSV and JSONL datasets, ready for exploratory visualisations and modelling within our Quarto documents.
+* **Details and reasons for the processing steps:**
+* **Filtering:** The raw Kaggle datasets were heavily filtered to include only the specific leagues and relevant time periods required for the project.
+* **Data Cleaning & Type Casting:** As identified in the EDA, string variables from the JSONL files (`stadium_seats`, `foreigners_percentage`, `average_age`) were stripped of text characters (like " Seats" or " %") and cast to appropriate numeric data types using Python (Pandas).
+* **Integrity Checks:** Manual checks were implemented to ensure data correctness and referential integrity between the `club_id` in the newly scraped JSONL files and the existing Kaggle CSVs.
 
 
-#### Data Chracteristics and Quality
-
-
-### Details Processed Dataset 2
-...
+* **How can the data be accessed:** The transformations are scripted directly in Python within the Quarto environment, meaning the processed data exists as accessible DataFrames ready for Plotly integration.
