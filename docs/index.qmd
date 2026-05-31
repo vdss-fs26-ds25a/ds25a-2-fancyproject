@@ -223,9 +223,9 @@ warnings.filterwarnings('ignore')
 
 _pjs_path = _os.path.join(_os.path.dirname(plotly.__file__), 'package_data', 'plotly.min.js')
 with open(_pjs_path, 'r', encoding='utf-8') as _pf:
-    _pjs = _pf.read()
+    _pjs = _pf.read()
 with open('_plotly_inject.html', 'w', encoding='utf-8') as _hf:
-    _hf.write(f'<script type="text/javascript">\n{_pjs}\n</script>\n')
+    _hf.write(f'<script type="text/javascript">\n{_pjs}\n</script>\n')
 
 TOP5    = ['GB1','ES1','L1','IT1','FR1']
 LNAMES  = {'GB1':'Premier League','ES1':'La Liga','L1':'Bundesliga','IT1':'Serie A','FR1':'Ligue 1'}
