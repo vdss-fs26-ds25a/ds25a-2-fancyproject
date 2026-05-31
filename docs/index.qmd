@@ -1,16 +1,16 @@
 ---
 format:
-  html:
-    self-contained: true
-    toc: false
-    page-layout: full
-    theme: none
-    css: styles.css
-    include-in-header: _plotly_inject.html
+  html:
+    self-contained: true
+    toc: false
+    page-layout: full
+    theme: none
+    css: styles.css
+    include-in-header: _plotly_inject.html
 execute:
-  echo: false
-  warning: false
-  message: false
+  echo: false
+  warning: false
+  message: false
 ---
 
 ```{=html}
