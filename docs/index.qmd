@@ -977,8 +977,8 @@ display(HTML(sec(
 ```
 
 ```{python}
-#| label: s3a-beeswarm
-# ── Chart 3A: Interactive Strip plot — top players by MV over time ──────────
+#| label: s3a-concentration
+# ── Chart 3A: Smooth Stacked Area — Top 100 players by MV over time ──────────
 
 # 1. Map valuations to seasons
 pv = pv_raw.copy()
@@ -991,109 +991,71 @@ pv5 = pv5[pv5['season'].between(2010, 2024)]
 
 # 2. Get the latest valuation for each player within each season
 season_pv = pv5.sort_values('date').groupby(['season', 'player_id']).last().reset_index()
-season_pv = season_pv.merge(players, on='player_id', how='left')
 season_pv['mv_m'] = season_pv['market_value_in_eur'] / 1e6
 
-# 3. Filter to the top 300 most valuable players per season to avoid massive clutter
-top_per_season = season_pv.groupby('season', group_keys=False).apply(lambda x: x.nlargest(300, 'mv_m'))
-seasons = sorted(top_per_season['season'].unique(), reverse=True)
+# 3. Filter to the top 100 most valuable players per season
+top100_per_season = season_pv.groupby('season', group_keys=False).apply(lambda x: x.nlargest(100, 'mv_m'))
+
+# 4. Aggregate player counts per league per season and pivot for the area chart
+league_counts = top100_per_season.groupby(['season', 'player_club_domestic_competition_id']).size().reset_index(name='count')
+pivot_counts = league_counts.pivot(index='season', columns='player_club_domestic_competition_id', values='count').fillna(0)
+
+# Ensure all seasons are present
+seasons_range = list(range(2010, 2025))
+pivot_counts = pivot_counts.reindex(seasons_range).fillna(0)
 
 fig = go.Figure()
 
-# Generate traces for each season and each league
-for ssn in seasons:
-    ssn_data = top_per_season[top_per_season['season'] == ssn]
-    for lg in TOP5:
-        _d = ssn_data[ssn_data['player_club_domestic_competition_id'] == lg]
-        
-        fig.add_trace(go.Box(
-            x=_d['mv_m'],
-            y=[LNAMES[lg]] * len(_d),
-            name=LNAMES[lg],
-            legendgroup=LNAMES[lg],
-            showlegend=bool(ssn == seasons[0]), # Cast to standard Python bool to satisfy Plotly
-            boxpoints='all',
-            jitter=0.6,
-            pointpos=0, # Centers the beeswarm directly on the axis line
-            fillcolor='rgba(0,0,0,0)',
-            line=dict(color='rgba(0,0,0,0)'), # Hides the actual box
-            marker=dict(
-                color=LCOLORS[lg], 
-                size=8, 
-                opacity=0.75,
-                line=dict(color='rgba(0,0,0,0.4)', width=0.8)
-            ),
-            text=_d['name'].fillna(''),
-            customdata=np.column_stack([
-                _d['sub_position'].fillna(''),
-                _d['mv_m'].round(1)
-            ]),
-            hovertemplate=(
-                '<b>%{text}</b><br>'
-                'Position: %{customdata[0]}<br>'
-                'Marktwert: €%{customdata[1]:.1f}M<extra>' + LNAMES[lg] + '</extra>'
-            ),
-            visible=bool(ssn == seasons[0]) # Cast to standard Python bool to satisfy Plotly
-        ))
-
-# Create dropdown buttons to toggle seasons
-buttons = []
-traces_per_season = len(TOP5)
-for i, ssn in enumerate(seasons):
-    visible_array = [False] * (len(seasons) * traces_per_season)
-    for j in range(traces_per_season):
-        visible_array[i * traces_per_season + j] = True
-        
-    buttons.append(dict(
-        label=f"{ssn}/{str(ssn+1)[-2:]}",
-        method="update",
-        args=[{"visible": visible_array}]
+# Generate smooth stacked area traces
+# TOP5 order puts GB1 at the bottom, creating a beautiful "rising tide" effect
+for lg in TOP5:
+    _color = LCOLORS[lg]
+    # Use the hex_to_rgba helper from your setup block for a softer fill
+    _rgba_fill = hex_to_rgba(_color, 0.75) 
+    
+    # Safely get the column data, or a series of 0s if the league dropped out entirely
+    _y_data = pivot_counts[lg] if lg in pivot_counts.columns else pd.Series(0, index=pivot_counts.index)
+    
+    fig.add_trace(go.Scatter(
+        x=pivot_counts.index,
+        y=_y_data,
+        name=LNAMES[lg],
+        mode='lines',
+        line=dict(width=2, color=_color, shape='spline', smoothing=0.8),
+        stackgroup='one', # This makes it stack dynamically
+        fillcolor=_rgba_fill,
+        hovertemplate='<b>%{x}</b><br>' + LNAMES[lg] + ': %{y} Spieler<extra></extra>'
     ))
 
 fig.update_layout(
-    xaxis_title='Marktwert (Mio. €)',
-    yaxis=dict(
-        title='',
-        categoryorder='array',
-        categoryarray=[LNAMES[lg] for lg in TOP5],
-        tickfont=dict(color='rgba(255,255,255,0.82)', size=15),
-        showgrid=False, zeroline=False
-    ),
-    updatemenus=[dict(
-        type='dropdown', direction='down',
-        x=0.0, xanchor='left', y=1.12, yanchor='bottom',
-        active=0, showactive=True, buttons=buttons,
-        bgcolor='rgba(10,28,12,0.96)', bordercolor='rgba(255,255,255,0.28)', borderwidth=1,
-        font=dict(color='rgba(255,255,255,0.92)', size=14),
-        pad=dict(l=6, r=6, t=4, b=4)
-    )],
-    # Legend pushed to the right to accommodate the dropdown menu on the left
-    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='right', x=1),
+    xaxis_title='Saison',
+    yaxis_title='Anzahl Spieler (Top 100)',
+    # Lock the Y-axis to 100 since we are strictly looking at the top 100 players
+    yaxis=dict(range=[0, 100], fixedrange=True),
+    legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
 themed(fig, height=650)
 
-_chart_id_beeswarm = 'chart-beeswarm'
-_chart_html_beeswarm = fig.to_html(
-    full_html=False, include_plotlyjs=False, div_id=_chart_id_beeswarm,
+_chart_id_concentration = 'chart-concentration'
+_chart_html_concentration = fig.to_html(
+    full_html=False, include_plotlyjs=False, div_id=_chart_id_concentration,
     config={'responsive': True, 'displayModeBar': False, 'scrollZoom': False}
 )
 
 display(HTML(sec(
     'III · Marktwert-Konzentration',
     'Die teuersten Spieler Europas — und wo sie spielen.',
-    ('Jeder Punkt ist ein Spieler: sein aktueller Marktwert auf der X-Achse, '
-     'seine Liga auf der Y-Achse. Wählen Sie über das Dropdown-Menü verschiedene Saisons, '
-     'um zu sehen, wie sich die Konzentration der Top-Spieler über die Jahre verschoben hat. '
-     'Das Muster ist deutlich: Im oberen Wertebereich beginnen im Laufe der Zeit die '
-     'englischen Farben zu dominieren.'),
-    _chart_html_beeswarm,
+    ('Dieses Flächendiagramm zeigt, wie viele der weltweit 100 wertvollsten Spieler pro Saison '
+     'in welcher Liga unter Vertrag standen. Das fliessende Muster macht die Verschiebung auf einen Blick deutlich: '
+     'Während sich das Elite-Talent 2010 noch relativ gleichmässig auf Spanien, England und '
+     'Deutschland verteilte, schwillt der englische Anteil über die Jahre wie eine Welle an.'),
+    _chart_html_concentration,
     hl=('Die Premier League hortet mittlerweile mehr Hochkaräter als die anderen vier Top-Ligen '
-        'zusammen. In der jüngsten Auswertung stellt sie die überwältigende Mehrheit der Spieler '
-        'mit einem Marktwert über €40M.'),
+        'zusammen. In der jüngsten Auswertung drängt sie die anderen Ligen beinahe komplett aus der '
+        'absoluten Weltspitze.'),
     hl_type='red',
-    cap='Die 300 wertvollsten Spieler pro Saison · Basierend auf Transfermarkt.de'
-)))
-```
+    cap='Die 100 wertvollsten Spieler pro Saison · Basierend auf Transfermarkt.de'
+)))```
 
 ```{python}
 #| label: s4a-mv-corr
