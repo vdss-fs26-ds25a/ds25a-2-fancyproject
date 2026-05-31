@@ -748,7 +748,12 @@ for i, y in enumerate(seasons_desc):
         marker=dict(colors=_colors, line=dict(width=1.5, color='rgba(255,255,255,0.7)')),
         hovertemplate='<b>%{label}</b><br>%{text}<extra></extra>',
         branchvalues='remainder',
-        root_color='rgba(0,0,0,0)',
+        root_color='rgba(20,20,20,0.85)', # Gibt dem "Gesamt" Pfad-Button einen sichtbaren, dunklen Hintergrund
+        pathbar=dict(
+            visible=True,
+            thickness=36, # Macht den Button oben etwas breiter
+            textfont=dict(size=16, color='#ffffff', family='Oswald') # Weiße Schrift für guten Kontrast auf dem dunklen Button
+        ),
         maxdepth=2,  # Stops navigation depth at League level. Club clicks zoom the parent league instead.
         visible=(i == 0) # Only the newest year is visible by default
     ))
@@ -788,16 +793,17 @@ _chart_html_mosaic = fig_mosaic.to_html(
 )
 
 display(HTML(sec(
-    'I · Kadermarktwerte',
+    'II · Kaderwerte: Verteilung',
     'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
     ('Die Kachelgröße spiegelt den kumulierten Kaderwert wider. '
      'Klicken Sie auf eine Liga oder einen Club, um diese Liga heranzuzoomen und die genauen Proportionen aller Vereine zu betrachten. '
      'Nutzen Sie das Dropdown-Menü, um die Entwicklung über die Saisons hinweg zu betrachten.'),
     _chart_html_mosaic,
-    hl=('Die finanzielle Dominanz in Kadermarktwerten der Premier League ist gross. '
-        '<strong>Keine Paarung von 2 anderen Top-5-Ligen übertrifft die Kaderwerte der Premier League.</strong>'),
+    hl=('Die finanzielle Dominanz der englischen Liga ist erdrückend. '
+        '<strong>Fast das gesamte Volumen der restlichen Top-Ligen wird von einer einzigen Liga aufgewogen.</strong>'),
     hl_type='red',
-    cap='Kaderwerte der Top-5-Ligen'
+    cap='Kaderwerte der Top-5-Ligen · Basierend auf Transfermarkt-Daten',
+    bridge='Hat dieses Geld auch strukturelle Auswirkungen auf die Transfers?'
 )))
 ```
 
