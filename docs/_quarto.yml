@@ -5,7 +5,7 @@ lang: en
 language:
   section-title-appendices: "Appendix"
 website:
-  title: "Football Dashboard"
+  title: "Dashboard"
   search: false                  
   navbar:
     background: "#3c7726"        
