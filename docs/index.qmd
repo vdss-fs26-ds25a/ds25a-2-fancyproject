@@ -1207,7 +1207,7 @@ display(HTML(sec(
       <p class="end-meta">
         Jay Bärtschi &nbsp;·&nbsp;
         Noa Medved &nbsp;·&nbsp;
-        John Wiese &nbsp;·&nbsp;
+        John Wiese &nbsp;
       </p>
     </div>
   </div>
