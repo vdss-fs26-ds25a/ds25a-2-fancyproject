@@ -677,7 +677,7 @@ _toggle_js = '''
 ''' % _chart_id
 
 display(HTML(sec(
-    'I · Kadermarktwerte',
+    'I',
     'Die Top-5-Ligen im Vergleich',
     ('Jeder Balken zeigt den Kadermarktwert einer Liga in einer Saison — die Summe der '
      'von Transfermarkt geschätzten Werte aller Erstligaspieler. Bis etwa 2015 lagen die '
@@ -793,8 +793,8 @@ _chart_html_mosaic = fig_mosaic.to_html(
 )
 
 display(HTML(sec(
-    'II · Kaderwerte: Verteilung',
-    'Die Premier League nimmt fast die Hälfte des Gesamtwertes ein.',
+    'II',
+    'Kadermarktwerte nach Liga und Verein',
     ('Die Kachelgröße spiegelt den kumulierten Kaderwert wider. '
      'Klicken Sie auf eine Liga oder einen Club, um diese Liga heranzuzoomen und die genauen Proportionen aller Vereine zu betrachten. '
      'Nutzen Sie das Dropdown-Menü, um die Entwicklung über die Saisons hinweg zu betrachten.'),
@@ -910,7 +910,7 @@ _lines = ', '.join(f'aus {LNAMES[lg]} <strong>€{v:.1f} Mrd.</strong>'
                    for lg, v in _ranked.items())
 
 display(HTML(sec(
-    'II · Transfers',
+    'III',
     'Transfers zwischen Top-5-Ligen',
     ('Links steht jede Liga als <em>Verkäufer</em>, rechts dieselbe Liga als <em>Käufer</em>. '
      'Die Breite jedes Bandes entspricht der Transfersumme, die zwischen den beiden Ligen floss. '
@@ -964,7 +964,7 @@ fig.update_layout(
 themed(fig, height=650)
 
 display(HTML(sec(
-    'III · Transfers',
+    'IV',
     'Die Transferbilanzen der Ligen',
     ('Die kumulierte Netto-Transferbilanz zeigt den strukturellen Trend: Wer baut über die Jahre Transferüberschüsse auf, und wer häuft ein Defizit an? '
      'Negative Werte bedeuten, dass insgesamt mehr für Spieler ausgegeben als eingenommen wurde. '
@@ -978,9 +978,9 @@ display(HTML(sec(
 
 ```{python}
 #| label: s3a-concentration
-# ── Chart 3A: Smooth Stacked Area — Top 100 players by MV over time ──────────
+# Chart 3A: Smooth Stacked Area, Top 150 players by MV over time
 
-# 1. Map valuations to seasons
+# Map valuations to seasons
 pv = pv_raw.copy()
 pv['date'] = pd.to_datetime(pv['date'], errors='coerce')
 pv5 = pv[pv['player_club_domestic_competition_id'].isin(TOP5)].copy()
@@ -989,15 +989,15 @@ pv5 = pv[pv['player_club_domestic_competition_id'].isin(TOP5)].copy()
 pv5['season'] = pv5['date'].dt.year - (pv5['date'].dt.month < 7).astype(int)
 pv5 = pv5[pv5['season'].between(2010, 2024)]
 
-# 2. Get the latest valuation for each player within each season
+# Get the latest valuation for each player within each season
 season_pv = pv5.sort_values('date').groupby(['season', 'player_id']).last().reset_index()
 season_pv['mv_m'] = season_pv['market_value_in_eur'] / 1e6
 
-# 3. Filter to the top 100 most valuable players per season
-top100_per_season = season_pv.groupby('season', group_keys=False).apply(lambda x: x.nlargest(100, 'mv_m'))
+# Filter to the top 150 most valuable players per season
+top150_per_season = season_pv.groupby('season', group_keys=False).apply(lambda x: x.nlargest(150, 'mv_m'))
 
-# 4. Aggregate player counts per league per season and pivot for the area chart
-league_counts = top100_per_season.groupby(['season', 'player_club_domestic_competition_id']).size().reset_index(name='count')
+# Aggregate player counts per league per season and pivot for the area chart
+league_counts = top150_per_season.groupby(['season', 'player_club_domestic_competition_id']).size().reset_index(name='count')
 pivot_counts = league_counts.pivot(index='season', columns='player_club_domestic_competition_id', values='count').fillna(0)
 
 # Ensure all seasons are present
@@ -1029,9 +1029,9 @@ for lg in TOP5:
 
 fig.update_layout(
     xaxis_title='Saison',
-    yaxis_title='Anzahl Spieler (Top 100)',
-    # Lock the Y-axis to 100 since we are strictly looking at the top 100 players
-    yaxis=dict(range=[0, 100], fixedrange=True),
+    yaxis_title='Anzahl Spieler (Top 150)',
+    # Lock the Y-axis to 150 since we are strictly looking at the top 150 players
+    yaxis=dict(range=[0, 150], fixedrange=True),
     legend=dict(orientation='h', yanchor='bottom', y=1.01, xanchor='left', x=0)
 )
 themed(fig, height=650)
@@ -1043,17 +1043,17 @@ _chart_html_concentration = fig.to_html(
 )
 
 display(HTML(sec(
-    'III · Marktwert-Konzentration',
-    'Die teuersten Spieler Europas — und wo sie spielen.',
-    ('Dieses Flächendiagramm zeigt, wie viele der weltweit 100 wertvollsten Spieler pro Saison '
-     'in welcher Liga unter Vertrag standen. Das fliessende Muster macht die Verschiebung auf einen Blick deutlich: '
-     'Während sich das Elite-Talent 2010 noch relativ gleichmässig verteilte,' 
+    'V',
+    'Verteilung der Top-150-Spieler nach Marktwert',
+    ('Dieses Flächendiagramm zeigt, wie viele der weltweit 150 wertvollsten Spieler pro Saison '
+     'in welcher Liga unter Vertrag standen. Das fliessende Muster macht die Veränderung auf einen Blick deutlich: '
+     'Während sich das Elite-Talent 2010 noch im Vergleich gleichmässig verteilte,' 
      'wurde der Anteil der englischen Premier League über die Jahre grösser.'),
     _chart_html_concentration,
-    hl=('Die Premier League hortet mittlerweile <strong> fast gleich viele </strong> Top-100-Spieler, als die anderen vier Top-Ligen '
+    hl=('Die Premier League hortet mittlerweile <strong> fast gleich viele </strong> Top-150-Spieler, als die anderen vier Top-Ligen '
         'zusammen.'),
     hl_type='red',
-    cap='Die 100 wertvollsten Spieler pro Saison'
+    cap='Die 150 wertvollsten Spieler pro Saison'
 )))
 ```
 
@@ -1090,7 +1090,7 @@ fig.update_layout(
 themed(fig, height=620)
 
 display(HTML(sec(
-    'IV · Kadermarktwert',
+    'VI',
     'Korrelation zwischen Kadermarktwert und Liga-Erfolg',
     ('Die Pearson-Korrelation misst, wie stark der Kaderwert den Tabellenplatz voraussagt '
      '(1.0 = perfekte Übereinstimmung, 0 = kein Zusammenhang). '
@@ -1130,7 +1130,7 @@ fig.update_layout(
 themed(fig, height=600)
 
 display(HTML(sec(
-    'IV · Kadermarktwert',
+    'VII',
     'Konzentration der Kadermarktwerte auf Top-Klubs',
     ('Wie viel Prozent des gesamten Kaderwerts einer Liga entfällt auf die vier reichsten Klubs? '
      'Ein hoher Wert bedeutet: Wenige Klubs haben fast alles, der Rest kämpft um Reste. '
