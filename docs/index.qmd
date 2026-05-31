@@ -1047,8 +1047,8 @@ display(HTML(sec(
     'Die teuersten Spieler Europas — und wo sie spielen.',
     ('Dieses Flächendiagramm zeigt, wie viele der weltweit 100 wertvollsten Spieler pro Saison '
      'in welcher Liga unter Vertrag standen. Das fliessende Muster macht die Verschiebung auf einen Blick deutlich: '
-     'Während sich das Elite-Talent 2010 noch relativ gleichmässig auf Spanien, England und '
-     'Deutschland verteilte, schwillt der englische Anteil über die Jahre wie eine Welle an.'),
+     'Während sich das Elite-Talent 2010 noch relativ gleichmässig verteilte,' 
+     'wurde der Anteil der englischen Premier League über die Jahre grösser.'),
     _chart_html_concentration,
     hl=('Die Premier League hortet mittlerweile <strong> fast gleich viele </strong> Top-100-Spieler, als die anderen vier Top-Ligen '
         'zusammen.'),
