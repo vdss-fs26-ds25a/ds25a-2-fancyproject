@@ -17,11 +17,6 @@ website:
         text: Projektcharta
       - href: data_report.qmd
         text: Datenbericht
-  sidebar:
-    style: "floating"
-    search: false                
-    contents:
-      - index.qmd
 format:
   html:
     theme: cosmo

@@ -4,7 +4,7 @@ title: "Projektcharta"
 
 # Projektcharta
 
-## 1 Kontext und Umfang
+## Kontext und Umfang
 
 Der europäische Spitzenfussball hat sich in den letzten Jahren zu einem Milliardenmarkt entwickelt. Vereine investieren jährlich enorme Summen in neue Spieler, während Marktwerte stetig steigen und neue Transferrekorde regelmässig Schlagzeilen machen. Gleichzeitig bleibt für viele Fans und selbst für dateninteressierte Beobachter unklar, wie sich diese Entwicklungen langfristig verändert haben und welche Vereine oder Ligen den europäischen Transfermarkt tatsächlich dominieren.
 
@@ -18,7 +18,7 @@ Das Endprodukt ist ein interaktives Dashboard, das historische Marktwerte, Trans
 
 ---
 
-## 2 Projektziele und Erfolgskriterien
+## Projektziele und Erfolgskriterien
 
 Die Projektziele orientieren sich an den Bedürfnissen der Zielgruppen und daran, ob das Dashboard wirtschaftliche Entwicklungen im europäischen Fussball verständlich und nachvollziehbar vermittelt.
 
@@ -31,7 +31,7 @@ Die Projektziele orientieren sich an den Bedürfnissen der Zielgruppen und daran
 * Komplexe Finanzdaten verständlich für Fussballfans und gleichzeitig ausreichend detailliert für datenaffine Nutzer aufbereiten.
 * Eine reproduzierbare Datenpipeline von der Datenerhebung bis zur Visualisierung bereitstellen.
 
-### 2.1 Erfolgskriterien
+### Erfolgskriterien
 
 Die Qualität des Projekts wird nicht anhand der Anzahl Visualisierungen gemessen, sondern daran, ob Nutzer relevante Erkenntnisse effizient gewinnen können.
 
@@ -45,13 +45,13 @@ Die Qualität des Projekts wird nicht anhand der Anzahl Visualisierungen gemesse
 | Reproduzierbarkeit     | Das Dashboard kann aus dem GitHub-Repository vollständig reproduziert werden |
 | Datenumfang            | Historische Daten von 2010–2025 für die UEFA Top-5-Ligen                     |
 
-### 2.2 Out of Scope
+### Out of Scope
 
 Nicht Bestandteil des Projekts sind Echtzeitdaten, Live-Transfers, Transferprognosen, Machine-Learning-Modelle oder detaillierte Analysen einzelner Spielerkarrieren. Der Fokus liegt ausschliesslich auf historischen Marktwert- und Transferdaten der UEFA Top-5-Ligen.
 
 ---
 
-## 3 Stakeholder Analysis
+## Stakeholder Analysis
 
 Die primären Stakeholder sind die VDSS-Dozierenden, welche die Projektanforderungen definieren, Feedback geben und die abschliessende Bewertung vornehmen. Das Projektteam ist für sämtliche Deliverables verantwortlich und muss die Umsetzung parallel zu weiteren Modulen organisieren.
 
@@ -61,9 +61,9 @@ Das Projektteam besitzt sowohl das höchste Interesse als auch den grössten Ein
 
 ---
 
-## 4 User Analysis
+## User Analysis
 
-### 4.1 Persona 1: Lukas Brenner (28), Data Analyst
+### Persona 1: Lukas Brenner (28), Data Analyst
 
 Lukas arbeitet als Data Analyst in einem Schweizer Finanzunternehmen und verfolgt den europäischen Fussball seit seiner Jugend mit grossem Interesse. In seiner Freizeit analysiert er Spielstatistiken, Marktwerte und Transferdaten auf verschiedenen Plattformen. Er interessiert sich insbesondere für wirtschaftliche Zusammenhänge im Fussball und nutzt häufig mehrere Datenquellen gleichzeitig, um eigene Analysen durchzuführen.
 
@@ -88,7 +88,7 @@ Lukas arbeitet als Data Analyst in einem Schweizer Finanzunternehmen und verfolg
 * Transparente Kennzahlen und nachvollziehbare Visualisierungen.
 * Zugriff auf historische Daten ohne zusätzliche Vorverarbeitung.
 
-### 4.2 Persona 2: Miriam Keller (34), Fussballfan
+### Persona 2: Miriam Keller (34), Fussballfan
 
 Miriam ist Lehrerin in Zürich und verfolgt regelmässig die Bundesliga sowie die Champions League. Sie interessiert sich vor allem für ihren Lieblingsverein und möchte besser verstehen, wie sich Transfers und Investitionen auf die Entwicklung eines Clubs auswirken. Mit Finanzdaten und Statistik hat sie wenig Erfahrung, schätzt jedoch übersichtliche und verständliche Visualisierungen.
 
@@ -115,9 +115,9 @@ Miriam ist Lehrerin in Zürich und verfolgt regelmässig die Bundesliga sowie di
 
 ---
 
-## 5 Situation Assessment
+## Situation Assessment
 
-### 5.1 Daten
+### Daten
 
 Die Daten stammen von Transfermarkt.de und werden mittels automatisierter Datenerhebung gesammelt. Der Datensatz umfasst historische Marktwerte, Transferausgaben, Transfereinnahmen und Transferbilanzen europäischer Spitzenvereine zwischen 2010 und 2025.
 
@@ -133,11 +133,11 @@ Wichtige Variablen sind:
 
 Nach der Bereinigung entsteht ein konsistenter Datensatz für die Vereine der UEFA Top-5-Ligen.
 
-### 5.2 Team und Tools
+### Team und Tools
 
 Das Projekt wird von einem dreiköpfigen Team umgesetzt. Für die Datenaufbereitung werden Python und pandas eingesetzt. Die Visualisierungen werden mit Plotly erstellt und in eine Quarto-Webanwendung integriert. GitHub dient der Versionskontrolle und GitHub Pages dem Deployment.
 
-### 5.3 Constraints und Risiken
+### Constraints und Risiken
 
 Da die Daten mittels Web Scraping erhoben werden, können Änderungen an der Struktur von Transfermarkt.de die Datenerfassung beeinträchtigen. Zudem besteht das Risiko unvollständiger historischer Daten oder Performanceprobleme bei grossen Datensätzen.
 
@@ -150,13 +150,13 @@ Da die Daten mittels Web Scraping erhoben werden, können Änderungen an der Str
 
 ---
 
-## 6 Visualisierungskonzept
+## Visualisierungskonzept
 
 Das Produkt ist ein interaktives Dashboard zur Analyse wirtschaftlicher Entwicklungen im europäischen Spitzenfussball.
 
 Im Gegensatz zu einer geführten Story steht hier die eigenständige Exploration im Vordergrund. Nutzer sollen Vereine, Ligen und Zeiträume frei auswählen und ihre eigenen Fragestellungen untersuchen können. Die Interaktivität dient dabei sowohl der Orientierung als auch der vertieften Analyse.
 
-### 6.1 Marktwertentwicklungen
+### Marktwertentwicklungen
 
 Liniendiagramme visualisieren die Entwicklung von Marktwerten über mehrere Saisons hinweg. Dadurch werden langfristige Trends, Wachstumsphasen und wirtschaftliche Veränderungen einzelner Vereine oder Ligen sichtbar.
 
@@ -164,7 +164,7 @@ Liniendiagramme visualisieren die Entwicklung von Marktwerten über mehrere Sais
 
 Lukas benötigt detaillierte Zeitvergleiche für Analysen. Miriam kann dadurch auf einen Blick erkennen, wie sich ihr Verein im Laufe der Jahre entwickelt hat.
 
-### 6.2 Transferausgaben
+### Transferausgaben
 
 Balkendiagramme zeigen die höchsten Transferausgaben einzelner Vereine oder Ligen innerhalb eines gewählten Zeitraums.
 
@@ -172,7 +172,7 @@ Balkendiagramme zeigen die höchsten Transferausgaben einzelner Vereine oder Lig
 
 Rankings sind leicht verständlich und ermöglichen schnelle Vergleiche zwischen verschiedenen Akteuren des Transfermarktes.
 
-### 6.2 Transferbilanzen
+### Transferbilanzen
 
 Visualisierungen der Nettotransferbilanzen machen sichtbar, welche Vereine langfristig mehr investieren als einnehmen und welche Vereine als Ausbildungs- oder Verkaufsclubs agieren.
 
@@ -180,7 +180,7 @@ Visualisierungen der Nettotransferbilanzen machen sichtbar, welche Vereine langf
 
 Diese Kennzahl liefert einen zusätzlichen wirtschaftlichen Blick auf den Transfermarkt und ergänzt reine Ausgabenbetrachtungen.
 
-### 6.4 Liga- und Vereinsvergleiche
+### Liga- und Vereinsvergleiche
 
 Interaktive Vergleichsansichten ermöglichen die Gegenüberstellung mehrerer Vereine oder Ligen innerhalb desselben Zeitraums.
 
@@ -188,7 +188,7 @@ Interaktive Vergleichsansichten ermöglichen die Gegenüberstellung mehrerer Ver
 
 Diese Funktion unterstützt sowohl die explorativen Bedürfnisse von Lukas als auch die einfache Vergleichbarkeit, die Miriam sucht.
 
-### 6.5 Interaktivität
+### Interaktivität
 
 Das Dashboard bietet:
 
@@ -200,7 +200,7 @@ Das Dashboard bietet:
 
 Die gewählten Visualisierungen sollen wirtschaftliche Entwicklungen verständlich kommunizieren und gleichzeitig genügend analytische Tiefe für fortgeschrittene Nutzer bieten.
 
-## 7 Project Plan
+## Project Plan
 
 Der Projektplan gilt als Leitfaden für die Arbeiten im Datenvisualisierungsprojekt:
 
@@ -211,7 +211,7 @@ Der Projektplan gilt als Leitfaden für die Arbeiten im Datenvisualisierungsproj
 | Woche 10-12   | Abschluss des Dashboards, sonstige Schreibarbeiten   |
 | Woche 13-14   | Abschlussarbeiten, Vorbeiretung für die Präsentation |                
 
-## 8 Rollen und Kontaktdetails
+## Rollen und Kontaktdetails
 
 Jay Bärtschi;
 Zuständig für die Code-Implementierung des Dashboards,
