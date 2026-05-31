@@ -1168,6 +1168,80 @@ display(HTML(sec(
 )))
 ```
 
+```{python}
+#| label: fazit-slopegraph
+# ── Fazit: slopegraph 2010 → 2024, squad market value per league ─
+_yr0, _yr1 = 2010, 2024
+_order = sorted(TOP5, key=lambda lg: mv_pivot.loc[_yr1, lg], reverse=True)
+
+fig = go.Figure()
+for lg in _order:
+    _v0, _v1 = mv_pivot.loc[_yr0, lg], mv_pivot.loc[_yr1, lg]
+    _is_pl = (lg == 'GB1')
+    fig.add_trace(go.Scatter(
+        x=[_yr0, _yr1], y=[_v0, _v1],
+        mode='lines+markers',
+        name=LNAMES[lg],
+        line=dict(color=LCOLORS[lg], width=4 if _is_pl else 2),
+        marker=dict(size=9 if _is_pl else 7, color=LCOLORS[lg]),
+        opacity=1.0 if _is_pl else 0.8,
+        hovertemplate='<b>%{x}</b>: €%{y:.2f} Mrd.<extra>' + LNAMES[lg] + '</extra>'
+    ))
+
+def _eur(v):
+    return '€' + ('%.1f' % v).replace('.', ',') + ' Mrd.'
+
+# Right-hand (2024) value labels with a minimum vertical gap so the clustered
+# leagues stay legible; text is coloured per league to tie it to its line.
+_gap, _last, _ann = 0.62, None, []
+for lg in _order:                                  # sorted high → low
+    _v1 = mv_pivot.loc[_yr1, lg]
+    _yl = _v1 if _last is None else min(_v1, _last - _gap)
+    _last = _yl
+    _txt = _eur(_v1)
+    if lg == 'GB1':
+        _txt += (' (×%.1f)' % (mv_pivot.loc[_yr1, lg] / mv_pivot.loc[_yr0, lg])).replace('.', ',')
+    _font = dict(color=LCOLORS[lg], size=15 if lg == 'GB1' else 14)
+    if lg == 'GB1':
+        _font['family'] = 'Oswald'
+    _ann.append(dict(x=_yr1 + 0.5, y=_yl, xref='x', yref='y', text=_txt,
+                     showarrow=False, xanchor='left', font=_font))
+
+# Anchor the standout line on the left as well.
+_ann.append(dict(x=_yr0 - 0.5, y=mv_pivot.loc[_yr0, 'GB1'], xref='x', yref='y',
+                 text=_eur(mv_pivot.loc[_yr0, 'GB1']), showarrow=False,
+                 xanchor='right', font=dict(color=LCOLORS['GB1'], size=14)))
+
+fig.update_layout(
+    xaxis=dict(tickmode='array', tickvals=[_yr0, _yr1],
+               ticktext=[str(_yr0), str(_yr1)], range=[2005.5, 2028.5], showgrid=False),
+    yaxis=dict(title='Kadermarktwert (Mrd. €)', range=[0, 14]),
+    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0),
+    annotations=_ann
+)
+themed(fig, height=600)
+fig.update_xaxes(showgrid=False)
+
+display(HTML(sec(
+    'Fazit',
+    'Aus einem engen Feld wird ein klarer Abstand',
+    ('Über fünfzehn Saisons ergibt sich ein einheitliches Bild. 2010 lagen die fünf Ligen '
+     'finanziell noch nah beieinander; die Premier League führte, aber mit überschaubarem '
+     'Abstand. In den Jahren danach stiegen die Kaderwerte überall — in England jedoch deutlich '
+     'schneller als auf dem Kontinent. Heute erreicht die Premier League rund das Doppelte der '
+     'nächstgrössten Liga und etwa die Hälfte des gesamten Kaderwerts der fünf Ligen. Höhere '
+     'Kaderwerte gehen dabei in allen Ligen mit besseren Tabellenplätzen einher, und die '
+     'Transferströme verstärken die Entwicklung, weil Talent überwiegend in Richtung der '
+     'finanzstärksten Liga wandert.'),
+    ch(fig),
+    hl=('2010 bewegten sich fünf Ligen in einer ähnlichen Grössenordnung. Fünfzehn Saisons '
+        'später bildet die Premier League finanziell <strong>eine eigene Kategorie.</strong>'),
+    hl_type='gold',
+    cap=('Kadermarktwert je Liga zu Saisonbeginn 2010 und 2024 · Marktwert = Summe der '
+         'geschätzten Spielerwerte eines Kaders, nicht Vereins- oder Unternehmenswert')
+)))
+```
+
 ```{=html}
 <section class="page page-end">
   <div class="page-inner">
