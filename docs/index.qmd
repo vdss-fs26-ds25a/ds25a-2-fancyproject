@@ -564,7 +564,7 @@ _intro_tiles = f'''
 
 _tm_img = (f'<img class="tm-logo-img" src="{_TM_LOGO}" alt="Transfermarkt.de">'
            if _TM_LOGO else '')
-_tm_btn = (f'<a class="hero-nav-btn tm-btn" href="[https://www.transfermarkt.de](https://www.transfermarkt.de)" '
+_tm_btn = (f'<a class="hero-nav-btn tm-btn" href="https://www.transfermarkt.de" '
            f'target="_blank" rel="noopener" title="Zu Transfermarkt.de">'
            f'{_tm_img}'
            f'<span class="hero-nav-text">'
