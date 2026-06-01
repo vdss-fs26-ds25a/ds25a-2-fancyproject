@@ -1082,12 +1082,12 @@ display(HTML(sec(
     'Rekord-Transfers',
     ('Jeder Balken zeigt den teuersten Transfer einer Saison. Der unangefochtene '
      'Rekordtransfer in diesem Zeitraum ist der Wechsel von Neymar zu '
-     'Paris Saint-Germain in 2017 für die Summe von 222 Millionen Euro.'
+     'Paris Saint-Germain in 2017 für die Summe von 222 Millionen Euro. '
      'Seitdem überschreiten die jährlichen Rekordsummen fast durchgehend '
      '100 Millionen Euro.'),
     ch(fig_bar),
     hl='In den Saisons 2020/21 bis 2024/25 gab der englische Verein Chelsea F.C. '
-       'total <strong>1,75 Milliarden Euro</strong> für Transfers aus. ',
+       'total <strong>1.75 Milliarden Euro</strong> für Transfers aus. ',
     hl_type='gold',
     cap='Höchste Ablösesumme pro Saison (2010–2024) · Farbe = Liga des aufnehmenden Vereins'
 )))
