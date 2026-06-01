@@ -1343,7 +1343,7 @@ display(HTML(sec(
      'Seit 2023 wird zudem der Begriff «Big Six» selbst infrage gestellt, da weitere Klubs wie '
      'Newcastle United und Aston Villa finanziell zu dieser Spitzengruppe aufgeschlossen haben, '
      'und da die Leistungen gewisser Top-6-Vereine deutlich unter den Erwartungen liegen '
-     '(z.B. Manchester United oder Tottenham Hotspurs))',
+     '(z.B. Manchester United oder Tottenham Hotspurs)'),
     ch(fig),
     hl=('Ungleichheit zeigt sich damit auf zwei Ebenen: zwischen den Ligen und innerhalb jeder '
         'einzelnen Liga, in der ein grosser Teil des Werts auf wenige Spitzenklubs entfällt.')
