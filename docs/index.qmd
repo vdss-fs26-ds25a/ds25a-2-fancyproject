@@ -939,10 +939,10 @@ display(HTML(sec(
      'der mit Abstand grösste: Sie verpflichtet aus allen vier anderen Ligen mehr Spieler, als '
      'sie dorthin abgibt.'),
     ch(fig),
-    hl=(f'Die grössten Zuflüsse in die Premier League (2010–2024): {_lines}. '
-        f'Insgesamt flossen <strong>€{_pl_in_total:.1f} Mrd.</strong> nach England, während nur '
-        f'<strong>€{_pl_out:.1f} Mrd.</strong> in die andere Richtung gingen, ein Negativsaldo '
-        f'von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel zwischen den Top-5-Ligen.'),
+    hl=(f'Die Premier League gab 2010–2024 €{_pl_in_total:.1f} Mrd. für Spieler aus den vier '
+        f'anderen Top-Ligen aus ({_lines}), während Klubs dieser Ligen nur €{_pl_out:.1f} Mrd. '
+        f'für PL-Spieler zahlten, ein Negativsaldo von <strong>€{_pl_net:.1f} Mrd.</strong> '
+        f'allein im Handel zwischen den Top-5-Ligen.'),
     hl_type='gold',
     cap='Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · Saison über das Menü wählbar'
 )))
