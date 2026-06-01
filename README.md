@@ -33,30 +33,27 @@
 
 Dieses Projekt umfasst Visualisierungen und Analysen von Marktwerten, Transfersummen und weiteren Geldgeschäften im europäischen Spitzenfussball für den Zeitraum 2010–2025.
 
-Das Dashboard bietet Einblicke in Marktwerttrends, Transferausgaben und Vergleiche in den Top-5-Ligen des europäischen Fussballverbands UEFA und dient als Analysewerkzeug für Sportdaten-Interessierte, Fussballfans und Soccer-Analytics-Spezialisten.
+Das Dashboard bietet Einblicke in Marktwerttrends, Transferausgaben und Vergleiche in den Top-5-Ligen des europäischen Fussballverbands UEFA.
 
 ### Was das Dashboard zeigt
 
 | Kapitel | Inhalt |
 | :--- | :--- |
-| **Kadermarktwerte** | Entwicklung der Liga-Kaderwerte über fünfzehn Saisons im direkten Vergleich |
-| **Verteilung nach Verein** | Interaktive Treemap der Kaderwerte je Liga und Klub mit Vereinswappen |
-| **Transferströme** | Sankey-Diagramm der Geldflüsse zwischen den Top-5-Ligen |
-| **Transferbilanzen** | Kumulierte Netto-Transferbilanz je Liga — Nettokäufer vs. Nettoverkäufer |
-| **Marktwert-Konzentration** | Verteilung der wertvollsten Spieler, regelbar von Top 10 bis Top 150 |
+| **Kadermarktwerte** | Entwicklung der Liga-Kaderwerte über 15 Saisons im direkten Vergleich |
+| **Verteilung nach Verein** | Treemap der Kaderwerte je Liga und Klub mit Vereinswappen |
+| **Transferströme** | Geldflüsse zwischen den Top-5-Ligen |
+| **Transferbilanzen** | Kumulierte Netto-Transferbilanz je Liga |
+| **Marktwert-Konzentration** | Verteilung der wertvollsten Spieler |
 | **Wert &harr; Erfolg** | Korrelation zwischen Kaderwert und Tabellenplatz je Liga und Saison |
-| **Rekord-Transfers** | Teuerster Transfer pro Saison über alle Ligen, mit Vereinswappen |
+| **Rekord-Transfers** | Teuerster Transfer pro Saison über alle Ligen|
 
 ---
 
 ## Daten & Methodik
 
-* **Datenakquise:** Wir nutzen einen automatisierten Scraper, um aktuelle und historische Marktwert- und Transferdaten direkt aus Transfermarkt.de zu beziehen.
+* **Datenakquise:** Zusätzlich zu bereitgestellten Daten nutzten wir einen Scraper, um aktuelle und historische Daten direkt von Transfermarkt.de zu beziehen.
 * **Visualisierung:** Die aufbereiteten Datensätze werden mit Python (`pandas`, `plotly`) innerhalb des Quarto-Frameworks zu interaktiven Visualisierungen verarbeitet.
 * **Deployment:** Das Dashboard wird via GitHub Actions auf GitHub Pages bereitgestellt.
-
-> [!NOTE]
-> Eine vollständige Dokumentation aller Roh- und verarbeiteten Datensätze, ihrer Schemata und Qualitätsmerkmale findet sich im **[Datenbericht](docs/data_report.qmd)**. Hinweis: «Marktwert» bezeichnet die geschätzten Spielerwerte von Transfermarkt, nicht den Vereins- oder Unternehmenswert.
 
 ### Scraper
 
@@ -115,8 +112,5 @@ Die Webseite im `.html`-Format befindet sich anschliessend im Ordner `docs/build
 
 <div align="center">
 
-**VDSS · FS26**
-
-Jay Bärtschi &nbsp;·&nbsp; Noa Medved &nbsp;·&nbsp; John Wiese
 
 </div>
