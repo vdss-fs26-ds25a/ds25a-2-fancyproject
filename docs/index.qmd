@@ -558,7 +558,7 @@ _intro_tiles = f'''
         </div>
         <div class="kpi-card">
           <span class="kpi-number">{_total_fee_fmt}</span>
-          <span class="kpi-label">Transfersumme von/zu Top-5-Klubs</span>
+          <span class="kpi-label">Totale Transfersumme</span>
         </div>
       </div>'''
 
