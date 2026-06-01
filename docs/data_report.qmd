@@ -147,7 +147,7 @@ Datenlage. Die wichtigsten Befunde:
   League, Pokalwettbewerbe, Nationalmannschaften) und reicht bis 2025; für die
   Tabellenberechnung wird auf `competition_type = domestic_league` und die fünf
   Ligen `GB1, ES1, L1, IT1, FR1` gefiltert. `home_/away_club_position` fehlen in
-  ≈ 29 % der Zeilen und werden nicht verwendet — die Tabellenplätze werden statt
+  ≈ 29 % der Zeilen und werden nicht verwendet, die Tabellenplätze werden statt
   dessen aus den Spielergebnissen neu berechnet.
 - **`player_valuations.csv`** ist mit 616'377 Zeilen die grösste Datei und
   deckt 2000–2026 ab; für das Dashboard relevant sind die Bewertungen ab 2010
@@ -197,7 +197,7 @@ plt.tight_layout(); plt.show()
 
 ### Details Datensatz 2: Saison-JSONL (Top-5-Ligen)
 
-Dieser Datensatz enthält Vereinskennzahlen pro Saison und Liga — unter anderem
+Dieser Datensatz enthält Vereinskennzahlen pro Saison und Liga, unter anderem
 Kadermarktwert, Transferein- und -ausgaben, Transferbilanz, Kaderdemografie und
 Stadiondaten. Er wurde selbst erhoben, weil die für das Dashboard zentrale
 Grösse (Kadermarktwert je Verein) im Kaggle-Datensatz nicht verfügbar ist
@@ -284,13 +284,13 @@ DataFrames, die unmittelbar die Visualisierungen speisen.
 
 ### Details verarbeitete Datensätze
 
-**`df` — Kaderkennzahlen je Verein und Saison.** Die fünf JSONL-Dateien werden
+**`df` : Kaderkennzahlen je Verein und Saison.** Die fünf JSONL-Dateien werden
 eingelesen, um die Liga (`competition_id`) ergänzt und auf die Saisons
 2010–2024 gefiltert. String-Felder mit Einheiten werden in Zahlen umgewandelt.
 `df` ist die zentrale Quelle für Kadermarktwerte, Transferbilanzen und die
 Konzentrationskennzahlen.
 
-**`tr` / `tr5` — Transfers mit Liga-Zuordnung.** `transfers.csv` wird zweimal
+**`tr` / `tr5` : Transfers mit Liga-Zuordnung.** `transfers.csv` wird zweimal
 mit `clubs.csv` verknüpft, um abgebender und aufnehmender Liga
 (`from_league`, `to_league`) zuzuordnen. `tr` enthält alle Transfers (Basis für
 die Rekord-Transfers je Saison über alle Ligen); `tr5` ist die Teilmenge der
@@ -299,13 +299,13 @@ Transfers *zwischen verschiedenen* Top-5-Ligen mit bekannter Ablöse
 bekannte Fehlbuchung von Transfermarkt (eine implausible Ablöse für einen
 Wechsel zu einem unterklassigen Verein) wird im Code gezielt entfernt.
 
-**`standings` — Tabellen aus Spielergebnissen.** Da `league_position` in beiden
+**`standings` : Tabellen aus Spielergebnissen.** Da `league_position` in beiden
 Rohquellen fehlt bzw. unbrauchbar ist, werden Punkte und Tabellenplätze aus
 `games.csv` neu berechnet: gefiltert auf `domestic_league` und die fünf Ligen,
 Punkte je Spiel (3/1/0), Aggregation je Verein und Saison, anschliessend
 Rangbildung.
 
-**`scatter_df` — Kaderwert gegen Tabellenplatz.** Verknüpfung der berechneten
+**`scatter_df` : Kaderwert gegen Tabellenplatz.** Verknüpfung der berechneten
 Tabellen mit den Kaderwerten aus `df`; Grundlage für die Korrelationsanalyse
 (Kaderwert ↔ Erfolg) und die Konzentrationskennzahlen (Anteil der Top-4-Vereine).
 
@@ -319,9 +319,9 @@ Verteilung auf die Ligen abgeleitet.
 Die Daten sind in Umfang und Qualität ausreichend, um die Visualisierungsziele
 des Dashboards zu erfüllen. Sie decken alle fünf Ligen über fünfzehn Saisons
 durchgängig ab und erlauben Vergleiche von Kaderwerten, Transferströmen,
-Marktwert-Konzentration und sportlichem Erfolg. Die wesentlichen Einschränkungen
-— leere Felder bei Kadermarktwert und Tabellenplatz in
-den Rohquellen — werden durch Filterung, eine ergänzende
+Marktwert-Konzentration und sportlichem Erfolg. Die einzigen Einschränkungen
+(leere Felder bei Kadermarktwert und Tabellenplatz in
+den Rohquellen) werden durch Filterung, eine ergänzende
 Eigenerhebung (JSONL-Kaderwerte) und Neuberechnung (Tabellen aus `games.csv`)
 aufgefangen. Eine inhaltliche Restunsicherheit bleibt: Transfermarkt-Marktwerte
 sind geschätzte Spielerwerte und keine Vereins- oder Unternehmenswerte; dies ist
