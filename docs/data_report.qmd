@@ -9,12 +9,9 @@ execute:
 
 # Datenbericht
 
-Dieser Bericht dokumentiert alle im Projekt verwendeten Daten, um die
-Nachvollziehbarkeit und Reproduzierbarkeit der Ergebnisse sicherzustellen und
-eine systematische Erweiterung der Datenbasis zu ermöglichen. Er beschreibt
-zunächst die Rohdaten (Herkunft, Beschaffung, Schema und Qualität) und
-anschliessend die daraus abgeleiteten, verarbeiteten Datensätze, die die
-Grundlage der Visualisierungen im Dashboard bilden.
+Dieser Bericht dokumentiert alle im Projekt verwendeten Daten. Er beschreibt
+zunächst die Rohdaten und anschliessend die daraus abgeleiteten, verarbeiteten 
+Datensätze.
 
 Sämtliche Daten stammen von [Transfermarkt.de](https://www.transfermarkt.de),
 einer öffentlich zugänglichen Datenbank für Fussballdaten. Es handelt sich um
@@ -42,7 +39,7 @@ verknüpfen.
 
 Der Datensatz enthält historische und aktuelle relationale Fussballdaten:
 Vereine, Spiele, Spieler, Marktwert-Verläufe und Transfers. Er stammt vom
-Kaggle-User `dcaribou` ([davidcariboo/player-scores](https://www.kaggle.com/datasets/davidcariboo/player-scores)),
+Kaggle-User `davidcariboo` ([davidcariboo/player-scores](https://www.kaggle.com/datasets/davidcariboo/player-scores)),
 der die Daten regelmässig von Transfermarkt.de aktualisiert, und umfasst fünf
 Dateien.
 
@@ -210,8 +207,7 @@ Grösse (Kadermarktwert je Verein) im Kaggle-Datensatz nicht verfügbar ist
   `FR1_long.jsonl`).
 - **Umfang:** insgesamt 1'466 Zeilen (eine je Verein und Saison), 183
   unterschiedliche Vereine, Saisons 2010–2024.
-- **Rechtliches / Governance:** öffentliche Daten, akademische Nutzung; die
-  Erhebung erfolgte ausschliesslich zu Projektzwecken.
+
 
 | Datei | Zeilen (Verein × Saison) |
 |---|---:|
