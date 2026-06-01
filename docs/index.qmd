@@ -1259,6 +1259,19 @@ for lg in TOP5:
 corr_df = pd.DataFrame(corr_rows)
 
 fig = go.Figure()
+
+fig.add_hrect(
+    y0=0.7, y1=1.0,
+    fillcolor='rgba(80, 200, 120, 0.14)',   # visible but transparent green tint
+    line_width=0,
+    layer='below',
+    annotation_text='Hohe / starke Korrelation (r ≥ 0.7)',
+    annotation_position='top left',
+    annotation_font=dict(size=11, color='rgba(255,255,255,0.75)')
+)
+# faint boundary line so the lower edge of the band is clearly readable
+fig.add_hline(y=0.7, line_color='rgba(80, 200, 120, 0.45)', line_dash='dash', line_width=1)
+
 for lg in TOP5:
     _d = corr_df[corr_df['competition_id']==lg].sort_values('season')
     fig.add_trace(go.Scatter(
@@ -1353,26 +1366,40 @@ for lg in _order:
 def _eur(v):
     return '€' + ('%.1f' % v).replace('.', ',') + ' Mrd.'
 
-# Right-hand (2024) value labels with a minimum vertical gap so the clustered
-# leagues stay legible; text is coloured per league to tie it to its line.
-_gap, _last, _ann = 0.62, None, []
-for lg in _order:                                  # sorted high → low
+def _factor(lg):
+    return ('×%.1f' % (mv_pivot.loc[_yr1, lg] / mv_pivot.loc[_yr0, lg])).replace('.', ',')
+
+_gap = 0.62
+_ann = []
+
+# Right-hand (2024) value + growth-factor labels for every league, with a
+# minimum vertical gap so the clustered leagues stay legible.
+_last = None
+for lg in _order:                                  # sorted high → low by 2024
     _v1 = mv_pivot.loc[_yr1, lg]
     _yl = _v1 if _last is None else min(_v1, _last - _gap)
     _last = _yl
-    _txt = _eur(_v1)
-    if lg == 'GB1':
-        _txt += (' (×%.1f)' % (mv_pivot.loc[_yr1, lg] / mv_pivot.loc[_yr0, lg])).replace('.', ',')
+    _txt = _eur(_v1) + ' (' + _factor(lg) + ')'
     _font = dict(color=LCOLORS[lg], size=15 if lg == 'GB1' else 14)
     if lg == 'GB1':
         _font['family'] = 'Oswald'
     _ann.append(dict(x=_yr1 + 0.5, y=_yl, xref='x', yref='y', text=_txt,
                      showarrow=False, xanchor='left', font=_font))
 
-# Anchor the standout line on the left as well.
-_ann.append(dict(x=_yr0 - 0.5, y=mv_pivot.loc[_yr0, 'GB1'], xref='x', yref='y',
-                 text=_eur(mv_pivot.loc[_yr0, 'GB1']), showarrow=False,
-                 xanchor='right', font=dict(color=LCOLORS['GB1'], size=14)))
+# Left-hand (2010) start-value labels for every league, same gap logic.
+# Sorted independently because the 2010 ranking differs from 2024.
+_order0 = sorted(TOP5, key=lambda lg: mv_pivot.loc[_yr0, lg], reverse=True)
+_last = None
+for lg in _order0:                                 # sorted high → low by 2010
+    _v0 = mv_pivot.loc[_yr0, lg]
+    _yl = _v0 if _last is None else min(_v0, _last - _gap)
+    _last = _yl
+    _font = dict(color=LCOLORS[lg], size=15 if lg == 'GB1' else 14)
+    if lg == 'GB1':
+        _font['family'] = 'Oswald'
+    _ann.append(dict(x=_yr0 - 0.5, y=_yl, xref='x', yref='y',
+                     text=_eur(_v0), showarrow=False,
+                     xanchor='right', font=_font))
 
 fig.update_layout(
     xaxis=dict(tickmode='array', tickvals=[_yr0, _yr1],
@@ -1388,7 +1415,7 @@ display(HTML(sec(
     'Fazit',
     'Aus einem engen Feld wird ein klarer Abstand',
     ('Über fünfzehn Saisons ergibt sich ein klares Bild. 2010 lagen die fünf Ligen '
-     'finanziell noch nah beieinander; die Premier League führte, aber mit überschaubarem '
+     'finanziell noch nah beieinander; die Premier League führte, aber mit relativ kleinem '
      'Abstand. In den Jahren danach stiegen die Kaderwerte überall, in England jedoch deutlich '
      'schneller als auf dem Kontinent. '
      'Höhere Kaderwerte gehen dabei in allen Ligen mit besseren Tabellenplätzen einher, und die '
@@ -1398,8 +1425,7 @@ display(HTML(sec(
     hl=('2010 bewegten sich fünf Ligen in einer ähnlichen Grössenordnung. Fünfzehn Saisons '
         'später bildet die Premier League finanziell <strong>eine eigene Kategorie.</strong>'),
     hl_type='gold',
-    cap=('Kadermarktwert je Liga zu Saisonbeginn 2010 und 2024 · Marktwert = Summe der '
-         'geschätzten Spielerwerte eines Kaders, nicht Vereins- oder Unternehmenswert')
+    cap=('Kadermarktwert je Liga zu Saisonbeginn 2010 und 2024')
 )))
 ```
 
