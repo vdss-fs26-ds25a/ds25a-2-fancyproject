@@ -58,11 +58,11 @@ execute:
      Each page gets its own arrangement of positions on the pitch (fractions of
      the viewport). The actual sprite image for each slot is chosen at render
      time by cycling through whatever sprites are available (see placeSprites),
-     so no page depends on a fixed sprite id existing — and every page looks
+     so no page depends on a fixed sprite id existing, and every page looks
      different from the next. Goal-mouth slots come first (x≈0.05 / 0.95),
      then a sideline slot, then outfield players scattered uniquely per page. */
   var PAGE_LAYOUTS = [
-    // PAGE 0 — hero
+    // PAGE 0 hero
     [ {x:0.06,y:0.46},{x:0.94,y:0.54},{x:0.50,y:0.05},{x:0.22,y:0.50},
       {x:0.30,y:0.22},{x:0.70,y:0.30},{x:0.86,y:0.72},{x:0.40,y:0.90},
       {x:0.62,y:0.84},{x:0.14,y:0.78} ],
@@ -102,7 +102,7 @@ execute:
     [ {x:0.06,y:0.54},{x:0.94,y:0.46},{x:0.96,y:0.90},{x:0.14,y:0.34},
       {x:0.26,y:0.72},{x:0.40,y:0.46},{x:0.54,y:0.74},{x:0.68,y:0.34},
       {x:0.82,y:0.62},{x:0.36,y:0.10} ],
-    // PAGE 10 — end
+    // PAGE 10 end
     [ {x:0.06,y:0.48},{x:0.94,y:0.52},{x:0.50,y:0.06},{x:0.20,y:0.28},
       {x:0.30,y:0.70},{x:0.46,y:0.40},{x:0.60,y:0.82},{x:0.72,y:0.26},
       {x:0.84,y:0.66},{x:0.16,y:0.88} ]
@@ -314,7 +314,7 @@ def sec(label, h2, story, chart_str, hl='', hl_type='gold', cap='', bridge=''):
             f'</div></section>')
 
 # ══════════════════════════════════════════════════════════
-# 1 — Kadermarktwerte
+# 1  Kadermarktwerte
 # ══════════════════════════════════════════════════════════
 mv_df = df.groupby(['competition_id','season'])['total_market_value'].sum().reset_index()
 mv_pivot = mv_df.pivot(index='season', columns='competition_id', values='total_market_value').fillna(0) / 1e9
@@ -347,7 +347,7 @@ net_df = df.groupby(['competition_id','season'])['net_transfer_record'].sum().re
 net_df['net_m'] = (net_df['net_transfer_record'] / 1e6).round(1)
 
 # ══════════════════════════════════════════════════════════
-# DATA: Section 3 — Spielerwert-Konzentration
+# DATA: Section 3 Spielerwert-Konzentration
 # ══════════════════════════════════════════════════════════
 pv = pv_raw.copy()
 pv['date'] = pd.to_datetime(pv['date'], errors='coerce')
@@ -389,7 +389,7 @@ for _lg in TOP5:
         tm_text.append(f'€{_mv}M')
 
 # ══════════════════════════════════════════════════════════
-# DATA: Section 4 — Wettbewerb
+# DATA: Section 4 Wettbewerb
 # ══════════════════════════════════════════════════════════
 g5 = games[games['competition_id'].isin(TOP5) & games['season'].between(2010, 2024)].copy()
 g5['home_pts'] = np.where(g5['home_club_goals'] > g5['away_club_goals'], 3,
@@ -439,7 +439,7 @@ top4_df = df.groupby(['competition_id','season']).apply(_top4_share).reset_index
 top4_df.columns = ['competition_id','season','top4_pct']
 
 # ══════════════════════════════════════════════════════════
-# DATA: Section 5 — Brain Drain / PL Tax
+# DATA: Section 5
 # ══════════════════════════════════════════════════════════
 tr_pl = tr[(tr['to_league'] == 'GB1') &
            (tr['transfer_fee'] > 1e6) &
@@ -474,7 +474,7 @@ _n_teams = int(df['club_id'].dropna().nunique())
 _n_transfers_considered = 10852
 _transfers_fmt = f'{_n_transfers_considered:,}'.replace(',', "'")
 # Total transfer fee (EUR) of all moves with a known fee that involve a top-5
-# league as either buyer OR seller, 2010–2025 — summed inline from the merged
+# league as either buyer OR seller, 2010–2025 summed inline from the merged
 # transfers table (tr already carries from_league / to_league).
 _fee_either_top5 = tr[(tr['from_league'].isin(TOP5) | tr['to_league'].isin(TOP5)) &
                       tr['yr'].between(2010, 2025)]['transfer_fee'].sum()
@@ -616,7 +616,7 @@ display(HTML(f'''
 
 ```{python}
 #| label: s1a-mv-time
-# ── Chart 1A: Grouped bar — squad market value (Kadermarktwert) per league per season ─
+# Chart 1A: Grouped bar squad market value (Kadermarktwert) per league per season 
 fig = go.Figure()
 for lg in TOP5:
     _d = mv_df[mv_df['competition_id']==lg].sort_values('season')
@@ -642,7 +642,7 @@ themed(fig, height=650)
 # chart box (the .spread container clips overflow, which previously cut the hint off).
 fig.update_layout(margin=dict(l=68, r=20, t=128, b=58))
 
-# TV-deal marker — named so the JS below can show it only while the PL is visible.
+# TV-deal marker so the JS below can show it only while the PL is visible.
 fig.add_shape(type='line', name='tv_vline', xref='x', yref='paper',
               x0=2015.5, x1=2015.5, y0=0, y1=1,
               line=dict(color='rgba(212,168,48,0.55)', width=1.5, dash='dot'))
@@ -650,7 +650,7 @@ fig.add_annotation(name='tv_anno', x=2015.5, y=0.97, xref='x', yref='paper',
               text='TV-Vertrag 2016/17', showarrow=False,
               xanchor='left', yanchor='top',
               font=dict(color='rgba(212,168,48,0.9)', size=13))
-# Discoverability hint for the clickable legend — kept low enough (y=1.10) and with
+# Discoverability hint for the clickable legend kept low enough (y=1.10) and with
 # a large top margin so it renders fully within the chart and stays readable.
 fig.add_annotation(x=1, y=1.10, xref='paper', yref='paper',
               text='Tipp: Liga in der Legende an-/abwählen', showarrow=False,
@@ -700,11 +700,9 @@ display(HTML(sec(
     'Die Top-5-Ligen im Vergleich',
     ('Jeder Balken steht für den Kadermarktwert einer Liga in einer Saison, also für die '
      'zusammengezählten geschätzten Marktwerte aller Erstligaspieler. Bereits 2010 lag die '
-     'Premier League vorne, doch der Abstand zu den übrigen vier Ligen war noch überschaubar — '
-     'sie bewegten sich in einer ähnlichen Grössenordnung. In den Jahren danach wuchsen die '
-     'Werte überall, in England jedoch deutlich schneller als auf dem Kontinent. Zuletzt erreicht '
-     'die Premier League rund das Doppelte der nächstgrössten Liga und hebt sich damit klar vom '
-     'übrigen Feld ab.'),
+     'Premier League vorne, doch der Abstand zu den übrigen vier Ligen war noch überschaubar.'
+     'Seither wächst die PL jedoch deutlich schneller als alle Konkurrenten auf dem europäischen Festland. ' 
+     'Zuletzt erreichen die aggregierten Kaderwerte der PL über das Doppelte der nächstgrössten Liga.'),
     _chart_html + _toggle_js,
     hl=('Zur Saison 2016/17 trat ein neuer Fernsehvertrag der Premier League in Kraft '
         '(Sky und BT, rund £5,1 Mrd. für drei Spielzeiten und damit etwa 58 % mehr als zuvor). '
@@ -718,7 +716,7 @@ display(HTML(sec(
 
 ```{python}
 #| label: s1b-mosaic
-# ── Chart 1B: Treemap (Mosaic) — squad market value per club/league ─
+# ── Chart 1B: Treemap (Mosaic) squad market value per club/league ─
 seasons_desc = sorted(df['season'].unique(), reverse=True)
 fig_mosaic = go.Figure()
 
@@ -893,7 +891,7 @@ fig = go.Figure(go.Sankey(
     )
 ))
 
-# Season dropdown — restyle link values/labels per view (structure stays fixed).
+# Season dropdown restyle link values/labels per view (structure stays fixed).
 _buttons = [
     dict(label=_name, method='restyle',
          args=[{'link.value': [_view_vals[i]], 'link.label': [_view_labs[i]]}])
@@ -943,7 +941,7 @@ display(HTML(sec(
     ch(fig),
     hl=(f'Die grössten Zuflüsse in die Premier League (2010–2024): {_lines}. '
         f'Insgesamt flossen <strong>€{_pl_in_total:.1f} Mrd.</strong> nach England, während nur '
-        f'<strong>€{_pl_out:.1f} Mrd.</strong> in die andere Richtung gingen — ein Negativsaldo '
+        f'<strong>€{_pl_out:.1f} Mrd.</strong> in die andere Richtung gingen, ein Negativsaldo '
         f'von <strong>€{_pl_net:.1f} Mrd.</strong> allein im Handel zwischen den Top-5-Ligen.'),
     hl_type='gold',
     cap='Transfers zwischen verschiedenen Top-5-Ligen mit bekannter Ablösesumme · Saison über das Menü wählbar'
@@ -982,10 +980,10 @@ _tt = _tt[~((_tt['player_name'] == 'Alessandro Malomo') &
 _idx = _tt.groupby('transfer_season')['transfer_fee'].idxmax()
 _top_transfers = _tt.loc[_idx].sort_values('yr')
 
-# 2. Build Image List for Annotations
+# Build Image List for Annotations
 # Embed each crest as a base64 data URI (like the league badges / sprites do).
 # A raw relative path such as "logos/x.png" is NOT inlined by Quarto's
-# self-contained build — Plotly buries it in its own JSON — so it would resolve
+# self-contained build; Plotly buries it in its own JSON; so it would resolve
 # against the build/ folder at view time and silently 404. Embedding avoids that.
 def _logo_data_uri(fn):
     try:
@@ -1236,7 +1234,7 @@ display(HTML(sec(
     'Verteilung der Top-150-Spieler nach Marktwert',
     ('Das Flächendiagramm zeigt, wie sich die wertvollsten Spieler einer Saison auf die fünf '
      'Ligen verteilen. Über den Regler lässt sich einstellen, wie viele Spieler betrachtet '
-     'werden — von den Top 10 bis zu den Top 150. 2010 waren sie noch vergleichsweise '
+     'werden: Von den Top 10 bis zu den Top 150. 2010 waren sie noch vergleichsweise '
      'gleichmässig verteilt; im Lauf der Jahre verschob sich ein zunehmender Anteil in die '
      'Premier League.'),
     _chart_html_concentration,
@@ -1389,12 +1387,11 @@ fig.update_xaxes(showgrid=False)
 display(HTML(sec(
     'Fazit',
     'Aus einem engen Feld wird ein klarer Abstand',
-    ('Über fünfzehn Saisons ergibt sich ein einheitliches Bild. 2010 lagen die fünf Ligen '
+    ('Über fünfzehn Saisons ergibt sich ein klares Bild. 2010 lagen die fünf Ligen '
      'finanziell noch nah beieinander; die Premier League führte, aber mit überschaubarem '
-     'Abstand. In den Jahren danach stiegen die Kaderwerte überall — in England jedoch deutlich '
-     'schneller als auf dem Kontinent. Heute erreicht die Premier League rund das Doppelte der '
-     'nächstgrössten Liga und etwa die Hälfte des gesamten Kaderwerts der fünf Ligen. Höhere '
-     'Kaderwerte gehen dabei in allen Ligen mit besseren Tabellenplätzen einher, und die '
+     'Abstand. In den Jahren danach stiegen die Kaderwerte überall, in England jedoch deutlich '
+     'schneller als auf dem Kontinent. '
+     'Höhere Kaderwerte gehen dabei in allen Ligen mit besseren Tabellenplätzen einher, und die '
      'Transferströme verstärken die Entwicklung, weil Talent überwiegend in Richtung der '
      'finanzstärksten Liga wandert.'),
     ch(fig),
