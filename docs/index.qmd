@@ -1231,7 +1231,7 @@ _chart_html_concentration = fig.to_html(
 
 display(HTML(sec(
     'V',
-    'Verteilung der Top-150-Spieler nach Marktwert',
+    'Verteilung der Top-150-Spieler nach Liga',
     ('Das Flächendiagramm zeigt, wie sich die wertvollsten Spieler einer Saison auf die fünf '
      'Ligen verteilen. Über den Regler lässt sich einstellen, wie viele Spieler betrachtet '
      'werden: Von den Top 10 bis zu den Top 150. 2010 waren sie noch vergleichsweise '
